@@ -1,0 +1,3888 @@
+{
+  "experiment": "Max-Abs \u2194 Gradient Oracle Correlation Analysis",
+  "description": "Post-hoc analysis proving max-abs group importance is a reliable proxy for gradient-based importance. Computes Spearman rank correlation between max-abs and gradient-norm group rankings at each layer during training.",
+  "model": "meta-llama/Llama-3.2-3B-Instruct",
+  "fp8_ratio": 0.2,
+  "group_size": 128,
+  "train_steps": 300,
+  "analysis_interval": 20,
+  "analysis_samples": 3,
+  "timestamp": "20260329_000456",
+  "total_time_sec": 853.9993760585785,
+  "overall_mean_spearman_rho": 0.1345124279063611,
+  "overall_mean_top20_overlap": 0.24837229564134825,
+  "claim_validated": false,
+  "overall_mean_jaccard": 0.2203614126787615,
+  "anchor_stable": false,
+  "correlations": [
+    {
+      "step": 20,
+      "mean_spearman_rho": 0.09815694679058247,
+      "min_spearman_rho": -0.042393968634933644,
+      "max_spearman_rho": 0.24395025027962278,
+      "mean_top20_overlap": 0.22824847931610243,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.09534373027153246,
+          "spearman_rho_std": 0.019173232301359654,
+          "top10_overlap_mean": 0.09987432999945588,
+          "top20_overlap_mean": 0.2109100413367334
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.042393968634933644,
+          "spearman_rho_std": 0.0035172442013707986,
+          "top10_overlap_mean": 0.09727478041167603,
+          "top20_overlap_mean": 0.18747280998449423
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.028621062544884404,
+          "spearman_rho_std": 0.004871897065632836,
+          "top10_overlap_mean": 0.09248248787528075,
+          "top20_overlap_mean": 0.19688164237190067
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.015328225773147996,
+          "spearman_rho_std": 0.010437080367328528,
+          "top10_overlap_mean": 0.09602302705935978,
+          "top20_overlap_mean": 0.19897961413886633
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.0027680094173687113,
+          "spearman_rho_std": 0.005924427973891583,
+          "top10_overlap_mean": 0.09251407142177871,
+          "top20_overlap_mean": 0.19218261792502556
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.008395596814674382,
+          "spearman_rho_std": 0.006272795967023736,
+          "top10_overlap_mean": 0.09735496899365566,
+          "top20_overlap_mean": 0.20722387431127073
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.017971136051139515,
+          "spearman_rho_std": 0.006744134973913729,
+          "top10_overlap_mean": 0.09904041599018405,
+          "top20_overlap_mean": 0.21396121496615794
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.01905431136932939,
+          "spearman_rho_std": 0.00531146303370353,
+          "top10_overlap_mean": 0.10375898116286698,
+          "top20_overlap_mean": 0.21839932974845366
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.03398873169960561,
+          "spearman_rho_std": 0.0011504941333408654,
+          "top10_overlap_mean": 0.1179597523627633,
+          "top20_overlap_mean": 0.22532483745291235
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.03186314178285767,
+          "spearman_rho_std": 0.0016600671692337224,
+          "top10_overlap_mean": 0.11844838720488698,
+          "top20_overlap_mean": 0.22860739883704514
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.04590227100492459,
+          "spearman_rho_std": 0.008122074961124054,
+          "top10_overlap_mean": 0.12897055757618,
+          "top20_overlap_mean": 0.22204722664640344
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.052916524101744335,
+          "spearman_rho_std": 0.013350659467447991,
+          "top10_overlap_mean": 0.12084834767612627,
+          "top20_overlap_mean": 0.23055718516405532
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.05804546669272468,
+          "spearman_rho_std": 0.024611706218108216,
+          "top10_overlap_mean": 0.12858253710281642,
+          "top20_overlap_mean": 0.23452229948777562
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.0930293421925991,
+          "spearman_rho_std": 0.023820230223476357,
+          "top10_overlap_mean": 0.12733548029195035,
+          "top20_overlap_mean": 0.23394240772060862
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.07456646243356749,
+          "spearman_rho_std": 0.035008063654123955,
+          "top10_overlap_mean": 0.1154450878984133,
+          "top20_overlap_mean": 0.2191781720588483
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.07221002997064303,
+          "spearman_rho_std": 0.01797606888096944,
+          "top10_overlap_mean": 0.11681330992065735,
+          "top20_overlap_mean": 0.2177558760800736
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.11308405172232923,
+          "spearman_rho_std": 0.012538896504197133,
+          "top10_overlap_mean": 0.11970014055720324,
+          "top20_overlap_mean": 0.24561757661405692
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.1373275950082776,
+          "spearman_rho_std": 0.024714749696483032,
+          "top10_overlap_mean": 0.1186338866970769,
+          "top20_overlap_mean": 0.2407344533568256
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.1494925498779409,
+          "spearman_rho_std": 0.02312482067001668,
+          "top10_overlap_mean": 0.10675758392789048,
+          "top20_overlap_mean": 0.25221596573749744
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.1665406812672564,
+          "spearman_rho_std": 0.030178697971663494,
+          "top10_overlap_mean": 0.11116655253237236,
+          "top20_overlap_mean": 0.24810568997767277
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.17794660877168397,
+          "spearman_rho_std": 0.030525460120540988,
+          "top10_overlap_mean": 0.10980479172839562,
+          "top20_overlap_mean": 0.23967326275569692
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.19396091172483296,
+          "spearman_rho_std": 0.03113894343088632,
+          "top10_overlap_mean": 0.11501962014928553,
+          "top20_overlap_mean": 0.24230758179078146
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.1946079599307536,
+          "spearman_rho_std": 0.03622806659689074,
+          "top10_overlap_mean": 0.11818153194290139,
+          "top20_overlap_mean": 0.2502659643188176
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.1843119113020835,
+          "spearman_rho_std": 0.027223749639383822,
+          "top10_overlap_mean": 0.11810134336092176,
+          "top20_overlap_mean": 0.2472029097656586
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.21190209050927933,
+          "spearman_rho_std": 0.020979728675526162,
+          "top10_overlap_mean": 0.11223457106931578,
+          "top20_overlap_mean": 0.2441690533284594
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.24395025027962278,
+          "spearman_rho_std": 0.014526799166067231,
+          "top10_overlap_mean": 0.11246397905553718,
+          "top20_overlap_mean": 0.25960363721216145
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.22329613484075114,
+          "spearman_rho_std": 0.005438810955687175,
+          "top10_overlap_mean": 0.12575534420563225,
+          "top20_overlap_mean": 0.24529150226840302
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.20160581650545684,
+          "spearman_rho_std": 0.017173017268216947,
+          "top10_overlap_mean": 0.10561230867360054,
+          "top20_overlap_mean": 0.23782327549421192
+        }
+      ]
+    },
+    {
+      "step": 40,
+      "mean_spearman_rho": 0.13958205922584696,
+      "min_spearman_rho": -0.06581400053616804,
+      "max_spearman_rho": 0.32901559392869123,
+      "mean_top20_overlap": 0.24699788791037763,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.07336022995639598,
+          "spearman_rho_std": 0.02424025094118002,
+          "top10_overlap_mean": 0.161761651280845,
+          "top20_overlap_mean": 0.22955025808946558
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.06581400053616804,
+          "spearman_rho_std": 0.02037904832929872,
+          "top10_overlap_mean": 0.11661064939778625,
+          "top20_overlap_mean": 0.19381014613438494
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.04210218971295327,
+          "spearman_rho_std": 0.02401612341220203,
+          "top10_overlap_mean": 0.1078127224190285,
+          "top20_overlap_mean": 0.19231800140759037
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.0037315724527963376,
+          "spearman_rho_std": 0.03582397995990937,
+          "top10_overlap_mean": 0.11482638731942339,
+          "top20_overlap_mean": 0.2191942594630243
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": -0.008908649311360988,
+          "spearman_rho_std": 0.0410086097353686,
+          "top10_overlap_mean": 0.1033697951557993,
+          "top20_overlap_mean": 0.2096786510489951
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.006274478067914038,
+          "spearman_rho_std": 0.03720397455284656,
+          "top10_overlap_mean": 0.11108159578979215,
+          "top20_overlap_mean": 0.21161176404623835
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.027526059173978434,
+          "spearman_rho_std": 0.0439701121230214,
+          "top10_overlap_mean": 0.11239535553650083,
+          "top20_overlap_mean": 0.21981754808973467
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.028939664434159768,
+          "spearman_rho_std": 0.04722193910843785,
+          "top10_overlap_mean": 0.11618922682901106,
+          "top20_overlap_mean": 0.2207524529199704
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.05372650057110051,
+          "spearman_rho_std": 0.04271631800468715,
+          "top10_overlap_mean": 0.12103292530603549,
+          "top20_overlap_mean": 0.2179943164172875
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.06182775875647841,
+          "spearman_rho_std": 0.055465824414908514,
+          "top10_overlap_mean": 0.12385177904114597,
+          "top20_overlap_mean": 0.22984012665464762
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.07820159362485275,
+          "spearman_rho_std": 0.05528183266505952,
+          "top10_overlap_mean": 0.1301257618794577,
+          "top20_overlap_mean": 0.22650397709116332
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.07481556634369937,
+          "spearman_rho_std": 0.0474344021331763,
+          "top10_overlap_mean": 0.12850431193545625,
+          "top20_overlap_mean": 0.23746912509991172
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.08120344473100598,
+          "spearman_rho_std": 0.05529563184869757,
+          "top10_overlap_mean": 0.13064305770783152,
+          "top20_overlap_mean": 0.23608940095254094
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.12321922471570501,
+          "spearman_rho_std": 0.04856219321919691,
+          "top10_overlap_mean": 0.1387531746304813,
+          "top20_overlap_mean": 0.24977913169710134
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.10957131072996186,
+          "spearman_rho_std": 0.042689219263318576,
+          "top10_overlap_mean": 0.14006431079307277,
+          "top20_overlap_mean": 0.24919980684424137
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.12888545936333262,
+          "spearman_rho_std": 0.03852612881567522,
+          "top10_overlap_mean": 0.12326492075389213,
+          "top20_overlap_mean": 0.25933222925417726
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.17115992939493915,
+          "spearman_rho_std": 0.032472853743468554,
+          "top10_overlap_mean": 0.12108217372789339,
+          "top20_overlap_mean": 0.27688290134521654
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.1988754533372874,
+          "spearman_rho_std": 0.02085165499018947,
+          "top10_overlap_mean": 0.12322862159364145,
+          "top20_overlap_mean": 0.2816943578474287
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.2111669484660913,
+          "spearman_rho_std": 0.015893360907929144,
+          "top10_overlap_mean": 0.132254181974343,
+          "top20_overlap_mean": 0.27221234068004346
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.24227238656793473,
+          "spearman_rho_std": 0.0158406569908378,
+          "top10_overlap_mean": 0.1368057630997991,
+          "top20_overlap_mean": 0.28202277435924766
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.2686103318832697,
+          "spearman_rho_std": 0.014269444842127804,
+          "top10_overlap_mean": 0.13623938750854633,
+          "top20_overlap_mean": 0.27639276898239945
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.2961646937482409,
+          "spearman_rho_std": 0.019132033660259187,
+          "top10_overlap_mean": 0.13639204262439666,
+          "top20_overlap_mean": 0.28281289482598476
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.2994286610772961,
+          "spearman_rho_std": 0.022649065479967916,
+          "top10_overlap_mean": 0.13502395594657454,
+          "top20_overlap_mean": 0.2824947571419394
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.2826537151070867,
+          "spearman_rho_std": 0.018828644283506057,
+          "top10_overlap_mean": 0.1372221071593188,
+          "top20_overlap_mean": 0.27089726914127615
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.3035591897367869,
+          "spearman_rho_std": 0.020461275314226753,
+          "top10_overlap_mean": 0.13054472952309462,
+          "top20_overlap_mean": 0.2735803898780926
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.32901559392869123,
+          "spearman_rho_std": 0.01858887286135427,
+          "top10_overlap_mean": 0.14366677288434362,
+          "top20_overlap_mean": 0.27898661289968335
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.3013425249371893,
+          "spearman_rho_std": 0.006712560088451221,
+          "top10_overlap_mean": 0.13981595107660275,
+          "top20_overlap_mean": 0.2780362195532126
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.2695902067780032,
+          "spearman_rho_std": 0.015658545380885444,
+          "top10_overlap_mean": 0.11616325334625037,
+          "top20_overlap_mean": 0.2569863796255756
+        }
+      ]
+    },
+    {
+      "step": 60,
+      "mean_spearman_rho": 0.10954299967278461,
+      "min_spearman_rho": -0.03461199881748416,
+      "max_spearman_rho": 0.2095125439951462,
+      "mean_top20_overlap": 0.24947898964164342,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.013225727973752523,
+          "spearman_rho_std": 0.03661080777268512,
+          "top10_overlap_mean": 0.1200650589459179,
+          "top20_overlap_mean": 0.1889114939497636
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.029509674099806166,
+          "spearman_rho_std": 0.015363056861307987,
+          "top10_overlap_mean": 0.10143668248148942,
+          "top20_overlap_mean": 0.2118583117105218
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.03461199881748416,
+          "spearman_rho_std": 0.017740711076979793,
+          "top10_overlap_mean": 0.08215405742764818,
+          "top20_overlap_mean": 0.19076570615822594
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.011531887011448827,
+          "spearman_rho_std": 0.037788865132663836,
+          "top10_overlap_mean": 0.10805785743840668,
+          "top20_overlap_mean": 0.20846563688408526
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.002940124687041095,
+          "spearman_rho_std": 0.024789393244406,
+          "top10_overlap_mean": 0.09328814439283158,
+          "top20_overlap_mean": 0.21816860895941237
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.028433887989481,
+          "spearman_rho_std": 0.02636088600435745,
+          "top10_overlap_mean": 0.10736136784040977,
+          "top20_overlap_mean": 0.2344372345278524
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.043769887524347635,
+          "spearman_rho_std": 0.029115193675307214,
+          "top10_overlap_mean": 0.10996000924764088,
+          "top20_overlap_mean": 0.23623715917736368
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.054924739772559704,
+          "spearman_rho_std": 0.02359555278944522,
+          "top10_overlap_mean": 0.10748260159781943,
+          "top20_overlap_mean": 0.24261833071907743
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.08655069388597263,
+          "spearman_rho_std": 0.017176672571360924,
+          "top10_overlap_mean": 0.1337427914962501,
+          "top20_overlap_mean": 0.2505927183210786
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.11320041322302232,
+          "spearman_rho_std": 0.02479144230266122,
+          "top10_overlap_mean": 0.12819289481482335,
+          "top20_overlap_mean": 0.2626793361732011
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.12513445872947557,
+          "spearman_rho_std": 0.029025567960452765,
+          "top10_overlap_mean": 0.12472177488696175,
+          "top20_overlap_mean": 0.25487225643270917
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.12570994332875662,
+          "spearman_rho_std": 0.031105142325564494,
+          "top10_overlap_mean": 0.12751230002933492,
+          "top20_overlap_mean": 0.25426727616157624
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.14242260828366574,
+          "spearman_rho_std": 0.03021073015437288,
+          "top10_overlap_mean": 0.12049146278962508,
+          "top20_overlap_mean": 0.26415316747831336
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.1593819424072028,
+          "spearman_rho_std": 0.0397394564444183,
+          "top10_overlap_mean": 0.1278527951044986,
+          "top20_overlap_mean": 0.2697933951198423
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.13441227708482975,
+          "spearman_rho_std": 0.0365031408426547,
+          "top10_overlap_mean": 0.1201112306831902,
+          "top20_overlap_mean": 0.26542353708683586
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.11489442307231736,
+          "spearman_rho_std": 0.048100985433185806,
+          "top10_overlap_mean": 0.10399141547190277,
+          "top20_overlap_mean": 0.2617710844115071
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.11909577261703469,
+          "spearman_rho_std": 0.0659806793862904,
+          "top10_overlap_mean": 0.10107965657211992,
+          "top20_overlap_mean": 0.27705518696678894
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.12061166032448928,
+          "spearman_rho_std": 0.06760995207461575,
+          "top10_overlap_mean": 0.10387812912074733,
+          "top20_overlap_mean": 0.26567264249110156
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.13295822808180313,
+          "spearman_rho_std": 0.0708223412955903,
+          "top10_overlap_mean": 0.10637496694692648,
+          "top20_overlap_mean": 0.2633234663667418
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.14389383268651293,
+          "spearman_rho_std": 0.07755963483878092,
+          "top10_overlap_mean": 0.10324017070868197,
+          "top20_overlap_mean": 0.26405335768434207
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.15278674612445864,
+          "spearman_rho_std": 0.08455886148565304,
+          "top10_overlap_mean": 0.10788540387962235,
+          "top20_overlap_mean": 0.2643156657371994
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.16897408312727222,
+          "spearman_rho_std": 0.08745929356075148,
+          "top10_overlap_mean": 0.11449549143127502,
+          "top20_overlap_mean": 0.266638056426418
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.17328710217492926,
+          "spearman_rho_std": 0.087242169738233,
+          "top10_overlap_mean": 0.12974282812193197,
+          "top20_overlap_mean": 0.262350712624837
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.16306301046441182,
+          "spearman_rho_std": 0.08330950026262604,
+          "top10_overlap_mean": 0.12844748112144355,
+          "top20_overlap_mean": 0.25790386665169723
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.18946159604539325,
+          "spearman_rho_std": 0.08454950115707978,
+          "top10_overlap_mean": 0.12923405087353054,
+          "top20_overlap_mean": 0.2718194739871302
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.2095125439951462,
+          "spearman_rho_std": 0.08232883603863181,
+          "top10_overlap_mean": 0.13819236491134076,
+          "top20_overlap_mean": 0.26853466544992227
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.20428368089815815,
+          "spearman_rho_std": 0.06301481718094612,
+          "top10_overlap_mean": 0.13520264464926865,
+          "top20_overlap_mean": 0.26715668035747814
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.19686439224177651,
+          "spearman_rho_std": 0.04843716688239214,
+          "top10_overlap_mean": 0.12592390173434978,
+          "top20_overlap_mean": 0.24157268195099357
+        }
+      ]
+    },
+    {
+      "step": 80,
+      "mean_spearman_rho": 0.12143639488149535,
+      "min_spearman_rho": -0.04617577743670284,
+      "max_spearman_rho": 0.31875863425982265,
+      "mean_top20_overlap": 0.23401846172128996,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.12554438357542028,
+          "spearman_rho_std": 0.039467752755967735,
+          "top10_overlap_mean": 0.15414028970935398,
+          "top20_overlap_mean": 0.2637862364145698
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.04617577743670284,
+          "spearman_rho_std": 0.03831373485249871,
+          "top10_overlap_mean": 0.11736120769287435,
+          "top20_overlap_mean": 0.1989885476656054
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.03947025084951916,
+          "spearman_rho_std": 0.036939565070865224,
+          "top10_overlap_mean": 0.09258514110639367,
+          "top20_overlap_mean": 0.1902990494404279
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.01118709605934304,
+          "spearman_rho_std": 0.02683585276996919,
+          "top10_overlap_mean": 0.10173006148933549,
+          "top20_overlap_mean": 0.2046603005133587
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": -0.003917087587600313,
+          "spearman_rho_std": 0.02681481067759998,
+          "top10_overlap_mean": 0.09509612049266082,
+          "top20_overlap_mean": 0.19183485054644545
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.010596087040925075,
+          "spearman_rho_std": 0.02851902041592477,
+          "top10_overlap_mean": 0.08296411147774851,
+          "top20_overlap_mean": 0.2006540160408946
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.025390091082991284,
+          "spearman_rho_std": 0.02320735552083517,
+          "top10_overlap_mean": 0.09655731549943351,
+          "top20_overlap_mean": 0.1943929476077152
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.028083043422204676,
+          "spearman_rho_std": 0.03074720887158018,
+          "top10_overlap_mean": 0.0918656261705683,
+          "top20_overlap_mean": 0.19782432535670938
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.06270449487845402,
+          "spearman_rho_std": 0.030827327860994628,
+          "top10_overlap_mean": 0.10745160265072011,
+          "top20_overlap_mean": 0.2097198484425714
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.07074677585224479,
+          "spearman_rho_std": 0.028349141061209216,
+          "top10_overlap_mean": 0.11085545297723916,
+          "top20_overlap_mean": 0.21814914151388534
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.07853454897933647,
+          "spearman_rho_std": 0.02715906907839201,
+          "top10_overlap_mean": 0.11221447403398895,
+          "top20_overlap_mean": 0.220770677530433
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.06979807214234694,
+          "spearman_rho_std": 0.023557072998898684,
+          "top10_overlap_mean": 0.11013978523730844,
+          "top20_overlap_mean": 0.21195366181356787
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.06668944844324855,
+          "spearman_rho_std": 0.024436295922785064,
+          "top10_overlap_mean": 0.12475980119949209,
+          "top20_overlap_mean": 0.21937303040901246
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.08324099266594875,
+          "spearman_rho_std": 0.028292842955092407,
+          "top10_overlap_mean": 0.11235339459883846,
+          "top20_overlap_mean": 0.23230008814159456
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.07068835785449126,
+          "spearman_rho_std": 0.0319895464227557,
+          "top10_overlap_mean": 0.08864242258832811,
+          "top20_overlap_mean": 0.21987589906686844
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.0681806755339085,
+          "spearman_rho_std": 0.028461370560904586,
+          "top10_overlap_mean": 0.09103858621744965,
+          "top20_overlap_mean": 0.21457467064399427
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.1036796491500313,
+          "spearman_rho_std": 0.029636791925614216,
+          "top10_overlap_mean": 0.10137719110933818,
+          "top20_overlap_mean": 0.23342614164009964
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.1275251210265664,
+          "spearman_rho_std": 0.029738090484938858,
+          "top10_overlap_mean": 0.10072926187985336,
+          "top20_overlap_mean": 0.23670420456639804
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.14731924027820867,
+          "spearman_rho_std": 0.03787144669922636,
+          "top10_overlap_mean": 0.10199412844320371,
+          "top20_overlap_mean": 0.23478927992516532
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.17932817499483789,
+          "spearman_rho_std": 0.04166019400445674,
+          "top10_overlap_mean": 0.10634327802394472,
+          "top20_overlap_mean": 0.2522652411568221
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.21442283100326928,
+          "spearman_rho_std": 0.05480148372091838,
+          "top10_overlap_mean": 0.11530908768325271,
+          "top20_overlap_mean": 0.26019328816174286
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.2361044907482609,
+          "spearman_rho_std": 0.05858624239487086,
+          "top10_overlap_mean": 0.117986535986031,
+          "top20_overlap_mean": 0.2752907203100435
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.2498741846902719,
+          "spearman_rho_std": 0.059275699738555954,
+          "top10_overlap_mean": 0.12889155742112765,
+          "top20_overlap_mean": 0.27648451231899446
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.25016007046780686,
+          "spearman_rho_std": 0.0529442991547847,
+          "top10_overlap_mean": 0.13256291824547264,
+          "top20_overlap_mean": 0.26795361148201163
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.28282461021072064,
+          "spearman_rho_std": 0.04554601826747643,
+          "top10_overlap_mean": 0.13607814078517957,
+          "top20_overlap_mean": 0.2782963189981062
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.3170876938376492,
+          "spearman_rho_std": 0.04173413423256895,
+          "top10_overlap_mean": 0.15113253981363725,
+          "top20_overlap_mean": 0.2928958216248507
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.31875863425982265,
+          "spearman_rho_std": 0.03829273131179078,
+          "top10_overlap_mean": 0.14311547295250895,
+          "top20_overlap_mean": 0.2878220958678702
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.2913134043573829,
+          "spearman_rho_std": 0.03251582949026023,
+          "top10_overlap_mean": 0.12444176991100875,
+          "top20_overlap_mean": 0.2672384009963607
+        }
+      ]
+    },
+    {
+      "step": 100,
+      "mean_spearman_rho": 0.16337417916565275,
+      "min_spearman_rho": -0.03374859621869915,
+      "max_spearman_rho": 0.33271528183900473,
+      "mean_top20_overlap": 0.24235643583919786,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.07380160024017764,
+          "spearman_rho_std": 0.042579569720526435,
+          "top10_overlap_mean": 0.13811516373899313,
+          "top20_overlap_mean": 0.21987719701957598
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.03374859621869915,
+          "spearman_rho_std": 0.031134762338671084,
+          "top10_overlap_mean": 0.12360872791810802,
+          "top20_overlap_mean": 0.1915699510047286
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.00996797847201191,
+          "spearman_rho_std": 0.01450939737595437,
+          "top10_overlap_mean": 0.08727436015903368,
+          "top20_overlap_mean": 0.17472810657742666
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.0452449551758049,
+          "spearman_rho_std": 0.022698544166654473,
+          "top10_overlap_mean": 0.10285376727733125,
+          "top20_overlap_mean": 0.20821131264459622
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.03552212023174645,
+          "spearman_rho_std": 0.026043433662615804,
+          "top10_overlap_mean": 0.09618331367880799,
+          "top20_overlap_mean": 0.2064180830046929
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.06346678786826247,
+          "spearman_rho_std": 0.02482821375594939,
+          "top10_overlap_mean": 0.1058542781641059,
+          "top20_overlap_mean": 0.20248341577751647
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.07598639541299282,
+          "spearman_rho_std": 0.02426980411925787,
+          "top10_overlap_mean": 0.0993725385488285,
+          "top20_overlap_mean": 0.20236617660529696
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.07835804979171403,
+          "spearman_rho_std": 0.022875128387413925,
+          "top10_overlap_mean": 0.11012360754995543,
+          "top20_overlap_mean": 0.21012261267049803
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.11334993077297632,
+          "spearman_rho_std": 0.015586278318603049,
+          "top10_overlap_mean": 0.10993489356670956,
+          "top20_overlap_mean": 0.22624339001010663
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.13694847703695487,
+          "spearman_rho_std": 0.01909330684571092,
+          "top10_overlap_mean": 0.12778192246126138,
+          "top20_overlap_mean": 0.23287216777962116
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.12871266280105073,
+          "spearman_rho_std": 0.010370706006020792,
+          "top10_overlap_mean": 0.11529202785401814,
+          "top20_overlap_mean": 0.24489479226693678
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.1272345767277153,
+          "spearman_rho_std": 0.021376897786804957,
+          "top10_overlap_mean": 0.11330157633219944,
+          "top20_overlap_mean": 0.24610569417783804
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.1385246425154514,
+          "spearman_rho_std": 0.03226180397416556,
+          "top10_overlap_mean": 0.1181851259961965,
+          "top20_overlap_mean": 0.25322766693868
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.17435909387005244,
+          "spearman_rho_std": 0.02570984269115927,
+          "top10_overlap_mean": 0.13431941897645516,
+          "top20_overlap_mean": 0.2554304893918895
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.1442167212810478,
+          "spearman_rho_std": 0.016719484915770605,
+          "top10_overlap_mean": 0.10741922339102296,
+          "top20_overlap_mean": 0.24544937212420068
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.14370568233047856,
+          "spearman_rho_std": 0.011600062796785205,
+          "top10_overlap_mean": 0.10384899303824059,
+          "top20_overlap_mean": 0.239302991716042
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.17126482082225267,
+          "spearman_rho_std": 0.011269232561014995,
+          "top10_overlap_mean": 0.13327969240340595,
+          "top20_overlap_mean": 0.25523181843318254
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.1879825497644562,
+          "spearman_rho_std": 0.014780595543283334,
+          "top10_overlap_mean": 0.14530370277296778,
+          "top20_overlap_mean": 0.2612168836077586
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.20956171060097648,
+          "spearman_rho_std": 0.01668624140001407,
+          "top10_overlap_mean": 0.13628020329018065,
+          "top20_overlap_mean": 0.261987915879275
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.2277794927021345,
+          "spearman_rho_std": 0.020097537335720693,
+          "top10_overlap_mean": 0.1364873283937432,
+          "top20_overlap_mean": 0.25888757269175017
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.2546988625436335,
+          "spearman_rho_std": 0.0236304739431447,
+          "top10_overlap_mean": 0.14646155282529985,
+          "top20_overlap_mean": 0.26781538455119436
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.27749951357586977,
+          "spearman_rho_std": 0.02483283742204472,
+          "top10_overlap_mean": 0.14827454645164923,
+          "top20_overlap_mean": 0.27384116561901406
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.28699765289138146,
+          "spearman_rho_std": 0.01975087435459035,
+          "top10_overlap_mean": 0.1437423350623208,
+          "top20_overlap_mean": 0.2824429868431734
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.273629912548015,
+          "spearman_rho_std": 0.014097852502445678,
+          "top10_overlap_mean": 0.14175188354050205,
+          "top20_overlap_mean": 0.2730630544484522
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.29824672959381804,
+          "spearman_rho_std": 0.014515678020444176,
+          "top10_overlap_mean": 0.1435352099587582,
+          "top20_overlap_mean": 0.2821022163576559
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.33271528183900473,
+          "spearman_rho_std": 0.020839294021822913,
+          "top10_overlap_mean": 0.1502056635572815,
+          "top20_overlap_mean": 0.28180216176538203
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.32250827279324784,
+          "spearman_rho_std": 0.019875709303518077,
+          "top10_overlap_mean": 0.14233643661055637,
+          "top20_overlap_mean": 0.2718302937882726
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.29587709559777237,
+          "spearman_rho_std": 0.006901087126767186,
+          "top10_overlap_mean": 0.11072299422405635,
+          "top20_overlap_mean": 0.2564553298027827
+        }
+      ]
+    },
+    {
+      "step": 120,
+      "mean_spearman_rho": 0.13506608045662086,
+      "min_spearman_rho": -0.04081229445600658,
+      "max_spearman_rho": 0.30267204033246037,
+      "mean_top20_overlap": 0.2474436103536415,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.09050192884434972,
+          "spearman_rho_std": 0.029845110217925852,
+          "top10_overlap_mean": 0.11649255559273881,
+          "top20_overlap_mean": 0.22054954103739519
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.04081229445600658,
+          "spearman_rho_std": 0.004912753663429149,
+          "top10_overlap_mean": 0.11164062531698181,
+          "top20_overlap_mean": 0.1875211431642105
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.022371490757247817,
+          "spearman_rho_std": 0.008322808255737913,
+          "top10_overlap_mean": 0.0826122613747038,
+          "top20_overlap_mean": 0.19641964049865113
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.03699369690656926,
+          "spearman_rho_std": 0.011729291541544578,
+          "top10_overlap_mean": 0.09693243310916101,
+          "top20_overlap_mean": 0.2177631302200956
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.02854801523068068,
+          "spearman_rho_std": 0.005247070512136103,
+          "top10_overlap_mean": 0.0924040639701182,
+          "top20_overlap_mean": 0.21597935187504938
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.037646104434663874,
+          "spearman_rho_std": 0.003705897999686602,
+          "top10_overlap_mean": 0.08974664131979372,
+          "top20_overlap_mean": 0.22498265204735304
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.04783574785115171,
+          "spearman_rho_std": 0.012087515577358801,
+          "top10_overlap_mean": 0.0934030516847995,
+          "top20_overlap_mean": 0.23270437244914577
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.05125408179629376,
+          "spearman_rho_std": 0.005104884777380122,
+          "top10_overlap_mean": 0.10315271046299951,
+          "top20_overlap_mean": 0.2480646109379785
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.0754855521025921,
+          "spearman_rho_std": 0.010386610664041795,
+          "top10_overlap_mean": 0.11936542166077153,
+          "top20_overlap_mean": 0.25402257039689
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.08232923839224987,
+          "spearman_rho_std": 0.010124125339246432,
+          "top10_overlap_mean": 0.12518828545834604,
+          "top20_overlap_mean": 0.2536108282771295
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.09695536458509539,
+          "spearman_rho_std": 0.015592757889155066,
+          "top10_overlap_mean": 0.12904604961670943,
+          "top20_overlap_mean": 0.24418374316437516
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.09587436025676209,
+          "spearman_rho_std": 0.010888528050402458,
+          "top10_overlap_mean": 0.12381713157146888,
+          "top20_overlap_mean": 0.24431455821739126
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.10324662238545217,
+          "spearman_rho_std": 0.033750458139549286,
+          "top10_overlap_mean": 0.1266853010980514,
+          "top20_overlap_mean": 0.2624721529141355
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.12976758221923393,
+          "spearman_rho_std": 0.034970188356242896,
+          "top10_overlap_mean": 0.1218883120202059,
+          "top20_overlap_mean": 0.2617502856116708
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.10379708727216007,
+          "spearman_rho_std": 0.047755008496163,
+          "top10_overlap_mean": 0.12073071181838246,
+          "top20_overlap_mean": 0.24507041231648394
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.0911263983091244,
+          "spearman_rho_std": 0.031997438280463766,
+          "top10_overlap_mean": 0.11406923747008595,
+          "top20_overlap_mean": 0.2284671879785645
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.13947402455848004,
+          "spearman_rho_std": 0.030802193735038244,
+          "top10_overlap_mean": 0.11513255946557915,
+          "top20_overlap_mean": 0.2562965044957813
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.16842409436149583,
+          "spearman_rho_std": 0.03685553227393256,
+          "top10_overlap_mean": 0.11935486139005512,
+          "top20_overlap_mean": 0.2643244437380186
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.18842170066531735,
+          "spearman_rho_std": 0.03586809202148411,
+          "top10_overlap_mean": 0.1139908135649234,
+          "top20_overlap_mean": 0.2678687971251393
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.20638458031322846,
+          "spearman_rho_std": 0.04359447350014402,
+          "top10_overlap_mean": 0.13036097006202157,
+          "top20_overlap_mean": 0.26869811428069273
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.21967654123902572,
+          "spearman_rho_std": 0.039685780492735086,
+          "top10_overlap_mean": 0.12591102482814132,
+          "top20_overlap_mean": 0.26279239434375706
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.2396235890274179,
+          "spearman_rho_std": 0.039105774870301736,
+          "top10_overlap_mean": 0.13360130576079995,
+          "top20_overlap_mean": 0.2677742724311493
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.24816245870009748,
+          "spearman_rho_std": 0.03963685981122448,
+          "top10_overlap_mean": 0.144001143732899,
+          "top20_overlap_mean": 0.27232813544191997
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.24147439435967513,
+          "spearman_rho_std": 0.032215409590458266,
+          "top10_overlap_mean": 0.1353510870381403,
+          "top20_overlap_mean": 0.2594292776600972
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.2727178229295175,
+          "spearman_rho_std": 0.025787292170883144,
+          "top10_overlap_mean": 0.1283033568932973,
+          "top20_overlap_mean": 0.26997667004735265
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.30267204033246037,
+          "spearman_rho_std": 0.02217328282539234,
+          "top10_overlap_mean": 0.13196153193512014,
+          "top20_overlap_mean": 0.2781747387054832
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.28338986791217596,
+          "spearman_rho_std": 0.012399347011400982,
+          "top10_overlap_mean": 0.13680712604844728,
+          "top20_overlap_mean": 0.2707994338454209
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.2632511430133679,
+          "spearman_rho_std": 0.0025405120454159245,
+          "top10_overlap_mean": 0.11318965028996558,
+          "top20_overlap_mean": 0.25208212668063035
+        }
+      ]
+    },
+    {
+      "step": 140,
+      "mean_spearman_rho": 0.15688272349693638,
+      "min_spearman_rho": -0.06725260488374918,
+      "max_spearman_rho": 0.37539203288416334,
+      "mean_top20_overlap": 0.25585867984641825,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.06404194631339467,
+          "spearman_rho_std": 0.024217322828022345,
+          "top10_overlap_mean": 0.15139660128919924,
+          "top20_overlap_mean": 0.2269796422615625
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.06725260488374918,
+          "spearman_rho_std": 0.027189318249410163,
+          "top10_overlap_mean": 0.11217296930279151,
+          "top20_overlap_mean": 0.19764150656994187
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.038028998827314114,
+          "spearman_rho_std": 0.029704894680015356,
+          "top10_overlap_mean": 0.09653468389446924,
+          "top20_overlap_mean": 0.18766817642688682
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.02254675207838262,
+          "spearman_rho_std": 0.04497247897654324,
+          "top10_overlap_mean": 0.10701117999143812,
+          "top20_overlap_mean": 0.22176364782835822
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.010669385914974803,
+          "spearman_rho_std": 0.04849060127648518,
+          "top10_overlap_mean": 0.09617791393429752,
+          "top20_overlap_mean": 0.20758264158790105
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.02344022690564208,
+          "spearman_rho_std": 0.03929102961682805,
+          "top10_overlap_mean": 0.10895842286314134,
+          "top20_overlap_mean": 0.2140983502228435
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.03936582945068994,
+          "spearman_rho_std": 0.04340953786348493,
+          "top10_overlap_mean": 0.10987648990531036,
+          "top20_overlap_mean": 0.22081841732063248
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.03813951789006029,
+          "spearman_rho_std": 0.046359185993972006,
+          "top10_overlap_mean": 0.10951447277690413,
+          "top20_overlap_mean": 0.22477912045316942
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.06621899694508765,
+          "spearman_rho_std": 0.037630948572577635,
+          "top10_overlap_mean": 0.1193003665746688,
+          "top20_overlap_mean": 0.2276431654246994
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.0786726351438259,
+          "spearman_rho_std": 0.05172448047843831,
+          "top10_overlap_mean": 0.12448805440923667,
+          "top20_overlap_mean": 0.23730754042811944
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.0988899078886409,
+          "spearman_rho_std": 0.04970870059183787,
+          "top10_overlap_mean": 0.1402607235440214,
+          "top20_overlap_mean": 0.24050139803301654
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.08809131748069125,
+          "spearman_rho_std": 0.04460485224177724,
+          "top10_overlap_mean": 0.132254181974343,
+          "top20_overlap_mean": 0.23731139147480584
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.08920701531065216,
+          "spearman_rho_std": 0.054249400584508924,
+          "top10_overlap_mean": 0.12703281856364168,
+          "top20_overlap_mean": 0.24115827790637087
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.1246213791645674,
+          "spearman_rho_std": 0.054852484163518817,
+          "top10_overlap_mean": 0.12524330931704433,
+          "top20_overlap_mean": 0.25341649682707484
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.11055661474139176,
+          "spearman_rho_std": 0.04870450068606418,
+          "top10_overlap_mean": 0.1333481790714596,
+          "top20_overlap_mean": 0.2525191186196589
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.1204102752669538,
+          "spearman_rho_std": 0.05066240411085657,
+          "top10_overlap_mean": 0.1058862058618515,
+          "top20_overlap_mean": 0.2529807757248607
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.16667279505235724,
+          "spearman_rho_std": 0.046543833719172714,
+          "top10_overlap_mean": 0.11866933837481257,
+          "top20_overlap_mean": 0.274064047610106
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.20288594345339847,
+          "spearman_rho_std": 0.03597328725712661,
+          "top10_overlap_mean": 0.13514801399554696,
+          "top20_overlap_mean": 0.28589162393785134
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.22483434638907776,
+          "spearman_rho_std": 0.035023618552942566,
+          "top10_overlap_mean": 0.14423822698485195,
+          "top20_overlap_mean": 0.2921098837235015
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.2614707897374324,
+          "spearman_rho_std": 0.04158607508799133,
+          "top10_overlap_mean": 0.14960184487436742,
+          "top20_overlap_mean": 0.30177942156566656
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.29318929321001225,
+          "spearman_rho_std": 0.040250721598728396,
+          "top10_overlap_mean": 0.14096935361408833,
+          "top20_overlap_mean": 0.2991131011371438
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.3257427257288605,
+          "spearman_rho_std": 0.04118203382261247,
+          "top10_overlap_mean": 0.15177426622287615,
+          "top20_overlap_mean": 0.30331946544248733
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.33308715642139086,
+          "spearman_rho_std": 0.04282956729214892,
+          "top10_overlap_mean": 0.14586492409708793,
+          "top20_overlap_mean": 0.30358319186592975
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.31915074058632475,
+          "spearman_rho_std": 0.034645925719352585,
+          "top10_overlap_mean": 0.14587262619046065,
+          "top20_overlap_mean": 0.2906009012086402
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.3492142528032404,
+          "spearman_rho_std": 0.0359333453912264,
+          "top10_overlap_mean": 0.1398211982448372,
+          "top20_overlap_mean": 0.30056264073186306
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.37539203288416334,
+          "spearman_rho_std": 0.033144866203695694,
+          "top10_overlap_mean": 0.15985333115350972,
+          "top20_overlap_mean": 0.3023754623973307
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.3511138284915624,
+          "spearman_rho_std": 0.01774720272892451,
+          "top10_overlap_mean": 0.15386901074162804,
+          "top20_overlap_mean": 0.30098541257246997
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.320372156372507,
+          "spearman_rho_std": 0.01080415180171371,
+          "top10_overlap_mean": 0.12273460070436487,
+          "top20_overlap_mean": 0.265488216396816
+        }
+      ]
+    },
+    {
+      "step": 160,
+      "mean_spearman_rho": 0.11528093305123688,
+      "min_spearman_rho": -0.05681614476046052,
+      "max_spearman_rho": 0.24149777300815542,
+      "mean_top20_overlap": 0.25506734754046034,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.02181613984709957,
+          "spearman_rho_std": 0.017500332987951037,
+          "top10_overlap_mean": 0.11217969059183182,
+          "top20_overlap_mean": 0.20482904639396424
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.05681614476046052,
+          "spearman_rho_std": 0.016708306434762656,
+          "top10_overlap_mean": 0.12940296906846568,
+          "top20_overlap_mean": 0.20177123809585304
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.03279482370019284,
+          "spearman_rho_std": 0.020183225915266775,
+          "top10_overlap_mean": 0.10447345115938962,
+          "top20_overlap_mean": 0.1934110647718653
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.021257916559904843,
+          "spearman_rho_std": 0.036310387839873934,
+          "top10_overlap_mean": 0.11300094931108766,
+          "top20_overlap_mean": 0.22002822598651117
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.009737565464523446,
+          "spearman_rho_std": 0.02457579526346786,
+          "top10_overlap_mean": 0.09300240448289178,
+          "top20_overlap_mean": 0.22284570206428303
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.03822965319253537,
+          "spearman_rho_std": 0.025417476689467134,
+          "top10_overlap_mean": 0.11147461756588332,
+          "top20_overlap_mean": 0.24126856443911238
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.05657599816380008,
+          "spearman_rho_std": 0.029990945354284756,
+          "top10_overlap_mean": 0.1080346512413413,
+          "top20_overlap_mean": 0.24194585238040653
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.07048463459910251,
+          "spearman_rho_std": 0.019427469191282448,
+          "top10_overlap_mean": 0.11884389728701106,
+          "top20_overlap_mean": 0.25059596521371263
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.09726465270755195,
+          "spearman_rho_std": 0.011037460841631902,
+          "top10_overlap_mean": 0.13608307057615338,
+          "top20_overlap_mean": 0.25724809651955416
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.1239472472944591,
+          "spearman_rho_std": 0.018936676256389354,
+          "top10_overlap_mean": 0.14519794336023947,
+          "top20_overlap_mean": 0.27019647640437466
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.1363530952516333,
+          "spearman_rho_std": 0.02252160979407832,
+          "top10_overlap_mean": 0.14254454678778444,
+          "top20_overlap_mean": 0.2669713602447542
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.13198029314459628,
+          "spearman_rho_std": 0.023350525560255818,
+          "top10_overlap_mean": 0.14213379709972732,
+          "top20_overlap_mean": 0.26655650968896843
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.14401954216439136,
+          "spearman_rho_std": 0.024836525320385733,
+          "top10_overlap_mean": 0.14068189135296302,
+          "top20_overlap_mean": 0.26456873472276815
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.15618101936602732,
+          "spearman_rho_std": 0.03525261476403316,
+          "top10_overlap_mean": 0.13653748802416985,
+          "top20_overlap_mean": 0.27753044658883125
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.12628044006369038,
+          "spearman_rho_std": 0.03209297126751333,
+          "top10_overlap_mean": 0.12087459423821183,
+          "top20_overlap_mean": 0.27431866241045344
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.09504334940681036,
+          "spearman_rho_std": 0.04552290001083218,
+          "top10_overlap_mean": 0.11285587333491526,
+          "top20_overlap_mean": 0.2676154904382949
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.10451631690219594,
+          "spearman_rho_std": 0.06188473007093602,
+          "top10_overlap_mean": 0.11168970749809075,
+          "top20_overlap_mean": 0.2733216534373727
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.10488102845979878,
+          "spearman_rho_std": 0.06378619836679683,
+          "top10_overlap_mean": 0.10773301651889304,
+          "top20_overlap_mean": 0.26324563240528837
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.1275285541658813,
+          "spearman_rho_std": 0.06824769881316498,
+          "top10_overlap_mean": 0.11944653071021023,
+          "top20_overlap_mean": 0.26984047220485624
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.1436695981756723,
+          "spearman_rho_std": 0.07346931620708862,
+          "top10_overlap_mean": 0.12757500260081306,
+          "top20_overlap_mean": 0.2696982655958432
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.15619993903148807,
+          "spearman_rho_std": 0.07650359754175458,
+          "top10_overlap_mean": 0.11998268554122364,
+          "top20_overlap_mean": 0.269531674423003
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.17411288391852922,
+          "spearman_rho_std": 0.08310850586106168,
+          "top10_overlap_mean": 0.1214425386942422,
+          "top20_overlap_mean": 0.27025603944931104
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.18215391684069973,
+          "spearman_rho_std": 0.08461053942704988,
+          "top10_overlap_mean": 0.1352379696381348,
+          "top20_overlap_mean": 0.2691168238672172
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.17579273060527567,
+          "spearman_rho_std": 0.0803719931826088,
+          "top10_overlap_mean": 0.13337467818161605,
+          "top20_overlap_mean": 0.26168447726612737
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.20772438712624008,
+          "spearman_rho_std": 0.08002056984242273,
+          "top10_overlap_mean": 0.13839219605273703,
+          "top20_overlap_mean": 0.27473819323621135
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.24149777300815542,
+          "spearman_rho_std": 0.08387992669612822,
+          "top10_overlap_mean": 0.14428219244448856,
+          "top20_overlap_mean": 0.2767314944937038
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.24097056750740622,
+          "spearman_rho_std": 0.06760911071884954,
+          "top10_overlap_mean": 0.1596587102988094,
+          "top20_overlap_mean": 0.26673402411174196
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.22925785092781678,
+          "spearman_rho_std": 0.062353584480410805,
+          "top10_overlap_mean": 0.1251567621586205,
+          "top20_overlap_mean": 0.2552855442785058
+        }
+      ]
+    },
+    {
+      "step": 180,
+      "mean_spearman_rho": 0.11422832694993601,
+      "min_spearman_rho": -0.04293728827447873,
+      "max_spearman_rho": 0.329527166043831,
+      "mean_top20_overlap": 0.23604532602679923,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.11661142969668652,
+          "spearman_rho_std": 0.05837487130093329,
+          "top10_overlap_mean": 0.16382865419650808,
+          "top20_overlap_mean": 0.2534313411760145
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.04293728827447873,
+          "spearman_rho_std": 0.0284608346652947,
+          "top10_overlap_mean": 0.12168240527001682,
+          "top20_overlap_mean": 0.1851698442573737
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.02497617449731146,
+          "spearman_rho_std": 0.03108039773556102,
+          "top10_overlap_mean": 0.08227064102220903,
+          "top20_overlap_mean": 0.18420302772819522
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.02580939648631006,
+          "spearman_rho_std": 0.019521281793538677,
+          "top10_overlap_mean": 0.0906390422426896,
+          "top20_overlap_mean": 0.19959732364429825
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.002623361091173312,
+          "spearman_rho_std": 0.017036312753206082,
+          "top10_overlap_mean": 0.09366247383754976,
+          "top20_overlap_mean": 0.19457681514079683
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.019165075606147136,
+          "spearman_rho_std": 0.019412317371198876,
+          "top10_overlap_mean": 0.09720524472891832,
+          "top20_overlap_mean": 0.21389566294807238
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.02712529773240487,
+          "spearman_rho_std": 0.012407221601348134,
+          "top10_overlap_mean": 0.10337725430765737,
+          "top20_overlap_mean": 0.20456136971139505
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.02770570098846532,
+          "spearman_rho_std": 0.024809695799996704,
+          "top10_overlap_mean": 0.10281083776444926,
+          "top20_overlap_mean": 0.21051912504402004
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.06481452887829725,
+          "spearman_rho_std": 0.026270423316508862,
+          "top10_overlap_mean": 0.11848177047483549,
+          "top20_overlap_mean": 0.22963510074915697
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.07333523315881459,
+          "spearman_rho_std": 0.03269372010183805,
+          "top10_overlap_mean": 0.1271329923896178,
+          "top20_overlap_mean": 0.23864511029556104
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.08178943775126633,
+          "spearman_rho_std": 0.024752436783238605,
+          "top10_overlap_mean": 0.12270577366655779,
+          "top20_overlap_mean": 0.23911132033947816
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.0690757883010699,
+          "spearman_rho_std": 0.024694046158134402,
+          "top10_overlap_mean": 0.12243137608081646,
+          "top20_overlap_mean": 0.22512757021029972
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.06326150171182528,
+          "spearman_rho_std": 0.032111617619433895,
+          "top10_overlap_mean": 0.13001061633171307,
+          "top20_overlap_mean": 0.2406342227799917
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.060932315310839126,
+          "spearman_rho_std": 0.043332872336581375,
+          "top10_overlap_mean": 0.12174670023650502,
+          "top20_overlap_mean": 0.22528582416929535
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.04418501223873949,
+          "spearman_rho_std": 0.04850787154251161,
+          "top10_overlap_mean": 0.10270290909521905,
+          "top20_overlap_mean": 0.21519007971236126
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.034570605656140035,
+          "spearman_rho_std": 0.05307059000862603,
+          "top10_overlap_mean": 0.0912731972963436,
+          "top20_overlap_mean": 0.21154839751814547
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.06444394086868545,
+          "spearman_rho_std": 0.05596237953360137,
+          "top10_overlap_mean": 0.10592611267745923,
+          "top20_overlap_mean": 0.21459635217675652
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.0934763556069947,
+          "spearman_rho_std": 0.05589258261019875,
+          "top10_overlap_mean": 0.11352297430008129,
+          "top20_overlap_mean": 0.224995409734245
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.11659640435475183,
+          "spearman_rho_std": 0.06274445798892499,
+          "top10_overlap_mean": 0.12353666081557109,
+          "top20_overlap_mean": 0.22916726811377705
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.15358087190594458,
+          "spearman_rho_std": 0.06570676611848748,
+          "top10_overlap_mean": 0.1208450346850251,
+          "top20_overlap_mean": 0.23825523787242583
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.19164767190192475,
+          "spearman_rho_std": 0.07861245861254504,
+          "top10_overlap_mean": 0.12644527665328564,
+          "top20_overlap_mean": 0.2541012225754791
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.21878210789325206,
+          "spearman_rho_std": 0.0790324861167622,
+          "top10_overlap_mean": 0.13794272696260698,
+          "top20_overlap_mean": 0.2742557094462094
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.2387302315572051,
+          "spearman_rho_std": 0.07887652535102017,
+          "top10_overlap_mean": 0.15641665801672713,
+          "top20_overlap_mean": 0.2769585222198388
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.24273070855692544,
+          "spearman_rho_std": 0.06771749997656193,
+          "top10_overlap_mean": 0.1514505711021206,
+          "top20_overlap_mean": 0.27103776893035175
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.2808938110622254,
+          "spearman_rho_std": 0.05997157601453148,
+          "top10_overlap_mean": 0.15358955486528933,
+          "top20_overlap_mean": 0.29064058183992564
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.3187741044264582,
+          "spearman_rho_std": 0.04689347161378612,
+          "top10_overlap_mean": 0.16424772706630622,
+          "top20_overlap_mean": 0.29278085936946807
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.329527166043831,
+          "spearman_rho_std": 0.035895540962201766,
+          "top10_overlap_mean": 0.16196293565037262,
+          "top20_overlap_mean": 0.29520706802197066
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.30611855858362147,
+          "spearman_rho_std": 0.021254745509687895,
+          "top10_overlap_mean": 0.13186831542122504,
+          "top20_overlap_mean": 0.2761409930254757
+        }
+      ]
+    },
+    {
+      "step": 200,
+      "mean_spearman_rho": 0.18358406496051027,
+      "min_spearman_rho": -0.03446577394146646,
+      "max_spearman_rho": 0.3759710121002648,
+      "mean_top20_overlap": 0.2590988486465236,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.07641048799399741,
+          "spearman_rho_std": 0.051098333247430745,
+          "top10_overlap_mean": 0.14167056048772889,
+          "top20_overlap_mean": 0.22787230281111448
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.03446577394146646,
+          "spearman_rho_std": 0.03330823650792021,
+          "top10_overlap_mean": 0.1482300456395094,
+          "top20_overlap_mean": 0.20836890914725284
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.014142955590322422,
+          "spearman_rho_std": 0.019486836627753037,
+          "top10_overlap_mean": 0.10265021969003875,
+          "top20_overlap_mean": 0.17771709971519192
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.05067620626611093,
+          "spearman_rho_std": 0.03218986090561929,
+          "top10_overlap_mean": 0.11501073473022255,
+          "top20_overlap_mean": 0.21766559792675944
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.05271208359060143,
+          "spearman_rho_std": 0.03178954409041671,
+          "top10_overlap_mean": 0.1103455662575646,
+          "top20_overlap_mean": 0.22066720052322353
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.08999785070920957,
+          "spearman_rho_std": 0.03399957469299321,
+          "top10_overlap_mean": 0.11805574642913703,
+          "top20_overlap_mean": 0.2349074273139814
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.09688595625599372,
+          "spearman_rho_std": 0.03466394838348529,
+          "top10_overlap_mean": 0.10958355529204095,
+          "top20_overlap_mean": 0.22832525456017053
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.09297745065668217,
+          "spearman_rho_std": 0.031664222082981246,
+          "top10_overlap_mean": 0.11897680416981334,
+          "top20_overlap_mean": 0.2241179220496519
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.12970372106750905,
+          "spearman_rho_std": 0.02006742191008228,
+          "top10_overlap_mean": 0.12207702741555426,
+          "top20_overlap_mean": 0.2419924029125057
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.15470857149675646,
+          "spearman_rho_std": 0.01676852788608753,
+          "top10_overlap_mean": 0.13249516926232924,
+          "top20_overlap_mean": 0.25085175100696794
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.1500828355313518,
+          "spearman_rho_std": 0.006070420994624634,
+          "top10_overlap_mean": 0.13174799190085218,
+          "top20_overlap_mean": 0.2522332174420313
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.1509491586026177,
+          "spearman_rho_std": 0.012729704691277533,
+          "top10_overlap_mean": 0.14529244668519123,
+          "top20_overlap_mean": 0.25808507381756945
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.15346143206841587,
+          "spearman_rho_std": 0.021945447147649576,
+          "top10_overlap_mean": 0.1278264232734012,
+          "top20_overlap_mean": 0.25450114349210323
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.1796855078239502,
+          "spearman_rho_std": 0.014427140363292831,
+          "top10_overlap_mean": 0.1454811606684371,
+          "top20_overlap_mean": 0.26056981084470054
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.14726005539892098,
+          "spearman_rho_std": 0.010260536563462427,
+          "top10_overlap_mean": 0.13467075725112376,
+          "top20_overlap_mean": 0.2502257057794093
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.14603749422000314,
+          "spearman_rho_std": 0.0057824552665157606,
+          "top10_overlap_mean": 0.11858096508300493,
+          "top20_overlap_mean": 0.24136635768494705
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.17678594708843556,
+          "spearman_rho_std": 0.009022110513065342,
+          "top10_overlap_mean": 0.1374083861344195,
+          "top20_overlap_mean": 0.2638533280150863
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.20082419003974353,
+          "spearman_rho_std": 0.019387598142340794,
+          "top10_overlap_mean": 0.14529244668519123,
+          "top20_overlap_mean": 0.2734004647658503
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.227518148308082,
+          "spearman_rho_std": 0.022624443544665366,
+          "top10_overlap_mean": 0.1472087301867769,
+          "top20_overlap_mean": 0.2722324491397266
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.255141969326238,
+          "spearman_rho_std": 0.02666534649800354,
+          "top10_overlap_mean": 0.14093411567506206,
+          "top20_overlap_mean": 0.2840471533777559
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.28571278592925503,
+          "spearman_rho_std": 0.028275267359956655,
+          "top10_overlap_mean": 0.16255492250968875,
+          "top20_overlap_mean": 0.302881729617447
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.30883774413805737,
+          "spearman_rho_std": 0.039222118814249356,
+          "top10_overlap_mean": 0.15023890828164477,
+          "top20_overlap_mean": 0.319002148394249
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.3231222090353422,
+          "spearman_rho_std": 0.04108252707573939,
+          "top10_overlap_mean": 0.14786745127706424,
+          "top20_overlap_mean": 0.30887857303694294
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.31402246209966944,
+          "spearman_rho_std": 0.0314726371520159,
+          "top10_overlap_mean": 0.15724228903451998,
+          "top20_overlap_mean": 0.29768908281269335
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.3439697888070135,
+          "spearman_rho_std": 0.028903211661340078,
+          "top10_overlap_mean": 0.1586446099700143,
+          "top20_overlap_mean": 0.2983898394905005
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.3759710121002648,
+          "spearman_rho_std": 0.024970748807593257,
+          "top10_overlap_mean": 0.14094537176283858,
+          "top20_overlap_mean": 0.30467531782015694
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.36573267010378524,
+          "spearman_rho_std": 0.02633606996350663,
+          "top10_overlap_mean": 0.15864818748628437,
+          "top20_overlap_mean": 0.2957357277157929
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.33977480976806945,
+          "spearman_rho_std": 0.019222360185433197,
+          "top10_overlap_mean": 0.11775961970129485,
+          "top20_overlap_mean": 0.284514770888879
+        }
+      ]
+    },
+    {
+      "step": 220,
+      "mean_spearman_rho": 0.132594880399787,
+      "min_spearman_rho": -0.03938468647556029,
+      "max_spearman_rho": 0.3154925545156776,
+      "mean_top20_overlap": 0.25057407851005065,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.09492596937978352,
+          "spearman_rho_std": 0.025173276836239128,
+          "top10_overlap_mean": 0.10720171278698161,
+          "top20_overlap_mean": 0.22907384593813532
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.03938468647556029,
+          "spearman_rho_std": 0.00455910192143911,
+          "top10_overlap_mean": 0.12743256530707628,
+          "top20_overlap_mean": 0.19523807488533507
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.033803553025334526,
+          "spearman_rho_std": 0.006200617776782347,
+          "top10_overlap_mean": 0.09600893743500917,
+          "top20_overlap_mean": 0.1933059492033777
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.032091073926313315,
+          "spearman_rho_std": 0.013081523785902466,
+          "top10_overlap_mean": 0.09974260451736144,
+          "top20_overlap_mean": 0.22030292456119008
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.02535826549753546,
+          "spearman_rho_std": 0.007944588414732919,
+          "top10_overlap_mean": 0.09309052325196533,
+          "top20_overlap_mean": 0.2151298554203753
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.03995052142934952,
+          "spearman_rho_std": 0.0066093148039709166,
+          "top10_overlap_mean": 0.09788751232981081,
+          "top20_overlap_mean": 0.22661152969800288
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.04793366429447008,
+          "spearman_rho_std": 0.0071149334543494855,
+          "top10_overlap_mean": 0.10481760661691002,
+          "top20_overlap_mean": 0.2316909564832362
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.04622278171406516,
+          "spearman_rho_std": 0.001587116023490789,
+          "top10_overlap_mean": 0.10656738789425034,
+          "top20_overlap_mean": 0.23962915971215168
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.07174317848496337,
+          "spearman_rho_std": 0.009453393392246207,
+          "top10_overlap_mean": 0.13337952618066187,
+          "top20_overlap_mean": 0.25284683769960636
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.0813023619146407,
+          "spearman_rho_std": 0.010276200975940517,
+          "top10_overlap_mean": 0.13426557457904956,
+          "top20_overlap_mean": 0.2580209510757854
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.0964267810647446,
+          "spearman_rho_std": 0.0219530423736061,
+          "top10_overlap_mean": 0.13772592518114893,
+          "top20_overlap_mean": 0.24999317373050378
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.09351097972412965,
+          "spearman_rho_std": 0.019590438747442474,
+          "top10_overlap_mean": 0.13520949603998186,
+          "top20_overlap_mean": 0.24595547868873124
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.09269785685277378,
+          "spearman_rho_std": 0.030691490425642176,
+          "top10_overlap_mean": 0.13951961495252074,
+          "top20_overlap_mean": 0.26449754396304886
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.10692942403928346,
+          "spearman_rho_std": 0.031189168104149158,
+          "top10_overlap_mean": 0.13422166608501807,
+          "top20_overlap_mean": 0.2660205745404715
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.084906550651672,
+          "spearman_rho_std": 0.042328395465782646,
+          "top10_overlap_mean": 0.12354557976803308,
+          "top20_overlap_mean": 0.2500965553443772
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.07144805726066471,
+          "spearman_rho_std": 0.028636131320751334,
+          "top10_overlap_mean": 0.11098751425844973,
+          "top20_overlap_mean": 0.23237104396346986
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.1128522779012246,
+          "spearman_rho_std": 0.02759066552048242,
+          "top10_overlap_mean": 0.12610415272641456,
+          "top20_overlap_mean": 0.2449960669216146
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.14682999606418273,
+          "spearman_rho_std": 0.028918080494448706,
+          "top10_overlap_mean": 0.13477756707258678,
+          "top20_overlap_mean": 0.2619276691675861
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.17302517005258933,
+          "spearman_rho_std": 0.023945785498113333,
+          "top10_overlap_mean": 0.1186338866970769,
+          "top20_overlap_mean": 0.2674529867661635
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.19835162780416782,
+          "spearman_rho_std": 0.027015135241973954,
+          "top10_overlap_mean": 0.13326189032291808,
+          "top20_overlap_mean": 0.2692891665301413
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.21852193967141942,
+          "spearman_rho_std": 0.022087253119296716,
+          "top10_overlap_mean": 0.13139916972928414,
+          "top20_overlap_mean": 0.2627462028294833
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.24153935914250144,
+          "spearman_rho_std": 0.0210734453857166,
+          "top10_overlap_mean": 0.1376428047345362,
+          "top20_overlap_mean": 0.274988843680783
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.25601016444875024,
+          "spearman_rho_std": 0.01920679898388166,
+          "top10_overlap_mean": 0.14605406036017304,
+          "top20_overlap_mean": 0.2844290158495917
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.25442602088605165,
+          "spearman_rho_std": 0.00979805082482022,
+          "top10_overlap_mean": 0.14979065930715843,
+          "top20_overlap_mean": 0.2709382234799118
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.28648846455818916,
+          "spearman_rho_std": 0.0062079134853743655,
+          "top10_overlap_mean": 0.13337659431602877,
+          "top20_overlap_mean": 0.27987301117337854
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.3154925545156776,
+          "spearman_rho_std": 0.0069071712411436,
+          "top10_overlap_mean": 0.14285586847860907,
+          "top20_overlap_mean": 0.28451165961984726
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.3019819161934236,
+          "spearman_rho_std": 0.008081235445822652,
+          "top10_overlap_mean": 0.1469336475402934,
+          "top20_overlap_mean": 0.28013303849954935
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.2948779332223642,
+          "spearman_rho_std": 0.015349730637555117,
+          "top10_overlap_mean": 0.11585823070000756,
+          "top20_overlap_mean": 0.26400385885556965
+        }
+      ]
+    },
+    {
+      "step": 240,
+      "mean_spearman_rho": 0.14599765129509104,
+      "min_spearman_rho": -0.07371069571362455,
+      "max_spearman_rho": 0.37218225573265445,
+      "mean_top20_overlap": 0.26081252434913615,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.06308793157242161,
+          "spearman_rho_std": 0.020349796997175422,
+          "top10_overlap_mean": 0.1477087602747987,
+          "top20_overlap_mean": 0.23228893321996455
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.07371069571362455,
+          "spearman_rho_std": 0.022705594922538364,
+          "top10_overlap_mean": 0.1164219387402104,
+          "top20_overlap_mean": 0.20000255424653698
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.051477712870724814,
+          "spearman_rho_std": 0.02632973362894583,
+          "top10_overlap_mean": 0.09704410897049136,
+          "top20_overlap_mean": 0.18872713930609497
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.017118837611729536,
+          "spearman_rho_std": 0.0419480079616647,
+          "top10_overlap_mean": 0.10803003014348232,
+          "top20_overlap_mean": 0.2277129340223315
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.0029380996258447597,
+          "spearman_rho_std": 0.044886289756110906,
+          "top10_overlap_mean": 0.09783303945443243,
+          "top20_overlap_mean": 0.2143932129677916
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.02044427931358996,
+          "spearman_rho_std": 0.035091598466645724,
+          "top10_overlap_mean": 0.10824733786793611,
+          "top20_overlap_mean": 0.2151443638404444
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.03394389457217024,
+          "spearman_rho_std": 0.037986088376138184,
+          "top10_overlap_mean": 0.1161918504131283,
+          "top20_overlap_mean": 0.22127089188142388
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.036612737769189614,
+          "spearman_rho_std": 0.04271003374015574,
+          "top10_overlap_mean": 0.11577812993772585,
+          "top20_overlap_mean": 0.223447164276619
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.06824520763259696,
+          "spearman_rho_std": 0.034658142661370704,
+          "top10_overlap_mean": 0.12510105483823017,
+          "top20_overlap_mean": 0.23301321109530213
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.08464090701616524,
+          "spearman_rho_std": 0.052626043995684414,
+          "top10_overlap_mean": 0.1317938366611999,
+          "top20_overlap_mean": 0.24881312802513303
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.10252131052664304,
+          "spearman_rho_std": 0.04914849109131235,
+          "top10_overlap_mean": 0.1359367758205091,
+          "top20_overlap_mean": 0.24996267951593223
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.08141216775567536,
+          "spearman_rho_std": 0.04485138270658154,
+          "top10_overlap_mean": 0.1316774807056002,
+          "top20_overlap_mean": 0.24308745552743824
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.07659893998263977,
+          "spearman_rho_std": 0.05821131492733794,
+          "top10_overlap_mean": 0.12144681444041687,
+          "top20_overlap_mean": 0.24486680775552452
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.0981390636512282,
+          "spearman_rho_std": 0.06807878035459945,
+          "top10_overlap_mean": 0.11573675226821965,
+          "top20_overlap_mean": 0.25659748949985417
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.08720634590849306,
+          "spearman_rho_std": 0.05672565555395313,
+          "top10_overlap_mean": 0.12489931995950083,
+          "top20_overlap_mean": 0.25480535666913956
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.0896898527001772,
+          "spearman_rho_std": 0.05759195951451895,
+          "top10_overlap_mean": 0.1018543754899075,
+          "top20_overlap_mean": 0.2543243225212433
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.1299058863845232,
+          "spearman_rho_std": 0.046706254199174735,
+          "top10_overlap_mean": 0.12176245034960759,
+          "top20_overlap_mean": 0.27525374930784224
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.17445373206294812,
+          "spearman_rho_std": 0.03193079288580157,
+          "top10_overlap_mean": 0.13984962665273618,
+          "top20_overlap_mean": 0.2898161497194002
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.20183084664872086,
+          "spearman_rho_std": 0.0239388169181149,
+          "top10_overlap_mean": 0.13893155961056716,
+          "top20_overlap_mean": 0.30363247776756075
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.239869912075338,
+          "spearman_rho_std": 0.02705121649068411,
+          "top10_overlap_mean": 0.15609051185301573,
+          "top20_overlap_mean": 0.3051621116374021
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.2774613241032448,
+          "spearman_rho_std": 0.023133050327886536,
+          "top10_overlap_mean": 0.1509725551363068,
+          "top20_overlap_mean": 0.30410175263664585
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.31014033543767877,
+          "spearman_rho_std": 0.024338490861623763,
+          "top10_overlap_mean": 0.15551381058427294,
+          "top20_overlap_mean": 0.3132256037223112
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.3224733221028879,
+          "spearman_rho_std": 0.022780831618210515,
+          "top10_overlap_mean": 0.14969247096573157,
+          "top20_overlap_mean": 0.31352550749674174
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.31004879622768944,
+          "spearman_rho_std": 0.015813182825672283,
+          "top10_overlap_mean": 0.14009791140966,
+          "top20_overlap_mean": 0.3047740366967457
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.34299779143322123,
+          "spearman_rho_std": 0.014445026801416537,
+          "top10_overlap_mean": 0.1452831443190896,
+          "top20_overlap_mean": 0.3076886418821922
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.37218225573265445,
+          "spearman_rho_std": 0.01180171035838364,
+          "top10_overlap_mean": 0.16041970674476252,
+          "top20_overlap_mean": 0.30996697169954807
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.34853843063962825,
+          "spearman_rho_std": 0.003609115101479438,
+          "top10_overlap_mean": 0.1618082761185857,
+          "top20_overlap_mean": 0.2933563297977164
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.32062043635979837,
+          "spearman_rho_std": 0.010614134832375163,
+          "top10_overlap_mean": 0.11904675968996432,
+          "top20_overlap_mean": 0.2737897050409321
+        }
+      ]
+    },
+    {
+      "step": 260,
+      "mean_spearman_rho": 0.10172508157545704,
+      "min_spearman_rho": -0.06456548163318787,
+      "max_spearman_rho": 0.23164622712720476,
+      "mean_top20_overlap": 0.254199774240599,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": -0.0011255344357078585,
+          "spearman_rho_std": 0.04323266459097001,
+          "top10_overlap_mean": 0.10645420035261044,
+          "top20_overlap_mean": 0.19845183843355355
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.06456548163318787,
+          "spearman_rho_std": 0.027534242610998787,
+          "top10_overlap_mean": 0.12635408159876463,
+          "top20_overlap_mean": 0.1877385254039031
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.04196643690467661,
+          "spearman_rho_std": 0.03042283002024713,
+          "top10_overlap_mean": 0.09174238247126952,
+          "top20_overlap_mean": 0.18189555275445327
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.013750284786424623,
+          "spearman_rho_std": 0.04149125630279688,
+          "top10_overlap_mean": 0.09795280774012965,
+          "top20_overlap_mean": 0.21454750051654103
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 9.408922135574814e-05,
+          "spearman_rho_std": 0.03205897353945235,
+          "top10_overlap_mean": 0.0871751106626184,
+          "top20_overlap_mean": 0.21499622550874928
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.028500869246144204,
+          "spearman_rho_std": 0.03216227013853325,
+          "top10_overlap_mean": 0.09349945830433132,
+          "top20_overlap_mean": 0.22336335850136724
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.051482771618902474,
+          "spearman_rho_std": 0.03367180198399973,
+          "top10_overlap_mean": 0.0967360581236278,
+          "top20_overlap_mean": 0.23098739752779338
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.06442064178801589,
+          "spearman_rho_std": 0.021588981241909062,
+          "top10_overlap_mean": 0.11102437150341342,
+          "top20_overlap_mean": 0.2444834740374685
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.09277398311127945,
+          "spearman_rho_std": 0.01042953305900717,
+          "top10_overlap_mean": 0.12679991561882953,
+          "top20_overlap_mean": 0.25170683265067634
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.12286007463387938,
+          "spearman_rho_std": 0.018609071282459946,
+          "top10_overlap_mean": 0.1341771427462115,
+          "top20_overlap_mean": 0.2698013222824485
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.13772505662529122,
+          "spearman_rho_std": 0.014507715128908772,
+          "top10_overlap_mean": 0.12767303016115736,
+          "top20_overlap_mean": 0.26616616516966557
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.12975634052318322,
+          "spearman_rho_std": 0.01036905302093877,
+          "top10_overlap_mean": 0.12383757293936935,
+          "top20_overlap_mean": 0.2684115679187509
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.13346298789686414,
+          "spearman_rho_std": 0.021707371880105842,
+          "top10_overlap_mean": 0.13511295986001748,
+          "top20_overlap_mean": 0.2800179872135567
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.14072080077394086,
+          "spearman_rho_std": 0.02952275912882097,
+          "top10_overlap_mean": 0.13699568149289396,
+          "top20_overlap_mean": 0.28999348176300077
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.11168386926455785,
+          "spearman_rho_std": 0.024051880218868525,
+          "top10_overlap_mean": 0.12830721255251507,
+          "top20_overlap_mean": 0.28899647278992
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.07128172936745365,
+          "spearman_rho_std": 0.03885859597910749,
+          "top10_overlap_mean": 0.11525154360173977,
+          "top20_overlap_mean": 0.26469208305924635
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.07282093742513314,
+          "spearman_rho_std": 0.058809695847049544,
+          "top10_overlap_mean": 0.10980762188691158,
+          "top20_overlap_mean": 0.27000693404504533
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.08033401842699149,
+          "spearman_rho_std": 0.06789422364287678,
+          "top10_overlap_mean": 0.11233183729570267,
+          "top20_overlap_mean": 0.2643109776072319
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.10345321395225392,
+          "spearman_rho_std": 0.07863144521635751,
+          "top10_overlap_mean": 0.1199868569267702,
+          "top20_overlap_mean": 0.26934069868633564
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.1215325735743674,
+          "spearman_rho_std": 0.08259517210914166,
+          "top10_overlap_mean": 0.126248501997005,
+          "top20_overlap_mean": 0.271493502115387
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.1358478452610008,
+          "spearman_rho_std": 0.09227726266274469,
+          "top10_overlap_mean": 0.1406507377496434,
+          "top20_overlap_mean": 0.27278669357774743
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.15118269066626802,
+          "spearman_rho_std": 0.10084905875360772,
+          "top10_overlap_mean": 0.13798939377093414,
+          "top20_overlap_mean": 0.26977609169730127
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.1600031311508643,
+          "spearman_rho_std": 0.10422818277460948,
+          "top10_overlap_mean": 0.13630650327945393,
+          "top20_overlap_mean": 0.2631623936251985
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.1544947546234349,
+          "spearman_rho_std": 0.09803025927674294,
+          "top10_overlap_mean": 0.1285728862643998,
+          "top20_overlap_mean": 0.2605995492429846
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.19062407574017795,
+          "spearman_rho_std": 0.09540483066094668,
+          "top10_overlap_mean": 0.14121804618397638,
+          "top20_overlap_mean": 0.2782862773202524
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.23164622712720476,
+          "spearman_rho_std": 0.09385240194541655,
+          "top10_overlap_mean": 0.1473858350794134,
+          "top20_overlap_mean": 0.2846022301930864
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.2316009527330362,
+          "spearman_rho_std": 0.07890955090283432,
+          "top10_overlap_mean": 0.16369753402584292,
+          "top20_overlap_mean": 0.27662940530107444
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.22390581754834402,
+          "spearman_rho_std": 0.07316489238575259,
+          "top10_overlap_mean": 0.13157913736067772,
+          "top20_overlap_mean": 0.260349139794032
+        }
+      ]
+    },
+    {
+      "step": 280,
+      "mean_spearman_rho": 0.11352677308861993,
+      "min_spearman_rho": -0.05370224598502066,
+      "max_spearman_rho": 0.3333724830506734,
+      "mean_top20_overlap": 0.2394589282882301,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.14012861084800174,
+          "spearman_rho_std": 0.032051966016595795,
+          "top10_overlap_mean": 0.15767272996884943,
+          "top20_overlap_mean": 0.25724131527410266
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.05370224598502066,
+          "spearman_rho_std": 0.03175377893116886,
+          "top10_overlap_mean": 0.1210207018647012,
+          "top20_overlap_mean": 0.18329256124041074
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.0374898509646601,
+          "spearman_rho_std": 0.03965648943934455,
+          "top10_overlap_mean": 0.0923298687637535,
+          "top20_overlap_mean": 0.17420459148176196
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.01792935277792026,
+          "spearman_rho_std": 0.025319440391617678,
+          "top10_overlap_mean": 0.10907853785723276,
+          "top20_overlap_mean": 0.20223983025056477
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": -0.006692251036327502,
+          "spearman_rho_std": 0.024293381886399124,
+          "top10_overlap_mean": 0.09013003357805428,
+          "top20_overlap_mean": 0.1857001328377006
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.011169863073055489,
+          "spearman_rho_std": 0.02443274854008311,
+          "top10_overlap_mean": 0.09407963918403524,
+          "top20_overlap_mean": 0.2059821372001185
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.0186333900083601,
+          "spearman_rho_std": 0.01552452806474295,
+          "top10_overlap_mean": 0.0944860702467107,
+          "top20_overlap_mean": 0.2002507177661341
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.024289422919388126,
+          "spearman_rho_std": 0.02332026812063428,
+          "top10_overlap_mean": 0.09776668170752371,
+          "top20_overlap_mean": 0.20029103635410908
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.06410192738646313,
+          "spearman_rho_std": 0.01976499308844531,
+          "top10_overlap_mean": 0.11729152950984645,
+          "top20_overlap_mean": 0.21989535946013516
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.07173019225272509,
+          "spearman_rho_std": 0.02284217906443168,
+          "top10_overlap_mean": 0.1371623606042511,
+          "top20_overlap_mean": 0.232600268454234
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.07865703391869634,
+          "spearman_rho_std": 0.013012620253948108,
+          "top10_overlap_mean": 0.13190810192807242,
+          "top20_overlap_mean": 0.22888323164956725
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.059432392000641376,
+          "spearman_rho_std": 0.015669857437958203,
+          "top10_overlap_mean": 0.12314550780010215,
+          "top20_overlap_mean": 0.2235745708836101
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.053671973178936794,
+          "spearman_rho_std": 0.015403302014144988,
+          "top10_overlap_mean": 0.12750498801271629,
+          "top20_overlap_mean": 0.23476034980624225
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.05028612642018473,
+          "spearman_rho_std": 0.02320517209089776,
+          "top10_overlap_mean": 0.11076360965908937,
+          "top20_overlap_mean": 0.23048903343862534
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.03646826186588978,
+          "spearman_rho_std": 0.026682805283725616,
+          "top10_overlap_mean": 0.09140523077327774,
+          "top20_overlap_mean": 0.2202614719348356
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.026778574459833348,
+          "spearman_rho_std": 0.030639829751158705,
+          "top10_overlap_mean": 0.08484935891892209,
+          "top20_overlap_mean": 0.2133033742470083
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.05822625364816767,
+          "spearman_rho_std": 0.024800260534594647,
+          "top10_overlap_mean": 0.09547613557238277,
+          "top20_overlap_mean": 0.22894301063080894
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.09120231386714778,
+          "spearman_rho_std": 0.02067044158717271,
+          "top10_overlap_mean": 0.10932651946002059,
+          "top20_overlap_mean": 0.2314768205575227
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.11528096829169447,
+          "spearman_rho_std": 0.024073901019015704,
+          "top10_overlap_mean": 0.10975057189442149,
+          "top20_overlap_mean": 0.24621243978629093
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.15979301781410393,
+          "spearman_rho_std": 0.02039700500092959,
+          "top10_overlap_mean": 0.1147461146840023,
+          "top20_overlap_mean": 0.2590109970168544
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.2037186220841037,
+          "spearman_rho_std": 0.02893196456692992,
+          "top10_overlap_mean": 0.12924787134508262,
+          "top20_overlap_mean": 0.2708221105577197
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.22919358096133302,
+          "spearman_rho_std": 0.031711302912650105,
+          "top10_overlap_mean": 0.13676626017344873,
+          "top20_overlap_mean": 0.28068506978326113
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.2495460939496511,
+          "spearman_rho_std": 0.0319238059957002,
+          "top10_overlap_mean": 0.15057301035834456,
+          "top20_overlap_mean": 0.2922800691272846
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.2502651138970398,
+          "spearman_rho_std": 0.02950724228982533,
+          "top10_overlap_mean": 0.14704057009884908,
+          "top20_overlap_mean": 0.2901194605891552
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.2916569534360131,
+          "spearman_rho_std": 0.02620120378191437,
+          "top10_overlap_mean": 0.1514781194537822,
+          "top20_overlap_mean": 0.30250234806557535
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.3330625862668573,
+          "spearman_rho_std": 0.01937735103950211,
+          "top10_overlap_mean": 0.1684403347104723,
+          "top20_overlap_mean": 0.3118129937488286
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.3333724830506734,
+          "spearman_rho_std": 0.02062431024150789,
+          "top10_overlap_mean": 0.16732167945182383,
+          "top20_overlap_mean": 0.29853038867254394
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.30803888609048463,
+          "spearman_rho_std": 0.024588632826395562,
+          "top10_overlap_mean": 0.13358669029395054,
+          "top20_overlap_mean": 0.27948430125543694
+        }
+      ]
+    },
+    {
+      "step": 300,
+      "mean_spearman_rho": 0.1867073235848585,
+      "min_spearman_rho": -0.03914770638016406,
+      "max_spearman_rho": 0.3826925964328374,
+      "mean_top20_overlap": 0.2659250623897537,
+      "per_layer": [
+        {
+          "layer_idx": 0,
+          "spearman_rho_mean": 0.08061244960886957,
+          "spearman_rho_std": 0.05005793262786128,
+          "top10_overlap_mean": 0.13639117173692342,
+          "top20_overlap_mean": 0.23336453155716966
+        },
+        {
+          "layer_idx": 1,
+          "spearman_rho_mean": -0.03914770638016406,
+          "spearman_rho_std": 0.03134375318277227,
+          "top10_overlap_mean": 0.13758226651361877,
+          "top20_overlap_mean": 0.20234095768789925
+        },
+        {
+          "layer_idx": 2,
+          "spearman_rho_mean": -0.014320098866507243,
+          "spearman_rho_std": 0.018302372782045412,
+          "top10_overlap_mean": 0.10752251326625928,
+          "top20_overlap_mean": 0.17954515612587904
+        },
+        {
+          "layer_idx": 3,
+          "spearman_rho_mean": 0.059645609429947975,
+          "spearman_rho_std": 0.0354429439986296,
+          "top10_overlap_mean": 0.1061611156266347,
+          "top20_overlap_mean": 0.2205898460304688
+        },
+        {
+          "layer_idx": 4,
+          "spearman_rho_mean": 0.06104698291948064,
+          "spearman_rho_std": 0.03143361600666138,
+          "top10_overlap_mean": 0.10265021969003875,
+          "top20_overlap_mean": 0.22637323864102502
+        },
+        {
+          "layer_idx": 5,
+          "spearman_rho_mean": 0.09141474370156454,
+          "spearman_rho_std": 0.03176340419931163,
+          "top10_overlap_mean": 0.111751464709329,
+          "top20_overlap_mean": 0.22409606330037365
+        },
+        {
+          "layer_idx": 6,
+          "spearman_rho_mean": 0.09676688031261876,
+          "spearman_rho_std": 0.032595498233274615,
+          "top10_overlap_mean": 0.09935770494478191,
+          "top20_overlap_mean": 0.22833114368263052
+        },
+        {
+          "layer_idx": 7,
+          "spearman_rho_mean": 0.09578020143584591,
+          "spearman_rho_std": 0.030370884008252552,
+          "top10_overlap_mean": 0.11977973843120676,
+          "top20_overlap_mean": 0.23802662764547164
+        },
+        {
+          "layer_idx": 8,
+          "spearman_rho_mean": 0.1351802779536339,
+          "spearman_rho_std": 0.023468963449333635,
+          "top10_overlap_mean": 0.12351259307541185,
+          "top20_overlap_mean": 0.2544545384763996
+        },
+        {
+          "layer_idx": 9,
+          "spearman_rho_mean": 0.15850596176812448,
+          "spearman_rho_std": 0.018712954798124237,
+          "top10_overlap_mean": 0.13369394261053108,
+          "top20_overlap_mean": 0.2640142846858624
+        },
+        {
+          "layer_idx": 10,
+          "spearman_rho_mean": 0.15760791269185387,
+          "spearman_rho_std": 0.010895422778206551,
+          "top10_overlap_mean": 0.13217349819575383,
+          "top20_overlap_mean": 0.2611828880507538
+        },
+        {
+          "layer_idx": 11,
+          "spearman_rho_mean": 0.15905941962952774,
+          "spearman_rho_std": 0.013582110716025777,
+          "top10_overlap_mean": 0.12510720551042212,
+          "top20_overlap_mean": 0.26514747354120227
+        },
+        {
+          "layer_idx": 12,
+          "spearman_rho_mean": 0.15784778215425735,
+          "spearman_rho_std": 0.02309358198949363,
+          "top10_overlap_mean": 0.1429654904927505,
+          "top20_overlap_mean": 0.2670927691241089
+        },
+        {
+          "layer_idx": 13,
+          "spearman_rho_mean": 0.18049026871483784,
+          "spearman_rho_std": 0.020899268064664342,
+          "top10_overlap_mean": 0.14783420655270096,
+          "top20_overlap_mean": 0.27109218138534114
+        },
+        {
+          "layer_idx": 14,
+          "spearman_rho_mean": 0.14451007781185463,
+          "spearman_rho_std": 0.01991890626033499,
+          "top10_overlap_mean": 0.13800419529225036,
+          "top20_overlap_mean": 0.2543268602370152
+        },
+        {
+          "layer_idx": 15,
+          "spearman_rho_mean": 0.13640977463853587,
+          "spearman_rho_std": 0.02734301665705068,
+          "top10_overlap_mean": 0.12663890601297592,
+          "top20_overlap_mean": 0.23859634591577486
+        },
+        {
+          "layer_idx": 16,
+          "spearman_rho_mean": 0.15876033445253712,
+          "spearman_rho_std": 0.017421638718389563,
+          "top10_overlap_mean": 0.13858874836230467,
+          "top20_overlap_mean": 0.25980059040191145
+        },
+        {
+          "layer_idx": 17,
+          "spearman_rho_mean": 0.19136678785201042,
+          "spearman_rho_std": 0.012934911714354812,
+          "top10_overlap_mean": 0.14183730764851166,
+          "top20_overlap_mean": 0.27621925194226
+        },
+        {
+          "layer_idx": 18,
+          "spearman_rho_mean": 0.2236183436222197,
+          "spearman_rho_std": 0.019262141114751143,
+          "top10_overlap_mean": 0.1503059212693377,
+          "top20_overlap_mean": 0.27029304267927995
+        },
+        {
+          "layer_idx": 19,
+          "spearman_rho_mean": 0.2571584816361068,
+          "spearman_rho_std": 0.0165144603082176,
+          "top10_overlap_mean": 0.15792709981663047,
+          "top20_overlap_mean": 0.2933996964635455
+        },
+        {
+          "layer_idx": 20,
+          "spearman_rho_mean": 0.29173647552825316,
+          "spearman_rho_std": 0.015312540306538091,
+          "top10_overlap_mean": 0.16873750323394385,
+          "top20_overlap_mean": 0.3228221054035464
+        },
+        {
+          "layer_idx": 21,
+          "spearman_rho_mean": 0.31967160254128396,
+          "spearman_rho_std": 0.02205697463473404,
+          "top10_overlap_mean": 0.16344328087909174,
+          "top20_overlap_mean": 0.3294079968882833
+        },
+        {
+          "layer_idx": 22,
+          "spearman_rho_mean": 0.3347439022408056,
+          "spearman_rho_std": 0.027526548097130666,
+          "top10_overlap_mean": 0.160298556821211,
+          "top20_overlap_mean": 0.33251794792919415
+        },
+        {
+          "layer_idx": 23,
+          "spearman_rho_mean": 0.3221212886187424,
+          "spearman_rho_std": 0.026254059255009624,
+          "top10_overlap_mean": 0.16614766503802417,
+          "top20_overlap_mean": 0.30907977294999034
+        },
+        {
+          "layer_idx": 24,
+          "spearman_rho_mean": 0.35488303187386777,
+          "spearman_rho_std": 0.02026858561902558,
+          "top10_overlap_mean": 0.16641054704150313,
+          "top20_overlap_mean": 0.3211301453090442
+        },
+        {
+          "layer_idx": 25,
+          "spearman_rho_mean": 0.3826925964328374,
+          "spearman_rho_std": 0.012182204094629227,
+          "top10_overlap_mean": 0.15890749197349321,
+          "top20_overlap_mean": 0.3158547275400482
+        },
+        {
+          "layer_idx": 26,
+          "spearman_rho_mean": 0.376370521258155,
+          "spearman_rho_std": 0.021588224176124746,
+          "top10_overlap_mean": 0.1620409599435974,
+          "top20_overlap_mean": 0.3030304353923308
+        },
+        {
+          "layer_idx": 27,
+          "spearman_rho_mean": 0.3532711567949364,
+          "spearman_rho_std": 0.018748790762718712,
+          "top10_overlap_mean": 0.1195577797235976,
+          "top20_overlap_mean": 0.2837711279262942
+        }
+      ]
+    }
+  ],
+  "jaccard_stability": [
+    {
+      "step": 40,
+      "mean_jaccard": 0.2429243630785732,
+      "min_jaccard": 0.12432065217391304,
+      "per_layer_jaccard": [
+        0.12432065217391304,
+        0.2939796716184519,
+        0.25759878419452886,
+        0.24062968515742128,
+        0.2691717791411043,
+        0.2424924924924925,
+        0.2415603900975244,
+        0.23139880952380953,
+        0.25759878419452886,
+        0.2614329268292683,
+        0.2490566037735849,
+        0.22956909361069835,
+        0.25664388762338647,
+        0.24811463046757165,
+        0.2397003745318352,
+        0.23784592370979807,
+        0.2223042836041359,
+        0.23231571109456442,
+        0.25664388762338647,
+        0.24811463046757165,
+        0.2397003745318352,
+        0.23231571109456442,
+        0.22592592592592592,
+        0.21780721118469462,
+        0.23139880952380953,
+        0.24529721595184348,
+        0.277992277992278,
+        0.2909516380655226
+      ]
+    },
+    {
+      "step": 60,
+      "mean_jaccard": 0.22233968345225236,
+      "min_jaccard": 0.09598853868194843,
+      "per_layer_jaccard": [
+        0.09598853868194843,
+        0.29441624365482233,
+        0.2520458265139116,
+        0.2220447284345048,
+        0.24796084828711257,
+        0.21815286624203822,
+        0.2318840579710145,
+        0.21140142517814728,
+        0.22302158273381295,
+        0.23786407766990292,
+        0.23089300080450523,
+        0.21428571428571427,
+        0.23786407766990292,
+        0.22990353697749197,
+        0.23786407766990292,
+        0.23089300080450523,
+        0.21236133122028525,
+        0.20948616600790515,
+        0.2318840579710145,
+        0.22009569377990432,
+        0.2047244094488189,
+        0.20567375886524822,
+        0.19718309859154928,
+        0.18512780790085206,
+        0.20188531029065201,
+        0.2220447284345048,
+        0.2540983606557377,
+        0.2644628099173554
+      ]
+    },
+    {
+      "step": 80,
+      "mean_jaccard": 0.2390876025002079,
+      "min_jaccard": 0.13899323816679188,
+      "per_layer_jaccard": [
+        0.13899323816679188,
+        0.31255411255411253,
+        0.26438698915763137,
+        0.2416052416052416,
+        0.2528925619834711,
+        0.24466338259441708,
+        0.22852512155591573,
+        0.22356739305891848,
+        0.2487644151565074,
+        0.2365415986949429,
+        0.23452768729641693,
+        0.2245557350565428,
+        0.2622814321398834,
+        0.2508250825082508,
+        0.24671052631578946,
+        0.24671052631578946,
+        0.22356739305891848,
+        0.2255456750202102,
+        0.2508250825082508,
+        0.24979389942291838,
+        0.22852512155591573,
+        0.20796812749003984,
+        0.2176706827309237,
+        0.22356739305891848,
+        0.23452768729641693,
+        0.24979389942291838,
+        0.2622814321398834,
+        0.2622814321398834
+      ]
+    },
+    {
+      "step": 100,
+      "mean_jaccard": 0.19375036634734047,
+      "min_jaccard": 0.11538461538461539,
+      "per_layer_jaccard": [
+        0.11538461538461539,
+        0.19834710743801653,
+        0.1885245901639344,
+        0.1620658949243099,
+        0.18421052631578946,
+        0.18206521739130435,
+        0.17886178861788618,
+        0.17567567567567569,
+        0.20387453874538744,
+        0.19944852941176472,
+        0.19944852941176472,
+        0.19287020109689215,
+        0.21621621621621623,
+        0.2116991643454039,
+        0.21395348837209302,
+        0.19287020109689215,
+        0.17779783393501805,
+        0.18528610354223432,
+        0.19834710743801653,
+        0.20609981515711645,
+        0.19615032080659944,
+        0.19615032080659944,
+        0.19724770642201836,
+        0.19287020109689215,
+        0.20165745856353592,
+        0.2116991643454039,
+        0.21621621621621623,
+        0.2299717247879359
+      ]
+    },
+    {
+      "step": 120,
+      "mean_jaccard": 0.2324426169058627,
+      "min_jaccard": 0.10492107706592387,
+      "per_layer_jaccard": [
+        0.10492107706592387,
+        0.2105798575788403,
+        0.22302158273381295,
+        0.22176591375770022,
+        0.218014329580348,
+        0.21552604698672115,
+        0.22176591375770022,
+        0.22807017543859648,
+        0.2632696390658174,
+        0.2605932203389831,
+        0.24737945492662475,
+        0.22933884297520662,
+        0.2552742616033755,
+        0.2318840579710145,
+        0.2268041237113402,
+        0.22176591375770022,
+        0.2130479102956167,
+        0.2192622950819672,
+        0.24607329842931938,
+        0.25,
+        0.24737945492662475,
+        0.2318840579710145,
+        0.24346917450365727,
+        0.23443983402489627,
+        0.23958333333333334,
+        0.26461211477151964,
+        0.2700106723585913,
+        0.26865671641791045
+      ]
+    },
+    {
+      "step": 140,
+      "mean_jaccard": 0.23908796231501836,
+      "min_jaccard": 0.12432065217391304,
+      "per_layer_jaccard": [
+        0.12432065217391304,
+        0.3114104595879556,
+        0.2434259954921112,
+        0.23048327137546468,
+        0.25759878419452886,
+        0.24436090225563908,
+        0.22774480712166173,
+        0.23048327137546468,
+        0.2643239113827349,
+        0.2623951182303585,
+        0.24623493975903615,
+        0.21780721118469462,
+        0.2633587786259542,
+        0.23415361670395227,
+        0.23507462686567165,
+        0.23048327137546468,
+        0.20626822157434402,
+        0.2187039764359352,
+        0.2415603900975244,
+        0.23507462686567165,
+        0.22865627319970305,
+        0.22320768662232077,
+        0.22140221402214022,
+        0.21245421245421245,
+        0.22956909361069835,
+        0.2585551330798479,
+        0.2839410395655547,
+        0.3114104595879556
+      ]
+    },
+    {
+      "step": 160,
+      "mean_jaccard": 0.2195330009609072,
+      "min_jaccard": 0.09598853868194843,
+      "per_layer_jaccard": [
+        0.09598853868194843,
+        0.31896551724137934,
+        0.23987034035656402,
+        0.2171837708830549,
+        0.25307125307125306,
+        0.22009569377990432,
+        0.21525019857029387,
+        0.2047244094488189,
+        0.22009569377990432,
+        0.23089300080450523,
+        0.22596153846153846,
+        0.2047244094488189,
+        0.24390243902439024,
+        0.21236133122028525,
+        0.23486682808716708,
+        0.21332275971451228,
+        0.19158878504672897,
+        0.1953125,
+        0.2289156626506024,
+        0.21525019857029387,
+        0.19718309859154928,
+        0.20188531029065201,
+        0.21044303797468356,
+        0.19158878504672897,
+        0.20948616600790515,
+        0.22792937399678972,
+        0.25,
+        0.27606338615512926
+      ]
+    },
+    {
+      "step": 180,
+      "mean_jaccard": 0.23712309998204853,
+      "min_jaccard": 0.13899323816679188,
+      "per_layer_jaccard": [
+        0.13899323816679188,
+        0.3368606701940035,
+        0.2518579686209744,
+        0.23755102040816325,
+        0.24979389942291838,
+        0.23957481602616518,
+        0.22061191626409019,
+        0.2176706827309237,
+        0.23553382233088835,
+        0.22952149229521493,
+        0.2305194805194805,
+        0.2157177225340818,
+        0.2508250825082508,
+        0.22952149229521493,
+        0.2456861133935908,
+        0.2508250825082508,
+        0.21669341894060995,
+        0.2255456750202102,
+        0.2591362126245847,
+        0.2612312811980033,
+        0.23151909017059302,
+        0.2157177225340818,
+        0.22653721682847897,
+        0.2108626198083067,
+        0.238562091503268,
+        0.24466338259441708,
+        0.2528925619834711,
+        0.2750210260723297
+      ]
+    },
+    {
+      "step": 200,
+      "mean_jaccard": 0.1863601123047319,
+      "min_jaccard": 0.11538461538461539,
+      "per_layer_jaccard": [
+        0.11538461538461539,
+        0.22765757290686736,
+        0.18099547511312217,
+        0.15794143744454303,
+        0.18206521739130435,
+        0.17673579801623085,
+        0.1693548387096774,
+        0.16310160427807488,
+        0.1906934306569343,
+        0.1906934306569343,
+        0.18528610354223432,
+        0.17145421903052063,
+        0.20276497695852536,
+        0.18313689936536717,
+        0.18960802187784867,
+        0.19287020109689215,
+        0.1683079677708147,
+        0.1683079677708147,
+        0.1939615736505032,
+        0.2072155411655874,
+        0.20498614958448755,
+        0.18960802187784867,
+        0.18528610354223432,
+        0.18099547511312217,
+        0.18960802187784867,
+        0.20387453874538744,
+        0.21621621621621623,
+        0.2299717247879359
+      ]
+    },
+    {
+      "step": 220,
+      "mean_jaccard": 0.22800066934300936,
+      "min_jaccard": 0.10492107706592387,
+      "per_layer_jaccard": [
+        0.10492107706592387,
+        0.23572170301142265,
+        0.21428571428571427,
+        0.2105798575788403,
+        0.2192622950819672,
+        0.21428571428571427,
+        0.2167689161554192,
+        0.21552604698672115,
+        0.25263157894736843,
+        0.2552742616033755,
+        0.2268041237113402,
+        0.2242798353909465,
+        0.23443983402489627,
+        0.20934959349593496,
+        0.2105798575788403,
+        0.20812182741116753,
+        0.18407960199004975,
+        0.20445344129554655,
+        0.23829344432882413,
+        0.24868835257082897,
+        0.24607329842931938,
+        0.24476987447698745,
+        0.25263157894736843,
+        0.23316062176165803,
+        0.25263157894736843,
+        0.2740899357601713,
+        0.28094725511302476,
+        0.27136752136752135
+      ]
+    },
+    {
+      "step": 240,
+      "mean_jaccard": 0.22776391898084566,
+      "min_jaccard": 0.12432065217391304,
+      "per_layer_jaccard": [
+        0.12432065217391304,
+        0.32506004803843075,
+        0.22956909361069835,
+        0.2187039764359352,
+        0.2434259954921112,
+        0.23323397913561847,
+        0.216017634092579,
+        0.21780721118469462,
+        0.24717407686510928,
+        0.24623493975903615,
+        0.22501850481125094,
+        0.1975397973950796,
+        0.24623493975903615,
+        0.2196020633750921,
+        0.21691176470588236,
+        0.22140221402214022,
+        0.20276162790697674,
+        0.2089116143170197,
+        0.22320768662232077,
+        0.21780721118469462,
+        0.22320768662232077,
+        0.20714806710430342,
+        0.21780721118469462,
+        0.2097953216374269,
+        0.22320768662232077,
+        0.24717407686510928,
+        0.27209838585703305,
+        0.2960062646828504
+      ]
+    },
+    {
+      "step": 260,
+      "mean_jaccard": 0.21259370828161092,
+      "min_jaccard": 0.09598853868194843,
+      "per_layer_jaccard": [
+        0.09598853868194843,
+        0.3110539845758355,
+        0.2171837708830549,
+        0.2028301886792453,
+        0.23486682808716708,
+        0.21332275971451228,
+        0.20188531029065201,
+        0.2,
+        0.2047244094488189,
+        0.21815286624203822,
+        0.21140142517814728,
+        0.186966640806827,
+        0.22596153846153846,
+        0.21332275971451228,
+        0.22009569377990432,
+        0.19905956112852666,
+        0.1962470680218921,
+        0.18973561430793157,
+        0.21332275971451228,
+        0.20757695343330704,
+        0.2037765538945712,
+        0.19905956112852666,
+        0.21236133122028525,
+        0.2028301886792453,
+        0.21525019857029387,
+        0.2318840579710145,
+        0.2561576354679803,
+        0.2676056338028169
+      ]
+    },
+    {
+      "step": 280,
+      "mean_jaccard": 0.22629719676300958,
+      "min_jaccard": 0.13899323816679188,
+      "per_layer_jaccard": [
+        0.13899323816679188,
+        0.31141868512110726,
+        0.22258064516129034,
+        0.21864951768488747,
+        0.23553382233088835,
+        0.22852512155591573,
+        0.20989624900239426,
+        0.2060461416070008,
+        0.22952149229521493,
+        0.2245557350565428,
+        0.21474358974358973,
+        0.1984189723320158,
+        0.238562091503268,
+        0.22653721682847897,
+        0.22852512155591573,
+        0.23151909017059302,
+        0.2070063694267516,
+        0.20031670625494855,
+        0.23252032520325203,
+        0.23755102040816325,
+        0.21183053557154277,
+        0.21962992759452937,
+        0.2255456750202102,
+        0.22061191626409019,
+        0.23957481602616518,
+        0.24979389942291838,
+        0.2528925619834711,
+        0.2750210260723297
+      ]
+    },
+    {
+      "step": 300,
+      "mean_jaccard": 0.17775547628724317,
+      "min_jaccard": 0.11538461538461539,
+      "per_layer_jaccard": [
+        0.11538461538461539,
+        0.2116991643454039,
+        0.1683079677708147,
+        0.15384615384615385,
+        0.167262969588551,
+        0.1683079677708147,
+        0.15896980461811722,
+        0.15794143744454303,
+        0.18313689936536717,
+        0.1725067385444744,
+        0.17886178861788618,
+        0.15896980461811722,
+        0.19944852941176472,
+        0.1693548387096774,
+        0.17886178861788618,
+        0.17992766726943943,
+        0.15589016829052257,
+        0.14775725593667546,
+        0.17673579801623085,
+        0.1939615736505032,
+        0.1885245901639344,
+        0.17992766726943943,
+        0.18421052631578946,
+        0.18528610354223432,
+        0.18744313011828936,
+        0.2072155411655874,
+        0.21395348837209302,
+        0.2334593572778828
+      ]
+    }
+  ],
+  "loss_curve": [
+    1.5224751830101013,
+    1.3925671577453613,
+    1.3371919691562653,
+    1.2460903525352478,
+    1.2323731929063797,
+    1.1520964950323105,
+    1.439684510231018,
+    0.9653988778591156,
+    1.3473916053771973,
+    1.1031153351068497,
+    1.0334011018276215,
+    0.9314465671777725,
+    1.2193871140480042,
+    0.9486711472272873,
+    0.9532490223646164,
+    0.9980088919401169,
+    0.9632711261510849,
+    1.1196164786815643,
+    0.9712301641702652,
+    1.1494406163692474,
+    1.0409289300441742,
+    1.350098192691803,
+    1.0818072706460953,
+    0.8709430694580078,
+    1.0672978311777115,
+    1.1919086426496506,
+    1.1103584468364716,
+    1.046837717294693,
+    0.9323511272668839,
+    1.0561004430055618,
+    1.1768712401390076,
+    0.8201524019241333,
+    1.094504937529564,
+    0.9185560792684555,
+    0.9130760580301285,
+    0.8793715536594391,
+    0.9226085543632507,
+    0.9090057015419006,
+    1.214034616947174,
+    1.2027947455644608,
+    1.0908637791872025,
+    1.0537793189287186,
+    1.0895988196134567,
+    1.102472722530365,
+    0.8953618556261063,
+    0.8620128184556961,
+    0.9507312029600143,
+    0.8908896446228027,
+    0.9616556018590927,
+    0.7747841328382492,
+    0.8838094174861908,
+    1.059327557682991,
+    0.9102812185883522,
+    0.9386033415794373,
+    1.109565019607544,
+    1.0042978823184967,
+    0.698929563164711,
+    1.097082480788231,
+    1.0118902027606964,
+    0.810204952955246,
+    0.871949091553688,
+    1.0109044760465622,
+    1.2985389679670334,
+    0.9772532880306244,
+    0.8574137985706329,
+    1.1317351162433624,
+    0.9720695167779922,
+    1.1577973365783691,
+    0.7200819328427315,
+    0.9085434079170227,
+    0.9463769346475601,
+    0.9082179367542267,
+    0.9205544590950012,
+    1.0861859172582626,
+    1.2468049079179764,
+    0.8361467868089676,
+    0.872677206993103,
+    0.7576518505811691,
+    1.11632539331913,
+    1.0089849084615707,
+    1.139017030596733,
+    1.0178583264350891,
+    1.0470160692930222,
+    0.9498428404331207,
+    1.1387511491775513,
+    1.1143483072519302,
+    1.0405055284500122,
+    0.8754784464836121,
+    1.115710824728012,
+    1.0860134363174438,
+    1.1315758377313614,
+    0.9035730510950089,
+    1.025467649102211,
+    1.029621422290802,
+    0.9253383427858353,
+    0.9079353362321854,
+    1.122961476445198,
+    0.9985464811325073,
+    1.081445425748825,
+    1.177036002278328,
+    0.8995457291603088,
+    0.841030552983284,
+    0.9676223695278168,
+    0.7772393524646759,
+    0.9043763726949692,
+    0.8543008863925934,
+    1.170063927769661,
+    0.7428257465362549,
+    1.0684620290994644,
+    0.8633809089660645,
+    0.8906272351741791,
+    0.7758791893720627,
+    0.9739128649234772,
+    0.7685375362634659,
+    0.8191607594490051,
+    0.8627681136131287,
+    0.8084948062896729,
+    0.9015386700630188,
+    0.8030100017786026,
+    0.9094316959381104,
+    0.8589595854282379,
+    1.1135250478982925,
+    0.9043967574834824,
+    0.7053994834423065,
+    0.9546734839677811,
+    1.066275030374527,
+    0.9056786149740219,
+    0.8939011096954346,
+    0.7818559110164642,
+    0.9257159382104874,
+    1.0482287257909775,
+    0.6516667902469635,
+    0.9288352876901627,
+    0.7534043490886688,
+    0.7989235371351242,
+    0.7654019296169281,
+    0.8071934580802917,
+    0.7140147835016251,
+    1.0245932638645172,
+    1.0351150780916214,
+    0.9282458126544952,
+    0.9421311169862747,
+    0.9415322244167328,
+    0.9885362535715103,
+    0.7884025424718857,
+    0.7671458721160889,
+    0.803783118724823,
+    0.7716367691755295,
+    0.862829253077507,
+    0.6697193384170532,
+    0.780646488070488,
+    0.8853256404399872,
+    0.807602271437645,
+    0.8457128405570984,
+    0.9717480465769768,
+    0.8827902376651764,
+    0.6264248192310333,
+    0.9536682963371277,
+    0.8877675235271454,
+    0.7444405853748322,
+    0.7445077449083328,
+    0.9003394693136215,
+    1.1411228030920029,
+    0.8693193942308426,
+    0.7627112120389938,
+    1.0004044622182846,
+    0.8785412758588791,
+    1.0612379610538483,
+    0.6291567608714104,
+    0.8133960515260696,
+    0.8354333490133286,
+    0.7809697538614273,
+    0.8253097236156464,
+    0.9922459870576859,
+    1.0709367841482162,
+    0.7638586461544037,
+    0.7755834460258484,
+    0.6771876439452171,
+    0.938574954867363,
+    0.9107712209224701,
+    1.0081546902656555,
+    0.8861163109540939,
+    0.9299964010715485,
+    0.8843461573123932,
+    1.0013829171657562,
+    0.9738496392965317,
+    0.8784337490797043,
+    0.7648974061012268,
+    1.0118879526853561,
+    1.008209377527237,
+    1.0121365636587143,
+    0.8228875249624252,
+    0.9548893868923187,
+    0.9121164828538895,
+    0.8352224826812744,
+    0.7889029234647751,
+    1.0483870208263397,
+    0.8958437293767929,
+    1.0162499099969864,
+    1.0613265335559845,
+    0.7566003054380417,
+    0.7547376602888107,
+    0.8918588608503342,
+    0.6796206533908844,
+    0.8143206089735031,
+    0.7540580332279205,
+    1.055550992488861,
+    0.6740361303091049,
+    0.9510696530342102,
+    0.770805299282074,
+    0.8101772367954254,
+    0.691167488694191,
+    0.8608552366495132,
+    0.6791568547487259,
+    0.7536885291337967,
+    0.7895694971084595,
+    0.7200699001550674,
+    0.796009361743927,
+    0.7155173495411873,
+    0.8063167333602905,
+    0.7482789754867554,
+    0.9732653647661209,
+    0.8164859861135483,
+    0.6186875700950623,
+    0.8616367727518082,
+    0.9867013394832611,
+    0.7856898605823517,
+    0.7968342900276184,
+    0.6980560123920441,
+    0.8335275799036026,
+    0.9663503915071487,
+    0.5622455775737762,
+    0.8312579840421677,
+    0.6607674211263657,
+    0.713298425078392,
+    0.6780357956886292,
+    0.7319669425487518,
+    0.5997991412878036,
+    0.89864681661129,
+    0.9014015197753906,
+    0.8204638212919235,
+    0.8483937233686447,
+    0.8254088312387466,
+    0.8885552287101746,
+    0.720660850405693,
+    0.7019257247447968,
+    0.7270753085613251,
+    0.6759606599807739,
+    0.8002058863639832,
+    0.6010517328977585,
+    0.7074599266052246,
+    0.7800096124410629,
+    0.710077740252018,
+    0.7834886461496353,
+    0.879291296005249,
+    0.7828967273235321,
+    0.5800179168581963,
+    0.8448175191879272,
+    0.8043553680181503,
+    0.6950795352458954,
+    0.6685672625899315,
+    0.8143773376941681,
+    1.0197337865829468,
+    0.7840424329042435,
+    0.688792884349823,
+    0.9203928858041763,
+    0.7973556518554688,
+    0.9704463630914688,
+    0.5748482942581177,
+    0.7520327568054199,
+    0.7418392598628998,
+    0.712018296122551,
+    0.7527421712875366,
+    0.8983754962682724,
+    0.9702823609113693,
+    0.6963308304548264,
+    0.705897331237793,
+    0.6191423162817955,
+    0.8187455236911774,
+    0.8332729935646057,
+    0.94129878282547,
+    0.8054228872060776,
+    0.8698968440294266,
+    0.8412749022245407,
+    0.9227463603019714,
+    0.8838091641664505,
+    0.771196648478508,
+    0.6885248571634293,
+    0.9359702467918396,
+    0.9344257786870003,
+    0.9302703738212585,
+    0.7627086192369461,
+    0.8990370035171509,
+    0.8342919945716858,
+    0.7781665623188019,
+    0.7101505994796753,
+    0.9907957315444946,
+    0.8342132121324539,
+    0.9686034917831421,
+    0.9949478209018707
+  ]
+}

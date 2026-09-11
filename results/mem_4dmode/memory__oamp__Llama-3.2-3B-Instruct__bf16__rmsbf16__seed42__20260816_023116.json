@@ -1,0 +1,148 @@
+{
+  "config": {
+    "mode": "memory",
+    "method": "oamp",
+    "model_id": "meta-llama/Llama-3.2-3B-Instruct",
+    "weight_quant": "bf16",
+    "seed": 42,
+    "fp8_ratio": 0.2,
+    "group_size": 128,
+    "min_numel": 1024,
+    "mask_seed": null,
+    "dedupe": false,
+    "pack_stochastic_rounding": false,
+    "sr_seed": null,
+    "pack_4d_mode": "fp8",
+    "bf16_rmsnorm": true,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "task": "gsm8k",
+    "n_train": 7473,
+    "epochs": 2,
+    "lr": 0.0002,
+    "batch_size": 1,
+    "grad_accum_steps": 4,
+    "max_seq_len": 512,
+    "padding": false,
+    "grad_clip": 1.0,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.0,
+    "optimizer": "adamw",
+    "eval_samples": 500,
+    "eval_fewshot": 8,
+    "eval_max_new_tokens": 256,
+    "mem_seq_len": 4096,
+    "mem_batch_size": 4,
+    "mem_steps": 100,
+    "mem_warmup": 10,
+    "gc_enabled": false,
+    "checkpoint_every": 50,
+    "output_dir": "results/mem_4dmode"
+  },
+  "env": {
+    "hostname": "93d447e43e92",
+    "python_version": "3.10.12",
+    "gpu_name": "NVIDIA GB10",
+    "compute_capability": "12.1",
+    "driver_version": "580.159.03",
+    "cuda_version": "12.8",
+    "torch_version": "2.12.0.dev20260407+cu128",
+    "transformers_version": "5.1.0",
+    "peft_version": "0.18.1",
+    "bitsandbytes_version": "0.50.0",
+    "torchao_version": "0.17.0",
+    "git_commit": "849f1a8a6e65a06eba8f4aecdeac045e3f990ea6",
+    "git_dirty": true,
+    "timestamp_start": "2026-08-16T02:31:16.254623",
+    "timestamp_end": "2026-08-16T03:30:30.553659"
+  },
+  "model": {
+    "n_params": 3221924864,
+    "n_trainable": 9175040,
+    "dtype_report": {
+      "weight_quant": "bf16",
+      "bf16_rmsnorm": true,
+      "rmsnorm_swapped": 57,
+      "rmsnorm_classes_seen": [
+        "LlamaRMSNorm"
+      ],
+      "norms": [
+        "torch.bfloat16"
+      ],
+      "embed": [
+        "torch.bfloat16"
+      ],
+      "lm_head": [
+        "torch.bfloat16"
+      ],
+      "lora": [
+        "torch.bfloat16"
+      ],
+      "lm_head_tied": true
+    }
+  },
+  "pack": {
+    "pack_stats": {
+      "kept": 61600,
+      "skip_small": 6270,
+      "skip_head": 220,
+      "skip_non_float": 12100,
+      "skip_misaligned": 24640,
+      "skip_param": 51810,
+      "skip_by_dim": 0,
+      "bilevel": 36960,
+      "uniform": 24640,
+      "override_fp8_4d": 24640,
+      "dedupe_hit": 0,
+      "dedupe_miss": 0
+    },
+    "coverage_bytes": {
+      "unique": null,
+      "raw": null
+    },
+    "effective_bits": null
+  },
+  "memory": {
+    "peak_allocated_gb": 63.094317568,
+    "peak_reserved_gb": 75.323408384,
+    "peak_measurement": "per_step_max_after_warmup",
+    "mem_after_load_gb": 6.44437504,
+    "mem_after_optimizer_init_gb": 8.214160896,
+    "mem_after_first_step_gb": null
+  },
+  "sequence": {
+    "seq_len_mean": 4096.0,
+    "seq_len_max": 4096,
+    "seq_len_p95": 4096,
+    "tokens_total": 1638400
+  },
+  "throughput": {
+    "tokens_per_second": 467.3096318232529,
+    "seconds_per_step": 31.854211266541387,
+    "train_wall_s": 3506.0266008377075,
+    "eval_wall_s": null,
+    "steps": 100
+  },
+  "results": {
+    "step_losses": [],
+    "final_loss": 12.359477996826172,
+    "gsm8k_accuracy": null,
+    "n_correct": null,
+    "n_eval_samples": null,
+    "per_sample": [],
+    "eval_diagnostics": null,
+    "adapter_path": null
+  },
+  "status": "OK",
+  "oom_stage": null,
+  "oom_step": null,
+  "allocated_at_failure_gb": null,
+  "error": null
+}

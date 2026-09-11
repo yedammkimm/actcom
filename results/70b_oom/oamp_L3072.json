@@ -1,0 +1,171 @@
+{
+  "config": {
+    "mode": "memory",
+    "method": "oamp",
+    "model_id": "unsloth/Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+    "weight_quant": "nf4",
+    "seed": 42,
+    "fp8_ratio": 0.2,
+    "group_size": 128,
+    "min_numel": 1024,
+    "mask_seed": null,
+    "dedupe": false,
+    "pack_stochastic_rounding": false,
+    "sr_seed": null,
+    "pack_4d_mode": "fp8",
+    "bf16_rmsnorm": true,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "task": "gsm8k",
+    "n_train": 7473,
+    "epochs": 2,
+    "lr": 0.0002,
+    "batch_size": 1,
+    "grad_accum_steps": 4,
+    "max_seq_len": 512,
+    "padding": false,
+    "data_packing": false,
+    "packed_seq_len": 2048,
+    "grad_clip": 1.0,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.0,
+    "optimizer": "adamw",
+    "eval_samples": 500,
+    "eval_fewshot": 8,
+    "eval_max_new_tokens": 256,
+    "mem_seq_len": 3072,
+    "mem_batch_size": 1,
+    "mem_steps": 7,
+    "mem_warmup": 3,
+    "mem_abort_gb": 115.0,
+    "gc_enabled": false,
+    "checkpoint_every": 50,
+    "output_dir": "results",
+    "output_path": "/app/HMA_Project/results/70b_oom/oamp_L3072.json"
+  },
+  "env": {
+    "hostname": "93d447e43e92",
+    "python_version": "3.10.12",
+    "gpu_name": "NVIDIA GB10",
+    "compute_capability": "12.1",
+    "driver_version": "580.159.03",
+    "cuda_version": "12.8",
+    "torch_version": "2.12.0.dev20260407+cu128",
+    "transformers_version": "5.1.0",
+    "peft_version": "0.18.1",
+    "bitsandbytes_version": "0.50.0",
+    "torchao_version": "0.17.0",
+    "git_commit": "43a99c36904db813427d528494e0ea02d3764aa0",
+    "git_dirty": true,
+    "timestamp_start": "2026-08-20T08:48:20.309599",
+    "timestamp_end": "2026-08-20T09:23:12.934292"
+  },
+  "model": {
+    "n_params": 36393721856,
+    "n_trainable": 65536000,
+    "dtype_report": {
+      "weight_quant": "nf4",
+      "bf16_rmsnorm": true,
+      "rmsnorm_swapped": 161,
+      "rmsnorm_classes_seen": [
+        "LlamaRMSNorm"
+      ],
+      "norms": [
+        "torch.bfloat16"
+      ],
+      "embed": [
+        "torch.bfloat16"
+      ],
+      "lm_head": [
+        "torch.bfloat16"
+      ],
+      "lora": [
+        "torch.bfloat16"
+      ],
+      "lm_head_tied": false
+    }
+  },
+  "pack": {
+    "pack_stats": {
+      "kept": 16000,
+      "skip_small": 1610,
+      "skip_head": 20,
+      "skip_non_float": 3180,
+      "skip_misaligned": 6400,
+      "skip_param": 7980,
+      "skip_by_dim": 0,
+      "bilevel": 9600,
+      "uniform": 6400,
+      "override_fp8_4d": 6400,
+      "uniform_fp4_3d": 0,
+      "uniform_fp8_3d": 0,
+      "uniform_fp4_4d": 0,
+      "uniform_fp8_4d": 6400,
+      "numel_kept": 419168256000,
+      "numel_uniform_fp4_3d": 0,
+      "numel_uniform_fp8_3d": 0,
+      "numel_uniform_fp4_4d": 0,
+      "numel_uniform_fp8_4d": 46556774400,
+      "numel_bilevel": 372611481600,
+      "dedupe_hit": 0,
+      "dedupe_miss": 0
+    },
+    "coverage_bytes": {
+      "unique": null,
+      "raw": null
+    },
+    "effective_bits": {
+      "element_bits": 5.155422138836773,
+      "byte_bits": 5.280422138836773,
+      "group_size": 128,
+      "fp8_ratio": 0.2,
+      "total_numel": 419168256000,
+      "numel_fp4": 0,
+      "numel_fp8": 46556774400,
+      "numel_bilevel": 372611481600
+    }
+  },
+  "memory": {
+    "peak_allocated_gb": 92.851703808,
+    "peak_reserved_gb": 98.064924672,
+    "peak_measurement": "per_step_max_after_warmup",
+    "mem_after_load_gb": 39.650378752,
+    "mem_after_optimizer_init_gb": 49.619981824,
+    "mem_after_first_step_gb": null
+  },
+  "sequence": {
+    "seq_len_mean": 3072.0,
+    "seq_len_max": 3072,
+    "seq_len_p95": 3072,
+    "tokens_total": 21504
+  },
+  "throughput": {
+    "tokens_per_second": 12.12347632348299,
+    "seconds_per_step": 123.2593381362302,
+    "train_wall_s": 1773.7486696243286,
+    "eval_wall_s": null,
+    "steps": 7
+  },
+  "results": {
+    "step_losses": [],
+    "final_loss": 12.692802429199219,
+    "gsm8k_accuracy": null,
+    "n_correct": null,
+    "n_eval_samples": null,
+    "per_sample": [],
+    "eval_diagnostics": null,
+    "adapter_path": null
+  },
+  "status": "OK",
+  "oom_stage": null,
+  "oom_step": null,
+  "allocated_at_failure_gb": null,
+  "error": null
+}

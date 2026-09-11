@@ -1,0 +1,50 @@
+086ef12  2026-09-09T08:37:56Z  PREREG changelog: pushed to the private remote 2026-09-09 08:35:27 UTC (head 6f40e83)
+6f40e83  2026-09-09T08:10:03Z  make_adapter_archive.py: license notice in the README (Built with Llama; Llama 3.2 / 3.1 Community License, Qwen2.5 license)
+4727e22  2026-09-09T07:58:31Z  Paper PDF rebuilt after the tau edits (0 errors, 0 undefined, 0 overfull, 0 underfull, 37 pages)
+b2eafde  2026-09-09T07:58:31Z  MMLU: statistics script for the pre-registered comparison, arm A and D cells, launch log
+bd8ffe2  2026-09-09T07:57:49Z  make_adapter_archive.py: package the 85 LoRA adapters for deposit outside git
+8d57a9b  2026-09-09T07:57:49Z  PREREG changelog: placeholder line for the push time to the private remote
+aae5719  2026-09-09T07:57:49Z  Experiment code as run: code state that produced results/ from 2026-09-06 to 2026-09-09; changes were not committed at the time
+c946a2d  2026-09-09T07:54:33Z  Track the figure generators, analyze_mc.py, ten run_*.sh chains and the audit documents
+83e0812  2026-09-09T07:54:33Z  _check_retracted.py: add the ten numbers retired in the 2026-09-08 audit
+4063d64  2026-09-09T07:53:08Z  Paper: state that tau is pre-specified for 24 of 32 runs, not for the first eight
+32b42d3  2026-09-08T14:38:56Z  MANIFEST: report untracked pattern matches on stdout, not in the file
+b6c9b9a  2026-09-08T14:38:19Z  MANIFEST: list tracked files only, so a clone regenerates it byte for byte
+0d03f3d  2026-09-08T14:37:03Z  Complete the move of _check_levels.py and _diag_wikitext_ppl.py into scripts/audit/
+c0dffef  2026-09-08T14:36:06Z  Paper: the 2026-09-08 audit fix passes
+0b4341a  2026-09-08T14:36:06Z  paper_data/MANIFEST.md: every paper number, its script, its files, their sha256
+7623664  2026-09-08T14:36:06Z  scripts/audit: derive the two remaining sys.path roots in _diag_wikitext_ppl.py from the file location
+bf29cbd  2026-09-08T14:34:32Z  Move the scripts that compute the paper's statistics into scripts/audit/
+88512a2  2026-09-08T14:32:29Z  Track every result file the paper's numbers are read from, in place
+146fe0e  2026-09-08T14:32:29Z  Remove the superseded draft, its figures and the internal handoff from the tree
+66d9bc3  2026-09-08T14:32:29Z  Track the five figures the paper includes
+d263588  2026-09-08T14:17:28Z  Pre-registration v3: carry the two-slot design through the document, with a dated changelog
+3063299  2026-09-08T14:17:28Z  Commit the subspace-geometry chain behind tab:subspace, tab:levels and Appendix E
+2d8540e  2026-09-08T14:00:22Z  Leave-one-arm-out check behind Appendix E, with every fold printed
+75b3448  2026-09-08T13:50:29Z  Generate Figure 3 from the probe JSON instead of hard-coded constants
+23320aa  2026-09-08T13:19:31Z  Recompute every cell of tab:levels from the primary result files
+511dd3a  2026-09-08T11:48:37Z  arm E: the registered prediction failed, and what that changes
+2479f1a  2026-09-08T09:41:58Z  pre-register the out-of-sample validation, arm E prediction included
+27ae5b6  2026-09-07T17:05:43Z  downstream multiple-choice harness with the pre-registration in its header
+1676501  2026-09-04T19:29:35Z  pack_4d_mode='chan_int4' + measured scale overhead + dose-response probe filters
+77e9837  2026-09-01T20:20:18Z  axis 3 — B_4DFP8 n=8 mirror (0/3 → 0/8 symmetric power)
+7bde870  2026-09-01T09:12:21Z  add INT4 seeds 123/456 batch_eval at stop+mnt=512 n=200
+a1fe1d9  2026-09-01T07:32:14Z  analyze_axis2: exact permutation p-values for Kendall tau
+0376571  2026-09-01T07:21:48Z  post-axis-2 PPL fill: INT4 s42 4-corpus + A_4DFP4 s789 recovery
+e9cf0e5  2026-08-31T20:07:26Z  add axis-2 aggregate analyzer
+75b756b  2026-08-31T20:01:43Z  chain: INT4 seed 123/456 + axis 2 A_4DFP4 five seed instability sweep
+1a91dcf  2026-08-31T09:21:35Z  add GACT body encoding (gact_affine + gact_affine_det); partial adapter save on NaNError
+bb11bb6  2026-08-31T09:05:55Z  int4 ppl follow-up: auto-run WikiText/GSM8K PPL on new INT4 adapters
+bd1f356  2026-08-31T08:22:13Z  watchdog: eval_reserved_gb + on_abort callback; INT4 §5 baseline scripts
+abf99a6  2026-08-31T08:00:35Z  watchdog prep: split residual roles pre_attn/pre_mlp, dist_stats numel share, chain timeouts
+6b2aa55  2026-08-22T20:45:15Z  OAMP E2M1 seed 789: 56.60% (n=4 mean 54.80 sd 3.69, retention 99.04%)
+fcfbafa  2026-08-22T15:22:29Z  Phase 2 E2M1 results: 70B memory sweep, 70B accuracy, 3B multi-seed
+af8a491  2026-08-21T03:47:04Z  E2M1 body encoding: quantizer, config plumbing, probe support
+43a99c3  2026-08-20T07:56:18Z  Add --output CLI to specify explicit JSON path + mid-step watchdog
+63bc469  2026-08-20T07:34:57Z  Spec v1 restructure + 70B enabling claim experiments
+849f1a8  2026-08-09T14:17:03Z  Add --weight_quant nf4 (QLoRA) support + VRAM logging (Step 2)
+b375486  2026-08-07T14:27:33Z  Allow MODEL_NAME and LEARNING_RATE override via env vars (for 8B run)
+ea775f1  2026-08-06T11:18:46Z  Fix meta-device offload on GB10: load bf16 then explicit .to(device) instead of device_map='auto'
+a343b8c  2026-08-06T11:15:28Z  A-2 fix: isolate random-routing RNG from global torch stream
+fdd2ad7  2026-04-21T02:36:29Z  OAMP — Outlier-Aware Mixed-Precision
+fb6658d  2026-04-21T02:14:22Z  Initial release: OAMP — Outlier-Aware Mixed-Precision activation compression

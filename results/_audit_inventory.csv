@@ -1,0 +1,62 @@
+filename,mtime,model,seeds,method,acc_per_seed,loss_per_seed,acc_mean,std_ddof0,std_ddof1,eval_samples,compress_mode,weight_quant,lr,epochs,num_train_samples,lora_target_modules,max_seq_len
+anchor_ratio_ablation_2ep_20260327_214944.json,2026-03-28 22:22:15,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,200,full,,0.0002,2,,,512
+anchor_ratio_multiseed_20260330_133152.json,2026-04-01 22:57:58,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",per_run_results/0.05,"[59.2000,59.0000,59.2000]","[0.8798,0.8980,0.8914]",59.1333,0.0943,0.1155,500,full,,0.0002,2,,,512
+anchor_ratio_multiseed_20260330_133152.json,2026-04-01 22:57:58,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",per_run_results/0.1,"[61.2000,59.0000,58.8000]","[0.8678,0.8932,0.8861]",59.6667,1.0873,1.3317,500,full,,0.0002,2,,,512
+anchor_ratio_multiseed_20260330_133152.json,2026-04-01 22:57:58,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",per_run_results/0.2,"[59.6000,58.4000,56.8000]","[0.8567,0.8763,0.8715]",58.2667,1.1470,1.4048,500,full,,0.0002,2,,,512
+anchor_ratio_multiseed_20260330_133152.json,2026-04-01 22:57:58,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",per_run_results/0.4,"[58.6000,57.4000,59.8000]","[0.8351,0.8567,0.8504]",58.6000,0.9798,1.2000,500,full,,0.0002,2,,,512
+anchor_ratio_multiseed_20260330_133152.json,2026-04-01 22:57:58,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",per_run_results/0.8,"[60.8000,59.2000,60.0000]","[0.8083,0.8254,0.8184]",60.0000,0.6532,0.8000,500,full,,0.0002,2,,,512
+batch_accuracy_20260325_102737.json,2026-03-27 06:48:24,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,500,,,0.0002,2,,,512
+batch_scaling_20260313_231407.json,2026-03-14 05:08:54,,,__no_per_seed_accs__,,,,,,,,,,,,,
+bench_synth_3b_nf4_L4096.json,2026-08-12 07:43:38,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,,,nf4,,,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/Standard-LoRA/gsm8k,"[58.0000,59.4000,59.2000]",,58.8667,0.6182,0.7572,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/Standard-LoRA/arc_c,"[71.4000,70.2000,70.4000]",,70.6667,0.5249,0.6429,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/Standard-LoRA/mmlu,"[58.9000,57.6000,58.3000]",,58.2667,0.5312,0.6506,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/Standard-LoRA/hellaswag,"[57.6000,57.6000,56.6000]",,57.2667,0.4714,0.5774,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/Naive-FP4/gsm8k,"[61.2000,57.6000,58.4000]",,59.0667,1.5434,1.8903,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/Naive-FP4/arc_c,"[69.8000,71.0000,70.6000]",,70.4667,0.4989,0.6110,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/Naive-FP4/mmlu,"[58.1000,57.9000,57.4000]",,57.8000,0.2944,0.3606,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/Naive-FP4/hellaswag,"[57.2000,56.8000,57.4000]",,57.1333,0.2494,0.3055,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/OAMP-20/gsm8k,"[58.2000,58.0000,59.6000]",,58.6000,0.7118,0.8718,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/OAMP-20/arc_c,"[72.0000,70.6000,71.8000]",,71.4667,0.6182,0.7572,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/OAMP-20/mmlu,"[59.3000,59.0000,58.6000]",,58.9667,0.2867,0.3512,500,,,0.0002,2,,,
+benchmark_multidomain_multiseed_20260329_001948.json,2026-03-30 12:30:49,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary_table/OAMP-20/hellaswag,"[58.4000,57.0000,57.0000]",,57.4667,0.6600,0.8083,500,,,0.0002,2,,,
+compress_mode_ablation_20260327_064827.json,2026-03-27 21:49:42,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,500,,,0.0002,2,,,512
+compress_mode_multiseed_20260418_144229.json,2026-04-20 11:17:37,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary/Standard-LoRA,"[59.0000,59.2000,59.6000]","[0.7948,0.8121,0.8057]",59.2667,0.2494,0.3055,500,,,0.0002,2,,,512
+compress_mode_multiseed_20260418_144229.json,2026-04-20 11:17:37,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary/OAMP-residual,"[60.0000,59.4000,58.8000]","[0.8310,0.8512,0.8432]",59.4000,0.4899,0.6000,500,,,0.0002,2,,,512
+compress_mode_multiseed_20260418_144229.json,2026-04-20 11:17:37,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary/OAMP-mlp-only,"[56.6000,59.2000,58.8000]","[0.8171,0.8354,0.8283]",58.2000,1.1431,1.4000,500,,,0.0002,2,,,512
+compress_mode_multiseed_20260418_144229.json,2026-04-20 11:17:37,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",summary/OAMP-full,"[58.2000,58.4000,59.6000]","[0.8494,0.8692,0.8633]",58.7333,0.6182,0.7572,500,,,0.0002,2,,,512
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/llama-3b/Standard,"[57.6000,59.2000,58.8000]","[0.7949,0.8124,0.8056]",58.5333,0.6799,0.8327,500,,,,,,,
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/llama-3b/Naive-FP4,"[59.4000,60.2000,59.2000]","[0.8602,0.8820,0.8730]",59.6000,0.4320,0.5292,500,,,,,,,
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/llama-3b/OAMP-20,"[59.0000,58.0000,59.0000]","[0.8517,0.8705,0.8623]",58.6667,0.4714,0.5774,500,,,,,,,
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/qwen-3b/Standard,"[70.2000,69.4000,70.4000]","[0.2067,0.2100,0.2195]",70.0000,0.4320,0.5292,500,,,,,,,
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/qwen-3b/Naive-FP4,"[55.6000,56.6000,53.0000]","[0.8376,0.8742,0.8698]",55.0667,1.5173,1.8583,500,,,,,,,
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/qwen-3b/OAMP-20,"[60.4000,59.2000,60.2000]","[0.7175,0.7495,0.7478]",59.9333,0.5249,0.6429,500,,,,,,,
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/mistral-7b/Standard,"[48.4000,45.8000,44.2000]","[0.6612,0.6852,0.6826]",46.1333,1.7308,2.1197,500,,,,,,,
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/mistral-7b/Naive-FP4,"[45.6000,49.2000,45.8000]","[0.7025,0.7325,0.7313]",46.8667,1.6519,2.0232,500,,,,,,,
+crossarch_multiseed_20260404_052013.json,2026-04-10 02:11:17,,"[42,123,456]",results/mistral-7b/OAMP-20,"[46.4000,48.4000,48.0000]","[0.6909,0.7184,0.7191]",47.6000,0.8641,1.0583,500,,,,,,,
+gradient_correlation_20260329_000456.json,2026-03-29 00:19:45,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,,,,,,,,
+group_routing_ablation_20260306_095441.json,2026-03-11 19:28:04,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,200,full (residual + MLP),,0.0002,1,,,
+longctx_20260314_050903.json,2026-03-14 08:49:16,,,__no_per_seed_accs__,,,,,,,,,,,,,
+longctx_accuracy_20260314_141528.json,2026-03-15 23:58:07,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,500,,,0.0002,2,,,
+model_scaling_8b_multiseed_20260320_133848.json,2026-03-24 10:16:24,meta-llama/Llama-3.1-8B-Instruct,"[42,123,456]",summary/Standard,"[70.6000,69.8000,68.8000]",,69.7333,0.7364,0.9018,500,,,5e-05,2,,"[""q_proj"", ""v_proj"", ""k_proj"", ""o_proj""]",512
+model_scaling_8b_multiseed_20260320_133848.json,2026-03-24 10:16:24,meta-llama/Llama-3.1-8B-Instruct,"[42,123,456]",summary/Naive-FP4,"[70.0000,70.0000,69.2000]",,69.7333,0.3771,0.4619,500,,,5e-05,2,,"[""q_proj"", ""v_proj"", ""k_proj"", ""o_proj""]",512
+model_scaling_8b_multiseed_20260320_133848.json,2026-03-24 10:16:24,meta-llama/Llama-3.1-8B-Instruct,"[42,123,456]",summary/CompAct-Rotate,"[75.8000,73.4000,73.4000]",,74.2000,1.1314,1.3856,500,,,5e-05,2,,"[""q_proj"", ""v_proj"", ""k_proj"", ""o_proj""]",512
+model_scaling_8b_multiseed_20260320_133848.json,2026-03-24 10:16:24,meta-llama/Llama-3.1-8B-Instruct,"[42,123,456]",summary/OAMP,"[72.0000,70.8000,71.0000]",,71.2667,0.5249,0.6429,500,,,5e-05,2,,"[""q_proj"", ""v_proj"", ""k_proj"", ""o_proj""]",512
+motivation_expA_20260306_151039.json,2026-03-06 15:24:16,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,,,,,,,,
+multiseed_20260414_120649.json,2026-04-16 08:53:43,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",results/Standard_LoRA,"[57.6000,57.8000,58.2000]","[0.7948,0.8124,0.8061]",57.8667,0.2494,0.3055,500,,,0.0002,2,,,
+multiseed_20260414_120649.json,2026-04-16 08:53:43,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",results/Naive_FP4,"[59.8000,58.4000,59.8000]","[0.8594,0.8762,0.8738]",59.3333,0.6600,0.8083,500,,,0.0002,2,,,
+multiseed_20260414_120649.json,2026-04-16 08:53:43,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",results/OAMP,"[56.4000,61.6000,59.0000]","[0.8494,0.8696,0.8625]",59.0000,2.1229,2.6000,500,,,0.0002,2,,,
+multiseed_20260414_120649.json,2026-04-16 08:53:43,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",results/Random_Mixed,"[59.0000,58.8000,59.0000]","[0.8705,0.8966,0.8928]",58.9333,0.0943,0.1155,500,,,0.0002,2,,,
+multiseed_a2fix_oamp-random_s42-123-456_20260806_111850.json,2026-08-07 10:09:12,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",results/Random_Mixed,"[57.0000,59.6000,58.6000]","[0.8735,0.8921,0.8888]",58.4000,1.0708,1.3115,500,,,0.0002,2,,,
+multiseed_a2fix_oamp-random_s42-123-456_20260806_111850.json,2026-08-07 10:09:12,meta-llama/Llama-3.2-3B-Instruct,"[42,123,456]",results/OAMP,"[60.4000,59.4000,59.4000]","[0.8466,0.8668,0.8645]",59.7333,0.4714,0.5774,500,,,0.0002,2,,,
+multiseed_a2fix_oamp-random_s42-123-456_20260807_142806.json,2026-08-09 13:25:45,meta-llama/Llama-3.1-8B-Instruct,"[42,123,456]",results/Random_Mixed,"[71.2000,70.8000,69.8000]","[0.9004,0.9252,0.9262]",70.6000,0.5888,0.7211,500,,,5e-05,2,,,
+multiseed_a2fix_oamp-random_s42-123-456_20260807_142806.json,2026-08-09 13:25:45,meta-llama/Llama-3.1-8B-Instruct,"[42,123,456]",results/OAMP,"[71.6000,71.4000,70.4000]","[0.8719,0.8976,0.8929]",71.1333,0.5249,0.6429,500,,,5e-05,2,,,
+multiseed_a2fix_oamp_s42_20260809_184316.json,2026-08-09 23:02:15,meta-llama/Llama-3.2-3B-Instruct,[42],results/OAMP,[58.0000],[0.8525],58.0000,0.0000,,500,,,0.0002,2,,,
+multiseed_a2fix_standard-oamp_s123-456_20260810_072910.json,2026-08-11 00:40:11,meta-llama/Llama-3.2-3B-Instruct,"[123,456]",results/Standard_LoRA,"[57.6000,58.2000]","[0.8199,0.8097]",57.9000,0.3000,0.4243,500,,,0.0002,2,,,
+multiseed_a2fix_standard-oamp_s123-456_20260810_072910.json,2026-08-11 00:40:11,meta-llama/Llama-3.2-3B-Instruct,"[123,456]",results/OAMP,"[58.4000,57.0000]","[0.8783,0.8703]",57.7000,0.7000,0.9899,500,,,0.0002,2,,,
+multiseed_a2fix_standard_s42_20260809_141723.json,2026-08-09 18:33:40,meta-llama/Llama-3.2-3B-Instruct,[42],results/Standard_LoRA,[59.0000],[0.8006],59.0000,0.0000,,500,,,0.0002,2,,,
+native_packing_vram_20260328_222217.json,2026-03-29 00:04:53,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,,,,,,,,
+oamp_vs_gc_20260308_054150.json,2026-03-11 19:28:04,meta-llama/Llama-3.2-3B-Instruct,,__no_per_seed_accs__,,,,,,200,,,0.0002,2,,"[""q_proj"", ""v_proj"", ""k_proj"", ""o_proj""]",512
+sota_baselines_20260416_085346.json,2026-04-18 14:42:26,meta-llama/Llama-3.1-8B-Instruct,,__no_per_seed_accs__,,,,,,500,,,5e-05,2,,"[""q_proj"", ""v_proj"", ""k_proj"", ""o_proj""]",512
+test_a_fixbefore_oamp_seed42_20260807_103147.json,2026-08-07 14:25:51,,[42],flat/oamp,[61.0000],,61.0000,0.0000,,,,,,,,,
+wallclock_summary_20260324_144403.json,2026-03-24 14:44:03,,,__no_per_seed_accs__,,,,,,,,,,,,,

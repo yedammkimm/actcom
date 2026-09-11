@@ -1,0 +1,140 @@
+{
+  "config": {
+    "mode": "memory",
+    "method": "standard",
+    "model_id": "meta-llama/Llama-3.2-3B-Instruct",
+    "weight_quant": "nf4",
+    "seed": 42,
+    "fp8_ratio": 0.2,
+    "group_size": 128,
+    "min_numel": 1024,
+    "mask_seed": null,
+    "dedupe": false,
+    "pack_stochastic_rounding": false,
+    "sr_seed": null,
+    "pack_4d_mode": "fp4",
+    "body_encoding": "e2m1",
+    "bf16_rmsnorm": true,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "task": "gsm8k",
+    "n_train": 7473,
+    "epochs": 2,
+    "lr": 0.0002,
+    "batch_size": 1,
+    "grad_accum_steps": 4,
+    "max_seq_len": 512,
+    "padding": false,
+    "data_packing": false,
+    "packed_seq_len": 2048,
+    "grad_clip": 1.0,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.0,
+    "optimizer": "adamw",
+    "eval_samples": 500,
+    "eval_fewshot": 8,
+    "eval_max_new_tokens": 256,
+    "mem_seq_len": 4096,
+    "mem_batch_size": 2,
+    "mem_steps": 100,
+    "mem_warmup": 10,
+    "mem_abort_gb": 70.0,
+    "gc_enabled": false,
+    "checkpoint_every": 50,
+    "output_dir": "results",
+    "output_path": "results/matrix_nf4/standard_nf4.json"
+  },
+  "env": {
+    "hostname": "93d447e43e92",
+    "python_version": "3.10.12",
+    "gpu_name": "NVIDIA GB10",
+    "compute_capability": "12.1",
+    "driver_version": "580.173.02",
+    "cuda_version": "12.8",
+    "torch_version": "2.12.0.dev20260407+cu128",
+    "transformers_version": "5.1.0",
+    "peft_version": "0.18.1",
+    "bitsandbytes_version": "0.50.0",
+    "torchao_version": "0.17.0",
+    "git_commit": "16765018042bfab5a0430d66196f13e6f3bc1c2b",
+    "git_dirty": true,
+    "timestamp_start": "2026-09-06T14:24:51.841318",
+    "timestamp_end": "2026-09-06T14:49:18.441106"
+  },
+  "model": {
+    "n_params": 1812638720,
+    "n_trainable": 9175040,
+    "dtype_report": {
+      "weight_quant": "nf4",
+      "bf16_rmsnorm": true,
+      "rmsnorm_swapped": 57,
+      "rmsnorm_classes_seen": [
+        "LlamaRMSNorm"
+      ],
+      "norms": [
+        "torch.bfloat16"
+      ],
+      "embed": [
+        "torch.bfloat16"
+      ],
+      "lm_head": [
+        "torch.bfloat16"
+      ],
+      "lora": [
+        "torch.bfloat16"
+      ],
+      "lm_head_tied": true
+    }
+  },
+  "pack": {
+    "pack_stats": null,
+    "coverage_bytes": {
+      "unique": null,
+      "raw": null
+    },
+    "effective_bits": null
+  },
+  "memory": {
+    "peak_allocated_gb": 43.36634368,
+    "peak_reserved_gb": 48.293216256,
+    "peak_measurement": "per_step_max_after_warmup",
+    "mem_after_load_gb": 2.2674432,
+    "mem_after_optimizer_init_gb": 2.2674432,
+    "mem_after_first_step_gb": null
+  },
+  "sequence": {
+    "seq_len_mean": 4096.0,
+    "seq_len_max": 4096,
+    "seq_len_p95": 4096,
+    "tokens_total": 819200
+  },
+  "throughput": {
+    "tokens_per_second": 574.5280084710713,
+    "seconds_per_step": 12.993641126304865,
+    "train_wall_s": 1425.866081237793,
+    "eval_wall_s": null,
+    "steps": 100
+  },
+  "results": {
+    "step_losses": [],
+    "final_loss": 12.396482467651367,
+    "gsm8k_accuracy": null,
+    "n_correct": null,
+    "n_eval_samples": null,
+    "per_sample": [],
+    "eval_diagnostics": null,
+    "adapter_path": null
+  },
+  "status": "OK",
+  "oom_stage": null,
+  "oom_step": null,
+  "allocated_at_failure_gb": null,
+  "error": null
+}

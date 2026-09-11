@@ -1,0 +1,364 @@
+% ============================================
+% 2.1 Activation Compression for Training
+% ============================================
+
+@inproceedings{chen2021actnn,
+  title={ActNN: Reducing Training Memory Footprint via 2-Bit Activation Compressed Training},
+  author={Chen, Jianfei and Zheng, Lianmin and Yao, Zhewei and Wang, Dequan and Stoica, Ion and Mahoney, Michael W and Gonzalez, Joseph E},
+  booktitle={International Conference on Machine Learning (ICML)},
+  year={2021}
+}
+
+@inproceedings{liu2022gact,
+  title     = {{GACT}: Activation Compressed Training for Generic Network Architectures},
+  author    = {Liu, Xiaoxuan and Zheng, Lianmin and Wang, Dequan and Cen, Yukuo and Chen, Weize and Han, Xu and Chen, Jianfei and Liu, Zhiyuan and Tang, Jie and Gonzalez, Joseph and Mahoney, Michael and Cheung, Alvin},
+  booktitle = {Proceedings of the 39th International Conference on Machine Learning (ICML)},
+  volume    = {162},
+  series    = {Proceedings of Machine Learning Research},
+  pages     = {14139--14152},
+  publisher = {PMLR},
+  year      = {2022}
+}
+
+@inproceedings{pan2021mesa,
+  title={Mesa: A Memory-saving Training Framework for Transformers},
+  author={Pan, Zizheng and Chen, Peng and He, Haoyu and Liu, Jing and Cai, Jianfei and Zhuang, Bohan},
+  booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year={2021}
+}
+
+@inproceedings{evans2021acgc,
+  title={AC-GC: Lossy Activation Compression with Guaranteed Convergence},
+  author={Evans, R David and Aamodt, Tor M},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2021}
+}
+
+@inproceedings{shamshoum2025compact,
+  title={CompAct: Compressed Activations for Memory-Efficient {LLM} Training},
+  author={Shamshoum, Yara and Hodos, Nitzan and Sieradzki, Yuval and Schuster, Assaf},
+  booktitle={Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the ACL (NAACL)},
+  pages={1511--1524},
+  year={2025}
+}
+
+@inproceedings{malladi2023mezo,
+  title={Fine-Tuning Language Models with Just Forward Passes},
+  author={Malladi, Sadhika and Gao, Tianyu and Nichani, Eshaan and Damian, Alex and Lee, Jason D. and Chen, Danqi and Arora, Sanjeev},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2023}
+}
+
+% ============================================
+% 2.2 Gradient Checkpointing / Offloading
+% ============================================
+
+@inproceedings{ren2021zerooffload,
+  title={{ZeRO-Offload}: Democratizing Billion-Scale Model Training},
+  author={Ren, Jie and Rajbhandari, Samyam and Aminabadi, Reza Yazdani and Ruwase, Olatunji and Yang, Shuangyan and Zhang, Minjia and Li, Dong and He, Yuxiong},
+  booktitle={USENIX Annual Technical Conference (USENIX ATC)},
+  year={2021}
+}
+
+@article{chen2016training,
+  title={Training Deep Nets with Sublinear Memory Cost},
+  author={Chen, Tianqi and Xu, Bing and Zhang, Chiyuan and Guestrin, Carlos},
+  journal={arXiv preprint arXiv:1604.06174},
+  year={2016}
+}
+
+@article{korthikanti2022megatron,
+  title={Reducing Activation Recomputation in Large Transformer Models},
+  author={Korthikanti, Vijay and Casper, Jared and Lym, Sangkug and McAfee, Lawrence and Andersch, Michael and Shoeybi, Mohammad and Catanzaro, Bryan},
+  journal={arXiv preprint arXiv:2205.05198},
+  year={2022}
+}
+
+% ============================================
+% 2.4 Mixed-Precision Training & Hardware Formats
+% ============================================
+
+% ============================================
+% 2.3 Mixed Precision / Hardware Formats
+% ============================================
+
+@inproceedings{dao2023flashattention2,
+  title={{FlashAttention-2}: Faster Attention with Better Parallelism and Work Partitioning},
+  author={Dao, Tri},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2024}
+}
+
+@inproceedings{micikevicius2018mixed,
+  title={Mixed Precision Training},
+  author={Micikevicius, Paulius and Narang, Sharan and Alben, Jonah and Diamos, Gregory and Elsen, Erich and Garcia, David and Ginsburg, Boris and Houston, Michael and Kuchaiev, Oleksii and Venkatesh, Ganesh and Wu, Hao},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2018}
+}
+
+@article{micikevicius2022fp8,
+  title={{FP8} Formats for Deep Learning},
+  author={Micikevicius, Paulius and Stosic, Dusan and Burgess, Neil and Cornea, Marius and Dubey, Pradeep and Grisenthwaite, Richard and Ha, Sangwon and Heinecke, Alexander and Judd, Patrick and Kamalu, John and others},
+  journal={arXiv preprint arXiv:2209.05433},
+  year={2022}
+}
+
+@techreport{ocp2024mx,
+  title={Open Compute Project Microscaling Formats ({MX}) Specification},
+  author={{Open Compute Project Foundation}},
+  year={2024},
+  institution={OCP}
+}
+
+% ============================================
+% 2.4 KV Cache Compression (Inference)
+% ============================================
+
+@inproceedings{zhang2023h2o,
+  title={{H2O}: Heavy-Hitter Oracle for Efficient Generative Inference of Large Language Models},
+  author={Zhang, Zhenyu and Sheng, Ying and Zhou, Tianyi and Chen, Tianlong and Zheng, Lianmin and Cai, Ruisi and Song, Zhao and Tian, Yuandong and R\'{e}, Christopher and Barrett, Clark and Wang, Zhangyang and Chen, Beidi},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2023}
+}
+
+@article{li2024snapkv,
+  title={{SnapKV}: LLM Knows What You are Looking for Before Generation},
+  author={Li, Yuhong and Huang, Yingbing and Yang, Bowen and Venkitesh, Bharat and Locatelli, Acyr and Ye, Hanchen and Cai, Tianle and Lewis, Patrick and Chen, Deming},
+  journal={arXiv preprint arXiv:2404.14469},
+  year={2024}
+}
+
+% ============================================
+% 2.5 Outlier-Aware Quantization (Inference)
+% ============================================
+
+@inproceedings{dettmers2022llmint8,
+  title={{LLM.int8()}: 8-bit Matrix Multiplication for Transformers at Scale},
+  author={Dettmers, Tim and Lewis, Mike and Belkada, Younes and Zettlemoyer, Luke},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2022}
+}
+
+@inproceedings{xiao2023smoothquant,
+  title={SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models},
+  author={Xiao, Guangxuan and Lin, Ji and Seznec, Mickael and Wu, Hao and Demouth, Julien and Han, Song},
+  booktitle={International Conference on Machine Learning (ICML)},
+  year={2023}
+}
+
+@inproceedings{frantar2023gptq,
+  title={{GPTQ}: Accurate Post-Training Quantization for Generative Pre-trained Transformers},
+  author={Frantar, Elias and Ashkboos, Saleh and Hoefler, Torsten and Alistarh, Dan},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2023}
+}
+
+@inproceedings{lin2024awq,
+  title={{AWQ}: Activation-Aware Weight Quantization for {LLM} Compression and Acceleration},
+  author={Lin, Ji and Tang, Jiaming and Tang, Haotian and Yang, Shang and Chen, Wei-Ming and Wang, Wei-Chen and Xiao, Guangxuan and Dang, Xingyu and Gan, Chuang and Han, Song},
+  booktitle={Conference on Machine Learning and Systems (MLSys)},
+  year={2024}
+}
+
+@inproceedings{dettmers2023spqr,
+  title={{SpQR}: A Sparse-Quantized Representation for Near-Lossless {LLM} Weight Compression},
+  author={Dettmers, Tim and Svirschevski, Ruslan and Egiazarian, Vage and Kuznedelev, Denis and Frantar, Elias and Ashkboos, Saleh and Borzunov, Alexander and Hoefler, Torsten and Alistarh, Dan},
+  booktitle={International Conference on Machine Learning (ICML)},
+  year={2023}
+}
+
+% ============================================
+% 2.6 LoRA & Parameter-Efficient Fine-Tuning
+% ============================================
+
+@inproceedings{hu2022lora,
+  title={{LoRA}: Low-Rank Adaptation of Large Language Models},
+  author={Hu, Edward J and Shen, Yelong and Wallis, Phillip and Allen-Zhu, Zeyuan and Li, Yuanzhi and Wang, Shean and Wang, Lu and Chen, Weizhu},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2022}
+}
+
+@inproceedings{dettmers2023qlora,
+  title={{QLoRA}: Efficient Finetuning of Quantized {LLMs}},
+  author={Dettmers, Tim and Pagnoni, Artidoro and Holtzman, Ari and Zettlemoyer, Luke},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2023}
+}
+
+@inproceedings{liu2024dora,
+  title={{DoRA}: Weight-Decomposed Low-Rank Adaptation},
+  author={Liu, Shih-Yang and Wang, Chien-Yi and Yin, Hongxu and Molchanov, Pavlo and Wang, Yu-Chiang Frank and Cheng, Kwang-Ting and Chen, Min-Hung},
+  booktitle={International Conference on Machine Learning (ICML)},
+  year={2024}
+}
+
+@inproceedings{pan2024lisa,
+  title={{LISA}: Layerwise Importance Sampling for Memory-Efficient Large Language Model Fine-Tuning},
+  author={Pan, Rui and Liu, Xiang and Lian, Shizhe and others},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2024}
+}
+
+% ============================================
+% 2.7 Importance-Based Pruning & Saliency
+% ============================================
+
+@inproceedings{molchanov2017pruning,
+  title={Pruning Convolutional Neural Networks for Resource Efficient Inference},
+  author={Molchanov, Pavlo and Tyree, Stephen and Karras, Tero and Aila, Timo and Kautz, Jan},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2017}
+}
+
+@inproceedings{sanh2020movement,
+  title={Movement Pruning: Adaptive Sparsity during Fine-Tuning},
+  author={Sanh, Victor and Wolf, Thomas and Rush, Alexander M},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2020}
+}
+
+% ============================================
+% 2.8 LLM Internal Structure & Ultra-Low Bit
+% ============================================
+
+@inproceedings{bondarenko2023quantizable,
+  title     = {Quantizable Transformers: Removing Outliers by Helping Attention Heads Do Nothing},
+  author    = {Bondarenko, Yelysei and Nagel, Markus and Blankevoort, Tijmen},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {36},
+  year      = {2023}
+}
+
+@article{ma2024bitnet,
+  title={The Era of 1-bit {LLMs}: All Large Language Models are in 1.58 Bits},
+  author={Ma, Shuming and Wang, Hongyu and Ma, Lingxiao and Wang, Lei and Wang, Wenhui and Huang, Shaohan and Dong, Li and Wang, Ruiping and Xue, Jilong and Wei, Furu},
+  journal={arXiv preprint arXiv:2402.17764},
+  year={2024}
+}
+
+@inproceedings{xi2024jetfire,
+  title     = {Jetfire: Efficient and Accurate Transformer Pretraining with {INT8} Data Flow and Per-Block Quantization},
+  author    = {Xi, Haocheng and Chen, Yuxiang and Zhao, Kang and Teh, Kai Jun and Chen, Jianfei and Zhu, Jun},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning (ICML)},
+  volume    = {235},
+  series    = {Proceedings of Machine Learning Research},
+  pages     = {54049--54063},
+  publisher = {PMLR},
+  year      = {2024},
+  note      = {arXiv:2403.12422}
+}
+
+@article{bengio2013ste,
+  title={Estimating or Propagating Gradients Through Stochastic Neurons for Conditional Computation},
+  author={Bengio, Yoshua and Léonard, Nicholas and Courville, Aaron},
+  journal={arXiv preprint arXiv:1308.3432},
+  year={2013},
+  url={https://arxiv.org/abs/1308.3432},
+  doi={10.48550/arXiv.1308.3432}
+}
+
+@inproceedings{ouyang2022instructgpt,
+  title={Training Language Models to Follow Instructions with Human Feedback},
+  author={Ouyang, Long and Wu, Jeff and Jiang, Xu and Almeida, Diogo and Wainwright, Carroll L. and Mishkin, Pamela and Zhang, Chong and Agarwal, Sandhini and Slama, Katarina and Ray, Alex and Schulman, John and Hilton, Jacob and Kelton, Fraser and Miller, Luke and Simens, Maddie and Askell, Amanda and Welinder, Peter and Christiano, Paul and Leike, Jan and Lowe, Ryan},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2022}
+}
+
+@article{hendrycks2020mmlu,
+  title={Measuring Massive Multitask Language Understanding},
+  author={Hendrycks, Dan and Burns, Collin and Basart, Steven and Zou, Andy and Mazeika, Mantas and Song, Dawn and Steinhardt, Jacob},
+  journal={arXiv preprint arXiv:2009.03300},
+  year={2020},
+  url={https://arxiv.org/abs/2009.03300}
+}
+
+
+@inproceedings{zhao2024galore,
+  title={{GaLore}: Memory-Efficient {LLM} Training by Gradient Low-Rank Projection},
+  author={Zhao, Jiawei and Zhang, Zhenyu and Chen, Beidi and Wang, Zhangyang and Anandkumar, Anima and Tian, Yuandong},
+  booktitle={International Conference on Machine Learning (ICML)},
+  year={2024}
+}
+
+@inproceedings{lv2024lomo,
+  title={Full Parameter Fine-tuning for Large Language Models with Limited Resources},
+  author={Lv, Kai and Yang, Yuqing and Liu, Tengxiao and Gao, Qinghui and Guo, Qipeng and Qiu, Xipeng},
+  booktitle={Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year={2024}
+}
+
+@article{zhang2024adammini,
+  title={Adam-mini: Use Fewer Learning Rates To Gain More},
+  author={Zhang, Yushun and Chen, Congliang and Li, Ziniu and Ding, Tian and Wu, Chenwei and Ye, Yinyu and Luo, Zhi-Quan and Sun, Ruoyu},
+  journal={arXiv preprint arXiv:2406.16793},
+  year={2024}
+}
+
+
+@article{adacc2025,
+  title   = {{Adacc}: An Adaptive Framework Unifying Compression and Activation
+             Recomputation for {LLM} Training},
+  author  = {Chen, Ping and Deng, Zhuohong and Li, Ping and He, Shuibing and
+             Zhu, Hongzi and Zheng, Yi and Wang, Zhefeng and Huai, Baoxing and
+             Guo, Minyi},
+  journal = {arXiv preprint arXiv:2508.00806},
+  year    = {2025}
+}
+
+@article{actcomp2026,
+  title   = {Activation Compression in {LLMs}: Theoretical Analysis and
+             Efficient Algorithm},
+  author  = {Wei, Wen-Da and Fang, Han-Bin and Liu, Yang-Di and Shi, Jiang-Xin
+             and Kwok, James and Li, Yu-Feng},
+  journal = {arXiv preprint arXiv:2605.01255},
+  year    = {2026}
+}
+
+@article{carelora2026,
+  title   = {{CARE-LoRA}: Compressed Activation {RE}construction for
+             Memory-Efficient {LoRA}},
+  author  = {Zhang, Gengyu and Ran, Haiyin and He, Zhengbao and Liu, Yuhang and
+             Tian, Hanling and Huang, Zhehao and Huang, Xiaolin},
+  journal = {arXiv preprint arXiv:2607.11940},
+  year    = {2026}
+}
+
+@article{loract2025,
+  title   = {Memory-Efficient Fine-Tuning via Low-Rank Activation Compression},
+  author  = {Shi, Jiang-Xin and Wei, Wen-Da and Qi, Jin-Fei and Chen, Xuanyu and
+             Wei, Tong and Li, Yu-Feng},
+  journal = {arXiv preprint arXiv:2509.23472},
+  year    = {2025}
+}
+
+
+@inproceedings{hyclora2025,
+ author = {Wang, Yujin and Dong, Shunan and Huang, Zongle and You, Yichen and He, Liu and Yang, Huazhong and Liu, Yongpan and Jia, Hongyang},
+ booktitle = {Proceedings of Machine Learning and Systems},
+ editor = {M. Zaharia and G. Joshi and Y. Lin},
+ pages = {},
+ publisher = {MLSys},
+ title = {HyC-LoRA: Memory Efficient LoRA Fine-tuning with Hybrid Activation Compression},
+ url = {https://proceedings.mlsys.org/paper_files/paper/2025/file/5431dca75a8d2abc1fb51e89e8324f10-Paper-Conference.pdf},
+ volume = {7},
+ year = {2025}
+}
+
+@article{cobbe2021gsm8k,
+  title   = {Training Verifiers to Solve Math Word Problems},
+  author  = {Cobbe, Karl and Kosaraju, Vineet and Bavarian, Mohammad and
+             Chen, Mark and Jun, Heewoo and Kaiser, Lukasz and
+             Plappert, Matthias and Tworek, Jerry and Hilton, Jacob and
+             Nakano, Reiichiro and Hesse, Christopher and Schulman, John},
+  journal = {arXiv preprint arXiv:2110.14168},
+  year    = {2021}
+}
+
+@article{lorafa2023,
+  title   = {LoRA-FA: Memory-efficient Low-rank Adaptation for Large
+             Language Models Fine-tuning},
+  author  = {Zhang, Longteng and Zhang, Lin and Shi, Shaohuai and
+             Chu, Xiaowen and Li, Bo},
+  journal = {arXiv preprint arXiv:2308.03303},
+  year    = {2023}
+}

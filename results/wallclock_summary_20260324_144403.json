@@ -1,0 +1,134 @@
+{
+  "experiment": "Wall-Clock End-to-End Summary",
+  "description": "Extracted wall-clock timing data from existing experiments. No new training.",
+  "timestamp": "20260324_144403",
+  "sources": {
+    "sota": "sota_baselines_20260316_005934.json",
+    "scaling_8b": "model_scaling_8b_multiseed_20260320_133848.json",
+    "gc": "oamp_vs_gc_20260308_054150.json",
+    "longctx": "longctx_20260314_050903.json",
+    "batch": "batch_scaling_20260313_231407.json"
+  },
+  "tables": {
+    "3b_sota_throughput": {
+      "Standard-LoRA": {
+        "method": "Standard-LoRA",
+        "ms_per_step": 3407.7,
+        "ms_per_step_std": 0.0,
+        "tok_per_sec": 198.0,
+        "gsm8k_accuracy": 0.69,
+        "bits": 16.0
+      },
+      "Naive-FP4-100": {
+        "method": "Naive-FP4-100",
+        "ms_per_step": 3524.0,
+        "ms_per_step_std": 0.0,
+        "tok_per_sec": 191.0,
+        "gsm8k_accuracy": 0.7,
+        "bits": 4.0
+      },
+      "Uniform-FP8": {
+        "method": "Uniform-FP8",
+        "ms_per_step": 3532.2,
+        "ms_per_step_std": 0.0,
+        "tok_per_sec": 191.0,
+        "gsm8k_accuracy": 0.7,
+        "bits": 8.0
+      },
+      "GACT-Adaptive": {
+        "method": "GACT-Adaptive",
+        "ms_per_step": 3534.5,
+        "ms_per_step_std": 0.0,
+        "tok_per_sec": 191.0,
+        "gsm8k_accuracy": 0.0,
+        "bits": 4.0
+      },
+      "CompAct-Rotate": {
+        "method": "CompAct-Rotate",
+        "ms_per_step": 3933.3,
+        "ms_per_step_std": 0.0,
+        "tok_per_sec": 171.0,
+        "gsm8k_accuracy": 0.732,
+        "bits": 4.0
+      },
+      "OAMP-20": {
+        "method": "OAMP-20",
+        "ms_per_step": 3722.7,
+        "ms_per_step_std": 0.0,
+        "tok_per_sec": 181.0,
+        "gsm8k_accuracy": 0.714,
+        "bits": 4.8
+      }
+    },
+    "8b_total_training_time": {
+      "Standard": {
+        "wall_time_s_mean": 12637.11472328504,
+        "wall_time_s_all": [
+          12650.610929965973,
+          12631.835773944855,
+          12628.89746594429
+        ],
+        "ms_per_step_mean": 3381.940434069049,
+        "gsm8k_accuracy_mean": 0.6973333333333332
+      },
+      "Naive-FP4": {
+        "wall_time_s_mean": null,
+        "wall_time_s_all": [],
+        "ms_per_step_mean": 3484.8958479351145,
+        "gsm8k_accuracy_mean": 0.6973333333333332
+      },
+      "CompAct-Rotate": {
+        "wall_time_s_mean": null,
+        "wall_time_s_all": [],
+        "ms_per_step_mean": 3903.647215370922,
+        "gsm8k_accuracy_mean": 0.742
+      },
+      "OAMP": {
+        "wall_time_s_mean": null,
+        "wall_time_s_all": [],
+        "ms_per_step_mean": 3716.626637364722,
+        "gsm8k_accuracy_mean": 0.7126666666666667
+      }
+    },
+    "oamp_vs_gc": {
+      "Standard-LoRA+GC": {
+        "ms_per_step": 2503.1002926405504,
+        "tok_per_sec": 818.1853543868754,
+        "gsm8k_accuracy": 0.51,
+        "peak_vram_gb": null
+      },
+      "OAMP": {
+        "ms_per_step": 1926.5403275681806,
+        "tok_per_sec": 1063.0454866133712,
+        "gsm8k_accuracy": 0.525,
+        "peak_vram_gb": null
+      }
+    },
+    "longctx_throughput": {
+      "Standard-LoRA": {
+        "ms_per_step": 27168.0,
+        "tok_per_sec": 603.0,
+        "peak_vram_gb": 105.56
+      },
+      "Naive-FP4": {
+        "ms_per_step": 32520.0,
+        "tok_per_sec": 504.0,
+        "peak_vram_gb": 76.75
+      },
+      "OAMP-Native": {
+        "ms_per_step": 34531.5,
+        "tok_per_sec": 474.0,
+        "peak_vram_gb": 78.57
+      },
+      "LoRA+GC": {
+        "ms_per_step": 36419.1,
+        "tok_per_sec": 450.0,
+        "peak_vram_gb": 39.04
+      }
+    }
+  },
+  "derived_metrics": {
+    "oamp_overhead_vs_standard_3b_pct": 9.243771458755171,
+    "oamp_speedup_vs_gc": 1.2992722014805398
+  }
+}

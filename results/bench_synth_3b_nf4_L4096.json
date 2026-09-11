@@ -1,0 +1,42 @@
+{
+  "config": {
+    "model": "meta-llama/Llama-3.2-3B-Instruct",
+    "weight_quant": "nf4",
+    "methods": [
+      "standard",
+      "oamp"
+    ],
+    "seqlens": [
+      4096
+    ],
+    "warmup": 3,
+    "iters": 10,
+    "out": "/app/HMA_Project/results/bench_synth_3b_nf4_L4096.json"
+  },
+  "results": [
+    {
+      "method": "standard",
+      "weight_quant": "nf4",
+      "seqlen": 4096,
+      "iters": 10,
+      "warmup": 3,
+      "gc_state": "is_gradient_checkpointing=True, layer0_gc=True",
+      "after_load_alloc_GB": 3.075,
+      "peak_alloc_GB": 13.61,
+      "ms_per_step": 19189.92,
+      "tok_per_sec": 213.4
+    },
+    {
+      "method": "oamp",
+      "weight_quant": "nf4",
+      "seqlen": 4096,
+      "iters": 10,
+      "warmup": 3,
+      "gc_state": "is_gradient_checkpointing=True, layer0_gc=True",
+      "after_load_alloc_GB": 3.143,
+      "peak_alloc_GB": 13.152,
+      "ms_per_step": 32069.26,
+      "tok_per_sec": 127.7
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "timestamp": "20260314_050903",
+  "experiment": "longctx_stress_test",
+  "description": "Long-context (L=4096) stress test: Standard vs OAMP vs GC",
+  "config": {
+    "B": 4,
+    "L": 4096,
+    "steps": 100,
+    "fp8_ratio": 0.2,
+    "group_size": 128,
+    "routing": "group_level_max_abs"
+  },
+  "gpu": "NVIDIA GB10",
+  "gpu_total_gb": 128.5,
+  "results": {
+    "Standard-LoRA": {
+      "peak_vram_gb": 105.56,
+      "avg_ms_per_step": 27168.0,
+      "tok_per_sec": 603.0,
+      "oom": false
+    },
+    "Naive-FP4": {
+      "peak_vram_gb": 76.75,
+      "avg_ms_per_step": 32520.0,
+      "tok_per_sec": 504.0,
+      "oom": false
+    },
+    "OAMP-Native": {
+      "peak_vram_gb": 78.57,
+      "avg_ms_per_step": 34531.5,
+      "tok_per_sec": 474.0,
+      "oom": false
+    },
+    "LoRA+GC": {
+      "peak_vram_gb": 39.04,
+      "avg_ms_per_step": 36419.1,
+      "tok_per_sec": 450.0,
+      "oom": false
+    }
+  }
+}

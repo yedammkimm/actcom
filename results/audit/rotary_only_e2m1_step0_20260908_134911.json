@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "model": "meta-llama/Llama-3.2-3B-Instruct",
+    "B": 1,
+    "L": 512,
+    "timestamp": "20260908_134914",
+    "filters_requested": [
+      "rotary_only"
+    ],
+    "note": "Adapter is from pilot_sr_lr (SR+lr=5e-5, 300 steps). Not a pure \u03b3-trained checkpoint; caveats apply for trained-state result."
+  },
+  "checkpoints": {
+    "step0_fresh": {
+      "checkpoint": "step0_fresh",
+      "loss_true": 12.388354301452637,
+      "g_true_norm": 2.2132184505462646,
+      "filters": {
+        "rotary_only": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.2132184505462646,
+            "norm_test": 2.2210347652435303,
+            "diff_norm": 0.05149957165122032,
+            "rel_err": 0.023269086537078723,
+            "cos": 0.9997365474700928,
+            "norm_ratio": 1.0035316507935927
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.9966968894004822,
+              "cos_mean": 0.9986811131238937,
+              "rel_err_max": 0.0813121424294395,
+              "rel_err_mean": 0.04694602179441042,
+              "norm_ratio_min": 0.9926636722545267,
+              "norm_ratio_max": 1.0150509873670988,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.9996838569641113,
+              "cos_mean": 0.9998725205659866,
+              "rel_err_max": 0.027041327040604825,
+              "rel_err_mean": 0.0157470680511695,
+              "norm_ratio_min": 1.0014359374754258,
+              "norm_ratio_max": 1.00963456545507,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 0.99969881772995,
+              "cos_mean": 0.9998545497655869,
+              "rel_err_max": 0.02485650281466658,
+              "rel_err_mean": 0.01221086733137742,
+              "norm_ratio_min": 1.0,
+              "norm_ratio_max": 1.0036584655193546,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "unknown": {
+              "seen": 625,
+              "compressed": 112,
+              "by_rank": {
+                "0": 29,
+                "1": 85,
+                "2": 224,
+                "3": 167,
+                "4": 120
+              },
+              "rank4_heads": {
+                "1": 112,
+                "24": 8
+              },
+              "rank4_shapes": {
+                "(1, 1, 512, 128)": 112,
+                "(1, 24, 512, 128)": 8
+              }
+            },
+            "q_proj.out": {
+              "seen": 73,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28,
+                "4": 45
+              },
+              "rank4_heads": {
+                "24": 45
+              },
+              "rank4_shapes": {
+                "(1, 24, 512, 128)": 45
+              }
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "k_proj.out": {
+              "seen": 57,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28,
+                "3": 1,
+                "4": 28
+              },
+              "rank4_heads": {
+                "8": 28
+              },
+              "rank4_shapes": {
+                "(1, 8, 512, 128)": 28
+              }
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "v_proj.out": {
+              "seen": 56,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28,
+                "4": 28
+              },
+              "rank4_heads": {
+                "8": 28
+              },
+              "rank4_shapes": {
+                "(1, 8, 512, 128)": 28
+              }
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "o_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0,
+              "by_rank": {
+                "3": 56
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "3": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "3": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0,
+              "by_rank": {
+                "3": 54
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "down_proj.in": {
+              "seen": 3,
+              "compressed": 0,
+              "by_rank": {
+                "4": 3
+              },
+              "rank4_heads": {
+                "24": 3
+              },
+              "rank4_shapes": {
+                "(1, 24, 512, 128)": 3
+              }
+            },
+            "up_proj.in": {
+              "seen": 2,
+              "compressed": 0,
+              "by_rank": {
+                "3": 2
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+ "A": {
+  "42": "results/naive4bit_e2m1/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed42__20260825_193617_adapter",
+  "123": "results/naive4bit_e2m1/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed123__20260826_073002_adapter",
+  "456": "results/naive4bit_e2m1/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed456__20260826_104720_adapter",
+  "789": "results/axis2_seeds/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed789__20260831_224859_adapter",
+  "1011": "results/axis2_seeds/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed1011__20260901_045636_adapter",
+  "2024": "results/axis2_seeds/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed2024__20260901_083847_adapter",
+  "3033": "results/axis2_seeds/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed3033__20260901_114401_adapter",
+  "4042": "results/axis2_seeds/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed4042__20260901_144026_adapter"
+ },
+ "B": {
+  "42": "results/pilot_e2m1/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed42__20260820_164235_adapter",
+  "123": "results/pilot_e2m1_seeds/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed123__20260822_010922_adapter",
+  "456": "results/pilot_e2m1_seeds/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed456__20260822_075818_adapter",
+  "789": "results/axis3_b4dfp8/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed789__20260901_202010_adapter",
+  "1011": "results/axis3_b4dfp8/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed1011__20260901_230446_adapter",
+  "2024": "results/axis3_b4dfp8/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed2024__20260902_015809_adapter",
+  "3033": "results/axis3_b4dfp8/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed3033__20260902_045035_adapter",
+  "4042": "results/axis3_b4dfp8/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed4042__20260902_074256_adapter"
+ },
+ "D": {
+  "42": "results/naive4bit_int4/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed42__20260831_082311_adapter",
+  "123": "results/naive4bit_int4/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed123__20260831_194822_adapter",
+  "456": "results/naive4bit_int4/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed456__20260831_230549_adapter"
+ },
+ "F": {
+  "42": "results/axis7_chan_int4/F_CHANINT4_s42_adapter",
+  "123": "results/axis7_chan_int4/F_CHANINT4_s123_adapter",
+  "456": "results/axis7_chan_int4/F_CHANINT4_s456_adapter",
+  "789": "results/axis7_chan_int4/F_CHANINT4_s789_adapter",
+  "1011": "results/axis7_chan_int4/F_CHANINT4_s1011_adapter",
+  "2024": "results/axis7_chan_int4/F_CHANINT4_s2024_adapter",
+  "3033": "results/axis7_chan_int4/F_CHANINT4_s3033_adapter",
+  "4042": "results/axis7_chan_int4/F_CHANINT4_s4042_adapter"
+ },
+ "C": {
+  "42": "results/pilot_e2m1/accuracy__standard__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed42__20260820_135332_adapter",
+  "456": "results/pilot_pack4d_fp8_matrix/accuracy__standard__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed456__20260816_140828_adapter"
+ },
+ "E": {
+  "42": "results/axis6_int4_fp8/E_INT4FP8_s42_adapter",
+  "123": "results/axis6_int4_fp8/E_INT4FP8_s123_adapter",
+  "456": "results/axis6_int4_fp8/E_INT4FP8_s456_adapter"
+ }
+}

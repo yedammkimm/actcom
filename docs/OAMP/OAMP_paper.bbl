@@ -1,0 +1,138 @@
+\begin{thebibliography}{17}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Chen et~al.(2021)Chen, Zheng, Yao, Wang, Stoica, Mahoney, and
+  Gonzalez]{chen2021actnn}
+Jianfei Chen, Lianmin Zheng, Zhewei Yao, Dequan Wang, Ion Stoica, Michael~W
+  Mahoney, and Joseph~E Gonzalez.
+\newblock Actnn: Reducing training memory footprint via 2-bit activation
+  compressed training.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2021.
+
+\bibitem[Liu et~al.(2022)Liu, Zheng, Wang, Cen, Chen, Han, Chen, Liu, Tang,
+  Gonzalez, Mahoney, and Cheung]{liu2022gact}
+Xiaoxuan Liu, Lianmin Zheng, Dequan Wang, Yukuo Cen, Weize Chen, Xu~Han,
+  Jianfei Chen, Zhiyuan Liu, Jie Tang, Joseph Gonzalez, Michael Mahoney, and
+  Alvin Cheung.
+\newblock {GACT}: Activation compressed training for generic network
+  architectures.
+\newblock In \emph{Proceedings of the 39th International Conference on Machine
+  Learning (ICML)}, volume 162 of \emph{Proceedings of Machine Learning
+  Research}, pages 14139--14152. PMLR, 2022.
+
+\bibitem[Chen et~al.(2025)Chen, Deng, Li, He, Zhu, Zheng, Wang, Huai, and
+  Guo]{adacc2025}
+Ping Chen, Zhuohong Deng, Ping Li, Shuibing He, Hongzi Zhu, Yi~Zheng, Zhefeng
+  Wang, Baoxing Huai, and Minyi Guo.
+\newblock {Adacc}: An adaptive framework unifying compression and activation
+  recomputation for {LLM} training.
+\newblock \emph{arXiv preprint arXiv:2508.00806}, 2025.
+
+\bibitem[Wang et~al.(2025)Wang, Dong, Huang, You, He, Yang, Liu, and
+  Jia]{hyclora2025}
+Yujin Wang, Shunan Dong, Zongle Huang, Yichen You, Liu He, Huazhong Yang,
+  Yongpan Liu, and Hongyang Jia.
+\newblock Hyc-lora: Memory efficient lora fine-tuning with hybrid activation
+  compression.
+\newblock In M.~Zaharia, G.~Joshi, and Y.~Lin, editors, \emph{Proceedings of
+  Machine Learning and Systems}, volume~7. MLSys, 2025.
+\newblock URL
+  \url{https://proceedings.mlsys.org/paper_files/paper/2025/file/5431dca75a8d2abc1fb51e89e8324f10-Paper-Conference.pdf}.
+
+\bibitem[Shi et~al.(2025)Shi, Wei, Qi, Chen, Wei, and Li]{loract2025}
+Jiang-Xin Shi, Wen-Da Wei, Jin-Fei Qi, Xuanyu Chen, Tong Wei, and Yu-Feng Li.
+\newblock Memory-efficient fine-tuning via low-rank activation compression.
+\newblock \emph{arXiv preprint arXiv:2509.23472}, 2025.
+
+\bibitem[Hu et~al.(2022)Hu, Shen, Wallis, Allen-Zhu, Li, Wang, Wang, and
+  Chen]{hu2022lora}
+Edward~J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean
+  Wang, Lu~Wang, and Weizhu Chen.
+\newblock {LoRA}: Low-rank adaptation of large language models.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2022.
+
+\bibitem[Dettmers et~al.(2023)Dettmers, Pagnoni, Holtzman, and
+  Zettlemoyer]{dettmers2023qlora}
+Tim Dettmers, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer.
+\newblock {QLoRA}: Efficient finetuning of quantized {LLMs}.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2023.
+
+\bibitem[Chen et~al.(2016)Chen, Xu, Zhang, and Guestrin]{chen2016training}
+Tianqi Chen, Bing Xu, Chiyuan Zhang, and Carlos Guestrin.
+\newblock Training deep nets with sublinear memory cost.
+\newblock \emph{arXiv preprint arXiv:1604.06174}, 2016.
+
+\bibitem[Evans and Aamodt(2021)]{evans2021acgc}
+R~David Evans and Tor~M Aamodt.
+\newblock Ac-gc: Lossy activation compression with guaranteed convergence.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2021.
+
+\bibitem[Xi et~al.(2024)Xi, Chen, Zhao, Teh, Chen, and Zhu]{xi2024jetfire}
+Haocheng Xi, Yuxiang Chen, Kang Zhao, Kai~Jun Teh, Jianfei Chen, and Jun Zhu.
+\newblock Jetfire: Efficient and accurate transformer pretraining with {INT8}
+  data flow and per-block quantization.
+\newblock In \emph{Proceedings of the 41st International Conference on Machine
+  Learning (ICML)}, volume 235 of \emph{Proceedings of Machine Learning
+  Research}, pages 54049--54063. PMLR, 2024.
+\newblock arXiv:2403.12422.
+
+\bibitem[Shamshoum et~al.(2025)Shamshoum, Hodos, Sieradzki, and
+  Schuster]{shamshoum2025compact}
+Yara Shamshoum, Nitzan Hodos, Yuval Sieradzki, and Assaf Schuster.
+\newblock Compact: Compressed activations for memory-efficient {LLM} training.
+\newblock In \emph{Proceedings of the 2025 Conference of the Nations of the
+  Americas Chapter of the ACL (NAACL)}, pages 1511--1524, 2025.
+
+\bibitem[Zhang et~al.(2026)Zhang, Ran, He, Liu, Tian, Huang, and
+  Huang]{carelora2026}
+Gengyu Zhang, Haiyin Ran, Zhengbao He, Yuhang Liu, Hanling Tian, Zhehao Huang,
+  and Xiaolin Huang.
+\newblock {CARE-LoRA}: Compressed activation {RE}construction for
+  memory-efficient {LoRA}.
+\newblock \emph{arXiv preprint arXiv:2607.11940}, 2026.
+
+\bibitem[Wei et~al.(2026)Wei, Fang, Liu, Shi, Kwok, and Li]{actcomp2026}
+Wen-Da Wei, Han-Bin Fang, Yang-Di Liu, Jiang-Xin Shi, James Kwok, and Yu-Feng
+  Li.
+\newblock Activation compression in {LLMs}: Theoretical analysis and efficient
+  algorithm.
+\newblock \emph{arXiv preprint arXiv:2605.01255}, 2026.
+
+\bibitem[Dettmers et~al.(2022)Dettmers, Lewis, Belkada, and
+  Zettlemoyer]{dettmers2022llmint8}
+Tim Dettmers, Mike Lewis, Younes Belkada, and Luke Zettlemoyer.
+\newblock {LLM.int8()}: 8-bit matrix multiplication for transformers at scale.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2022.
+
+\bibitem[Xiao et~al.(2023)Xiao, Lin, Seznec, Wu, Demouth, and
+  Han]{xiao2023smoothquant}
+Guangxuan Xiao, Ji~Lin, Mickael Seznec, Hao Wu, Julien Demouth, and Song Han.
+\newblock Smoothquant: Accurate and efficient post-training quantization for
+  large language models.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2023.
+
+\bibitem[Bondarenko et~al.(2023)Bondarenko, Nagel, and
+  Blankevoort]{bondarenko2023quantizable}
+Yelysei Bondarenko, Markus Nagel, and Tijmen Blankevoort.
+\newblock Quantizable transformers: Removing outliers by helping attention
+  heads do nothing.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~36, 2023.
+
+\bibitem[Cobbe et~al.(2021)Cobbe, Kosaraju, Bavarian, Chen, Jun, Kaiser,
+  Plappert, Tworek, Hilton, Nakano, Hesse, and Schulman]{cobbe2021gsm8k}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
+  Christopher Hesse, and John Schulman.
+\newblock Training verifiers to solve math word problems.
+\newblock \emph{arXiv preprint arXiv:2110.14168}, 2021.
+
+\end{thebibliography}

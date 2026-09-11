@@ -1,0 +1,95 @@
+{
+  "adapter_path": "results/axis5_short/B_4DFP8_s789_adapter",
+  "base_model": "meta-llama/Llama-3.2-3B-Instruct",
+  "weight_quant": "nf4",
+  "bf16_rmsnorm": true,
+  "max_len": 512,
+  "gsm8k_samples": 500,
+  "wikitext_chunks": 200,
+  "seed": 789,
+  "dtype_report": {
+    "weight_quant": "nf4",
+    "bf16_rmsnorm": true,
+    "rmsnorm_swapped": 57,
+    "rmsnorm_classes_seen": [
+      "LlamaRMSNorm"
+    ],
+    "norms": [
+      "torch.bfloat16"
+    ],
+    "embed": [
+      "torch.bfloat16"
+    ],
+    "lm_head": [
+      "torch.bfloat16"
+    ],
+    "lora": [
+      "torch.bfloat16"
+    ],
+    "lm_head_tied": true
+  },
+  "training_config": {
+    "mode": "accuracy",
+    "method": "naive_fp4",
+    "model_id": "meta-llama/Llama-3.2-3B-Instruct",
+    "weight_quant": "nf4",
+    "seed": 789,
+    "fp8_ratio": 0.0,
+    "group_size": 128,
+    "min_numel": 1024,
+    "mask_seed": null,
+    "dedupe": false,
+    "pack_stochastic_rounding": false,
+    "sr_seed": null,
+    "pack_4d_mode": "fp8",
+    "body_encoding": "e2m1",
+    "bf16_rmsnorm": true,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "task": "gsm8k",
+    "n_train": 2000,
+    "epochs": 1,
+    "lr": 0.0002,
+    "batch_size": 1,
+    "grad_accum_steps": 4,
+    "max_seq_len": 512,
+    "padding": false,
+    "data_packing": false,
+    "packed_seq_len": 2048,
+    "grad_clip": 1.0,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.0,
+    "optimizer": "paged_adamw8bit",
+    "eval_samples": 1,
+    "eval_fewshot": 8,
+    "eval_max_new_tokens": 256,
+    "mem_seq_len": 4096,
+    "mem_batch_size": 4,
+    "mem_steps": 100,
+    "mem_warmup": 10,
+    "mem_abort_gb": 70.0,
+    "gc_enabled": false,
+    "checkpoint_every": 10,
+    "output_dir": "results/axis5_short",
+    "output_path": null
+  },
+  "gsm8k_test_ppl": 2.6274278788537386,
+  "gsm8k_test_tokens": 84402,
+  "gsm8k_test_n_texts": 500,
+  "wikitext2_ppl": 15.382484431469301,
+  "wikitext2_tokens": 102200,
+  "wikitext2_n_texts": 200,
+  "narrativeqa_ppl": 25.838583043890182,
+  "narrativeqa_tokens": 102200,
+  "narrativeqa_n_texts": 200,
+  "govreport_ppl": 11.956011182613345,
+  "govreport_tokens": 102200,
+  "govreport_n_texts": 200
+}

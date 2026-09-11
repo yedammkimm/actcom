@@ -1,0 +1,2 @@
+{"step": 1, "loss": 1.1261033117771149, "elapsed_s": 13.096852779388428, "peak_alloc_gb": 12.604335616, "wall_time": 1787039583.4222744, "peak_reserved_gb": 13.807648768, "epoch": 0, "lr": 0.0002, "grad_norm": 0.57421875, "grad_norm_finite": true, "n_nonfinite_grad_steps_so_far": 0}
+{"step": 2, "loss": 1.166984111070633, "elapsed_s": 25.72141671180725, "peak_alloc_gb": 12.623187968, "wall_time": 1787039596.046869, "peak_reserved_gb": 13.822328832, "epoch": 0, "lr": 0.0, "grad_norm": 0.453125, "grad_norm_finite": true, "n_nonfinite_grad_steps_so_far": 0}

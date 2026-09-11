@@ -1,0 +1,280 @@
+{
+  "timestamp": "20260404_052013",
+  "experiment": "crossarch_multiseed",
+  "description": "Cross-architecture OAMP generalization with multi-seed robustness",
+  "config": {
+    "fp8_ratio": 0.2,
+    "group_size": 128,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "batch_size": 1,
+    "grad_accum": 4,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "methods": [
+      "Standard",
+      "Naive-FP4",
+      "OAMP-20"
+    ],
+    "eval_samples": 500
+  },
+  "models_tested": [
+    "llama-3b",
+    "qwen-3b",
+    "mistral-7b"
+  ],
+  "results": {
+    "llama-3b": {
+      "model": "meta-llama/Llama-3.2-3B-Instruct",
+      "short_name": "Llama-3.2-3B",
+      "family": "LLaMA",
+      "params_b": 3.21,
+      "Standard_mean_acc": 58.533333333333324,
+      "Standard_std_acc": 0.6798692684790386,
+      "Standard_mean_loss": 0.8042989122370878,
+      "Standard_per_seed": {
+        "42": {
+          "accuracy": 0.576,
+          "final_loss": 0.7949380140006542,
+          "wall_time_s": 6625.1212792396545,
+          "peak_vram_gb": 9.48420608
+        },
+        "123": {
+          "accuracy": 0.592,
+          "final_loss": 0.8124024729430676,
+          "wall_time_s": 6633.849778413773,
+          "peak_vram_gb": 9.448878592
+        },
+        "456": {
+          "accuracy": 0.588,
+          "final_loss": 0.8055562497675419,
+          "wall_time_s": 6635.4179401397705,
+          "peak_vram_gb": 9.488469504
+        }
+      },
+      "Naive-FP4_mean_acc": 59.599999999999994,
+      "Naive-FP4_std_acc": 0.4320493798938578,
+      "Naive-FP4_mean_loss": 0.8717350260416666,
+      "Naive-FP4_per_seed": {
+        "42": {
+          "accuracy": 0.594,
+          "final_loss": 0.860234375,
+          "wall_time_s": 6664.3912789821625,
+          "peak_vram_gb": 9.249946624
+        },
+        "123": {
+          "accuracy": 0.602,
+          "final_loss": 0.8819921875,
+          "wall_time_s": 6662.777883052826,
+          "peak_vram_gb": 9.213119488
+        },
+        "456": {
+          "accuracy": 0.592,
+          "final_loss": 0.872978515625,
+          "wall_time_s": 6669.685866832733,
+          "peak_vram_gb": 9.262888448
+        }
+      },
+      "OAMP-20_mean_acc": 58.66666666666666,
+      "OAMP-20_std_acc": 0.4714045207910321,
+      "OAMP-20_mean_loss": 0.86150390625,
+      "OAMP-20_per_seed": {
+        "42": {
+          "accuracy": 0.59,
+          "final_loss": 0.85173828125,
+          "wall_time_s": 7219.286668300629,
+          "peak_vram_gb": 9.257541632
+        },
+        "123": {
+          "accuracy": 0.58,
+          "final_loss": 0.870478515625,
+          "wall_time_s": 7227.347440958023,
+          "peak_vram_gb": 9.228048384
+        },
+        "456": {
+          "accuracy": 0.59,
+          "final_loss": 0.862294921875,
+          "wall_time_s": 7227.916868209839,
+          "peak_vram_gb": 9.2686976
+        }
+      },
+      "oamp_vs_fp4_ttest": {
+        "t_stat": -1.4675987714106855,
+        "p_value": 0.2799177001769043
+      },
+      "oamp_retention_pct": 100.22779043280181,
+      "fp4_retention_pct": 101.82232346241457
+    },
+    "qwen-3b": {
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "short_name": "Qwen2.5-3B",
+      "family": "Qwen2",
+      "params_b": 3.09,
+      "Standard_mean_acc": 69.99999999999999,
+      "Standard_std_acc": 0.4320493798938578,
+      "Standard_mean_loss": 0.21208082849780718,
+      "Standard_per_seed": {
+        "42": {
+          "accuracy": 0.702,
+          "final_loss": 0.2067456831410527,
+          "wall_time_s": 7881.821892499924,
+          "peak_vram_gb": 9.89752576
+        },
+        "123": {
+          "accuracy": 0.694,
+          "final_loss": 0.20999068394303322,
+          "wall_time_s": 7884.30154800415,
+          "peak_vram_gb": 9.896780288
+        },
+        "456": {
+          "accuracy": 0.704,
+          "final_loss": 0.21950611840933562,
+          "wall_time_s": 7883.250580072403,
+          "peak_vram_gb": 9.897004544
+        }
+      },
+      "Naive-FP4_mean_acc": 55.06666666666666,
+      "Naive-FP4_std_acc": 1.5173075568988033,
+      "Naive-FP4_mean_loss": 0.8605013020833333,
+      "Naive-FP4_per_seed": {
+        "42": {
+          "accuracy": 0.556,
+          "final_loss": 0.83755859375,
+          "wall_time_s": 7908.540798902512,
+          "peak_vram_gb": 9.569357824
+        },
+        "123": {
+          "accuracy": 0.566,
+          "final_loss": 0.8741796875,
+          "wall_time_s": 7905.992531299591,
+          "peak_vram_gb": 9.56546304
+        },
+        "456": {
+          "accuracy": 0.53,
+          "final_loss": 0.869765625,
+          "wall_time_s": 7911.8691618442535,
+          "peak_vram_gb": 9.56392704
+        }
+      },
+      "OAMP-20_mean_acc": 59.93333333333334,
+      "OAMP-20_std_acc": 0.5249338582674545,
+      "OAMP-20_mean_loss": 0.7382877604166667,
+      "OAMP-20_per_seed": {
+        "42": {
+          "accuracy": 0.604,
+          "final_loss": 0.717548828125,
+          "wall_time_s": 8986.747567892075,
+          "peak_vram_gb": 9.584218624
+        },
+        "123": {
+          "accuracy": 0.592,
+          "final_loss": 0.74947265625,
+          "wall_time_s": 8990.825027704239,
+          "peak_vram_gb": 9.578515456
+        },
+        "456": {
+          "accuracy": 0.602,
+          "final_loss": 0.747841796875,
+          "wall_time_s": 8990.709810972214,
+          "peak_vram_gb": 9.578192384
+        }
+      },
+      "oamp_vs_fp4_ttest": {
+        "t_stat": 3.6637649765680207,
+        "p_value": 0.0670878904832642
+      },
+      "oamp_retention_pct": 85.61904761904765,
+      "fp4_retention_pct": 78.66666666666669
+    },
+    "mistral-7b": {
+      "model": "mistralai/Mistral-7B-Instruct-v0.3",
+      "short_name": "Mistral-7B",
+      "family": "Mistral",
+      "params_b": 7.24,
+      "Standard_mean_acc": 46.13333333333333,
+      "Standard_std_acc": 1.730767331432955,
+      "Standard_mean_loss": 0.6763385727504888,
+      "Standard_per_seed": {
+        "42": {
+          "accuracy": 0.484,
+          "final_loss": 0.6612423281371593,
+          "wall_time_s": 13617.494452953339,
+          "peak_vram_gb": 18.641433088
+        },
+        "123": {
+          "accuracy": 0.458,
+          "final_loss": 0.6851563520729542,
+          "wall_time_s": 13553.15650510788,
+          "peak_vram_gb": 18.641498624
+        },
+        "456": {
+          "accuracy": 0.442,
+          "final_loss": 0.6826170380413532,
+          "wall_time_s": 13527.409974336624,
+          "peak_vram_gb": 18.67086336
+        }
+      },
+      "Naive-FP4_mean_acc": 46.86666666666666,
+      "Naive-FP4_std_acc": 1.6519348924485144,
+      "Naive-FP4_mean_loss": 0.7220638020833334,
+      "Naive-FP4_per_seed": {
+        "42": {
+          "accuracy": 0.456,
+          "final_loss": 0.7024609375,
+          "wall_time_s": 13728.64393377304,
+          "peak_vram_gb": 18.754120192
+        },
+        "123": {
+          "accuracy": 0.492,
+          "final_loss": 0.7324609375,
+          "wall_time_s": 13714.988554954529,
+          "peak_vram_gb": 18.752129536
+        },
+        "456": {
+          "accuracy": 0.458,
+          "final_loss": 0.73126953125,
+          "wall_time_s": 13687.419464111328,
+          "peak_vram_gb": 18.752498176
+        }
+      },
+      "OAMP-20_mean_acc": 47.599999999999994,
+      "OAMP-20_std_acc": 0.8640987597877129,
+      "OAMP-20_mean_loss": 0.709453125,
+      "OAMP-20_per_seed": {
+        "42": {
+          "accuracy": 0.464,
+          "final_loss": 0.6908984375,
+          "wall_time_s": 15226.299398183823,
+          "peak_vram_gb": 18.774263296
+        },
+        "123": {
+          "accuracy": 0.484,
+          "final_loss": 0.71837890625,
+          "wall_time_s": 15174.27057504654,
+          "peak_vram_gb": 18.767950848
+        },
+        "456": {
+          "accuracy": 0.48,
+          "final_loss": 0.71908203125,
+          "wall_time_s": 15174.287461042404,
+          "peak_vram_gb": 18.778523136
+        }
+      },
+      "oamp_vs_fp4_ttest": {
+        "t_stat": 0.8461538461538455,
+        "p_value": 0.48656396918973
+      },
+      "oamp_retention_pct": 103.17919075144508,
+      "fp4_retention_pct": 101.58959537572254
+    }
+  },
+  "summary": {
+    "avg_oamp_retention": 96.34200960109818,
+    "avg_fp4_retention": 94.02619516826793,
+    "models_tested": 3,
+    "total_runs": 27
+  }
+}

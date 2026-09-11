@@ -1,0 +1,81 @@
+{
+  "timestamp": "20260313_231407",
+  "experiment": "batch_scaling",
+  "description": "Batch scaling OOM boundary: Standard-LoRA vs OAMP-Native",
+  "config": {
+    "L": 2048,
+    "batch_sizes": [
+      5,
+      6,
+      7
+    ],
+    "steps": 100,
+    "fp8_ratio": 0.2,
+    "group_size": 128,
+    "routing": "group_level_max_abs"
+  },
+  "gpu": "NVIDIA GB10",
+  "gpu_total_gb": 128.5,
+  "results": {
+    "B5": {
+      "standard_lora": {
+        "peak_vram_gb": 68.45,
+        "avg_ms_per_step": 16714.6,
+        "tok_per_sec": 613.0,
+        "oom": false
+      },
+      "naive_fp4": {
+        "peak_vram_gb": 50.44,
+        "avg_ms_per_step": 20040.2,
+        "tok_per_sec": 511.0,
+        "oom": false
+      },
+      "oamp_native": {
+        "peak_vram_gb": 51.62,
+        "avg_ms_per_step": 21360.5,
+        "tok_per_sec": 479.0,
+        "oom": false
+      }
+    },
+    "B6": {
+      "standard_lora": {
+        "peak_vram_gb": 80.82,
+        "avg_ms_per_step": 20128.0,
+        "tok_per_sec": 610.0,
+        "oom": false
+      },
+      "naive_fp4": {
+        "peak_vram_gb": 59.21,
+        "avg_ms_per_step": 24077.9,
+        "tok_per_sec": 510.0,
+        "oom": false
+      },
+      "oamp_native": {
+        "peak_vram_gb": 60.58,
+        "avg_ms_per_step": 25776.2,
+        "tok_per_sec": 477.0,
+        "oom": false
+      }
+    },
+    "B7": {
+      "standard_lora": {
+        "peak_vram_gb": 93.2,
+        "avg_ms_per_step": 23406.5,
+        "tok_per_sec": 612.0,
+        "oom": false
+      },
+      "naive_fp4": {
+        "peak_vram_gb": 67.97,
+        "avg_ms_per_step": 28190.7,
+        "tok_per_sec": 509.0,
+        "oom": false
+      },
+      "oamp_native": {
+        "peak_vram_gb": 69.57,
+        "avg_ms_per_step": 29992.9,
+        "tok_per_sec": 478.0,
+        "oom": false
+      }
+    }
+  }
+}

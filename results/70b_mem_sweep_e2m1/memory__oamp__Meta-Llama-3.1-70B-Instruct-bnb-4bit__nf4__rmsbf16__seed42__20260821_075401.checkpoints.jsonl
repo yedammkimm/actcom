@@ -1,0 +1,1 @@
+{"step": 7, "loss": 12.693875312805176, "elapsed_s": 894.7717561721802, "peak_alloc_gb": 78.635172352, "wall_time": 1787300055.674781, "B": 1, "L": 2048, "peak_reserved_gb": 83.16256256, "peak_measurement": "per_step_max_after_warmup"}

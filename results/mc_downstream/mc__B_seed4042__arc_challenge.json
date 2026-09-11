@@ -1,0 +1,7079 @@
+{
+ "base_model": "meta-llama/Llama-3.2-3B-Instruct",
+ "adapter_path": "results/axis3_b4dfp8/accuracy__naive_fp4__Llama-3.2-3B-Instruct__nf4__rmsbf16__seed4042__20260902_074256_adapter",
+ "weight_quant": "nf4",
+ "bf16_rmsnorm": true,
+ "batch_size": 64,
+ "limit": null,
+ "stride": null,
+ "mem_guard_gb": 60.0,
+ "dtype_report": {
+  "weight_quant": "nf4",
+  "bf16_rmsnorm": true,
+  "bf16_params": true,
+  "bf16_lora": true,
+  "rmsnorm_swapped": 57,
+  "rmsnorm_classes_seen": [
+   "LlamaRMSNorm"
+  ],
+  "norms": [
+   "torch.bfloat16"
+  ],
+  "embed": [
+   "torch.bfloat16"
+  ],
+  "lm_head": [
+   "torch.bfloat16"
+  ],
+  "lora": [
+   "torch.bfloat16"
+  ],
+  "lm_head_tied": true
+ },
+ "tasks": {
+  "arc_challenge": {
+   "n": 1172,
+   "n_correct_sum": 477,
+   "n_correct_mean": 501,
+   "acc_sum": 40.69965870307167,
+   "acc_mean": 42.74744027303754,
+   "wall_s": 140.99254417419434,
+   "peak_reserved_gb": 9.957277696,
+   "per_sample": [
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 4,
+     "pred_mean": 4,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 2,
+     "correct_sum": 0
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 2,
+     "pred_sum": 2,
+     "pred_mean": 2,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 1,
+     "pred_sum": 1,
+     "pred_mean": 1,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 0,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 0,
+     "pred_sum": 1,
+     "pred_mean": 0,
+     "correct_sum": 0
+    },
+    {
+     "gold": 3,
+     "pred_sum": 3,
+     "pred_mean": 3,
+     "correct_sum": 1
+    },
+    {
+     "gold": 0,
+     "pred_sum": 0,
+     "pred_mean": 3,
+     "correct_sum": 1
+    }
+   ],
+   "items_hash": "d11c89e8a6572b9d"
+  }
+ }
+}

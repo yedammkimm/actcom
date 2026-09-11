@@ -1,0 +1,60 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "stats": {
+    "fp8": {
+      "calls": 288,
+      "clamped_groups": 72,
+      "total_groups": 737280,
+      "nonfinite_out": 0,
+      "min_scale": 2.2321429427041295e-11,
+      "max_scale": 0.2098214328289032,
+      "max_input_absmax": 94.0,
+      "nonfinite_input": 0
+    },
+    "fp4": {
+      "calls": 432,
+      "clamped_groups": 0,
+      "total_groups": 7117056,
+      "nonfinite_out": 0,
+      "min_scale": 5.173683166503906e-05,
+      "max_scale": 394.0,
+      "max_input_absmax": 2752.0,
+      "nonfinite_input": 0
+    }
+  },
+  "worst": {
+    "fp8": null,
+    "fp4": null
+  },
+  "gradient": {
+    "total": 7372800,
+    "nonfinite": 112640,
+    "nonfinite_params": 6,
+    "sample_nonfin_params": [
+      [
+        "base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight",
+        32768
+      ],
+      [
+        "base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight",
+        6144
+      ],
+      [
+        "base_model.model.model.layers.0.self_attn.k_proj.lora_A.default.weight",
+        32768
+      ],
+      [
+        "base_model.model.model.layers.0.self_attn.k_proj.lora_B.default.weight",
+        4096
+      ],
+      [
+        "base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight",
+        32768
+      ],
+      [
+        "base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight",
+        4096
+      ]
+    ]
+  }
+}

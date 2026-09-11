@@ -1,0 +1,39 @@
+{
+  "model": "meta-llama/Llama-3.2-3B-Instruct",
+  "stats": {
+    "fp8": {
+      "calls": 560,
+      "clamped_groups": 56,
+      "total_groups": 6482560,
+      "nonfinite_out": 0,
+      "min_scale": 2.2321429427041295e-11,
+      "max_scale": 0.7633928656578064,
+      "max_input_absmax": 342.0,
+      "nonfinite_input": 0,
+      "scale_fp16_underflow_groups": 56,
+      "scale_fp16_underflow_absmax_max": 0.0
+    },
+    "fp4": {
+      "calls": 0,
+      "clamped_groups": 0,
+      "total_groups": 0,
+      "nonfinite_out": 0,
+      "min_scale": Infinity,
+      "max_scale": 0.0,
+      "max_input_absmax": 0.0,
+      "nonfinite_input": 0,
+      "scale_fp16_underflow_groups": 0,
+      "scale_fp16_underflow_absmax_max": 0.0
+    }
+  },
+  "worst": {
+    "fp8": null,
+    "fp4": null
+  },
+  "gradient": {
+    "total": 9175040,
+    "nonfinite": 0,
+    "nonfinite_params": 0,
+    "sample_nonfin_params": []
+  }
+}

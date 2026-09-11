@@ -1,0 +1,804 @@
+{
+  "meta": {
+    "model": "meta-llama/Llama-3.2-3B-Instruct",
+    "B": 1,
+    "L": 512,
+    "timestamp": "20260904_192409",
+    "filters_requested": [
+      "qk_chan_int4_prod",
+      "qk_int4_chan",
+      "qk_fp8_block",
+      "qk_int4_block",
+      "qk_e2m1_block",
+      "qk_identity_chan"
+    ],
+    "note": "Adapter is from pilot_sr_lr (SR+lr=5e-5, 300 steps). Not a pure \u03b3-trained checkpoint; caveats apply for trained-state result."
+  },
+  "checkpoints": {
+    "step0_fresh": {
+      "checkpoint": "step0_fresh",
+      "loss_true": 12.388354301452637,
+      "g_true_norm": 2.212193012237549,
+      "filters": {
+        "qk_chan_int4_prod": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.212193012237549,
+            "norm_test": 2.3905508518218994,
+            "diff_norm": 0.9899614453315735,
+            "rel_err": 0.44750229290809723,
+            "cos": 0.9103490710258484,
+            "norm_ratio": 1.0806248996347514
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.8310309052467346,
+              "cos_mean": 0.8610619604587555,
+              "rel_err_max": 0.8373349561911447,
+              "rel_err_mean": 0.6254382689668392,
+              "norm_ratio_min": 1.0172695307404434,
+              "norm_ratio_max": 1.4569237599889353,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.9549542665481567,
+              "cos_mean": 0.9744876772165298,
+              "rel_err_max": 0.4623807570193458,
+              "rel_err_mean": 0.2975084060661016,
+              "norm_ratio_min": 1.0942377819034967,
+              "norm_ratio_max": 1.3095434821262752,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 0.9865744709968567,
+              "cos_mean": 0.9920608550310135,
+              "rel_err_max": 0.19748230182289805,
+              "rel_err_mean": 0.13812246137978887,
+              "norm_ratio_min": 1.0,
+              "norm_ratio_max": 1.1301341504167766,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "unknown": {
+              "seen": 626,
+              "compressed": 0
+            },
+            "q_proj.out": {
+              "seen": 71,
+              "compressed": 43
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "k_proj.out": {
+              "seen": 56,
+              "compressed": 28
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "v_proj.out": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "o_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0
+            },
+            "down_proj.in": {
+              "seen": 5,
+              "compressed": 0
+            },
+            "up_proj.in": {
+              "seen": 2,
+              "compressed": 0
+            }
+          }
+        },
+        "qk_int4_chan": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.212193012237549,
+            "norm_test": 2.292994260787964,
+            "diff_norm": 1.0219883918762207,
+            "rel_err": 0.4619797577438862,
+            "cos": 0.8976912498474121,
+            "norm_ratio": 1.0365254062839153
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.7872723937034607,
+              "cos_mean": 0.8324899524450302,
+              "rel_err_max": 0.7906916970997646,
+              "rel_err_mean": 0.6086781298503052,
+              "norm_ratio_min": 0.9132613520630708,
+              "norm_ratio_max": 1.2822380487572353,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.9564297199249268,
+              "cos_mean": 0.9737179577350616,
+              "rel_err_max": 0.46923821460738063,
+              "rel_err_mean": 0.31760048470067564,
+              "norm_ratio_min": 1.1180973155285583,
+              "norm_ratio_max": 1.3237744701798417,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 0.9866927266120911,
+              "cos_mean": 0.9921501278877258,
+              "rel_err_max": 0.18631651123279652,
+              "rel_err_mean": 0.1294282270127559,
+              "norm_ratio_min": 1.0,
+              "norm_ratio_max": 1.110596275071716,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "unknown": {
+              "seen": 626,
+              "compressed": 0
+            },
+            "q_proj.out": {
+              "seen": 66,
+              "compressed": 38
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "k_proj.out": {
+              "seen": 56,
+              "compressed": 28
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "v_proj.out": {
+              "seen": 57,
+              "compressed": 0
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "o_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0
+            },
+            "up_proj.in": {
+              "seen": 3,
+              "compressed": 0
+            },
+            "down_proj.in": {
+              "seen": 8,
+              "compressed": 0
+            }
+          }
+        },
+        "qk_fp8_block": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.212193012237549,
+            "norm_test": 2.1056294441223145,
+            "diff_norm": 0.2952542006969452,
+            "rel_err": 0.13346674501891986,
+            "cos": 0.9918614625930786,
+            "norm_ratio": 0.9518289916269786
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.9700725078582764,
+              "cos_mean": 0.982371374964714,
+              "rel_err_max": 0.26491869952890107,
+              "rel_err_mean": 0.20086842049775047,
+              "norm_ratio_min": 0.8505867602391891,
+              "norm_ratio_max": 0.9465185749002055,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.9950329661369324,
+              "cos_mean": 0.9974925518035889,
+              "rel_err_max": 0.10048541843913701,
+              "rel_err_mean": 0.06784661081787026,
+              "norm_ratio_min": 1.0032477794254806,
+              "norm_ratio_max": 1.0300539711686274,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 0.9983955025672913,
+              "cos_mean": 0.9988932609558105,
+              "rel_err_max": 0.059565446009958146,
+              "rel_err_mean": 0.04267692928772804,
+              "norm_ratio_min": 0.9731004875186213,
+              "norm_ratio_max": 1.0,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "unknown": {
+              "seen": 630,
+              "compressed": 0
+            },
+            "q_proj.out": {
+              "seen": 68,
+              "compressed": 40
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "k_proj.out": {
+              "seen": 56,
+              "compressed": 28
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "v_proj.out": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "o_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0
+            },
+            "down_proj.in": {
+              "seen": 3,
+              "compressed": 0
+            },
+            "down_proj.out": {
+              "seen": 1,
+              "compressed": 0
+            },
+            "up_proj.in": {
+              "seen": 2,
+              "compressed": 0
+            }
+          }
+        },
+        "qk_int4_block": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.212193012237549,
+            "norm_test": 5.7666168212890625,
+            "diff_norm": 5.355057239532471,
+            "rel_err": 2.420700729958474,
+            "cos": 0.37121304869651794,
+            "norm_ratio": 2.6067421736660985
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.18214371800422668,
+              "cos_mean": 0.4159003272652626,
+              "rel_err_max": 1.9243615421942086,
+              "rel_err_mean": 1.7357271488885317,
+              "norm_ratio_min": 1.7941881974647793,
+              "norm_ratio_max": 2.1053750468872754,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.7321503162384033,
+              "cos_mean": 0.816909670829773,
+              "rel_err_max": 1.4444133346368964,
+              "rel_err_mean": 1.0129201874832188,
+              "norm_ratio_min": 1.3791178923872702,
+              "norm_ratio_max": 2.005874773798952,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 0.7377555966377258,
+              "cos_mean": 0.8150110095739365,
+              "rel_err_max": 4.765701676700879,
+              "rel_err_mean": 2.62241141386279,
+              "norm_ratio_min": 1.0,
+              "norm_ratio_max": 5.488857489963392,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "unknown": {
+              "seen": 626,
+              "compressed": 0
+            },
+            "q_proj.out": {
+              "seen": 75,
+              "compressed": 47
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "k_proj.out": {
+              "seen": 56,
+              "compressed": 28
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "v_proj.out": {
+              "seen": 57,
+              "compressed": 0
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "o_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0
+            },
+            "down_proj.out": {
+              "seen": 1,
+              "compressed": 0
+            },
+            "down_proj.in": {
+              "seen": 1,
+              "compressed": 0
+            }
+          }
+        },
+        "qk_e2m1_block": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.212193012237549,
+            "norm_test": 3.5816798210144043,
+            "diff_norm": 2.9023642539978027,
+            "rel_err": 1.3119850925946883,
+            "cos": 0.5867776870727539,
+            "norm_ratio": 1.6190629846496405
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.4518848955631256,
+              "cos_mean": 0.5433561727404594,
+              "rel_err_max": 1.0398817428493226,
+              "rel_err_mean": 0.9657033646029354,
+              "norm_ratio_min": 0.879893978317561,
+              "norm_ratio_max": 1.180249575546184,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.778523325920105,
+              "cos_mean": 0.848300039768219,
+              "rel_err_max": 3.1162728774805895,
+              "rel_err_mean": 2.2229601891026944,
+              "norm_ratio_min": 1.5560890181771803,
+              "norm_ratio_max": 3.8456098957508655,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 0.8930203914642334,
+              "cos_mean": 0.9307865798473358,
+              "rel_err_max": 1.294823029915684,
+              "rel_err_mean": 0.797419291079926,
+              "norm_ratio_min": 1.0,
+              "norm_ratio_max": 2.148883669924922,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "unknown": {
+              "seen": 622,
+              "compressed": 0
+            },
+            "q_proj.out": {
+              "seen": 76,
+              "compressed": 48
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "k_proj.out": {
+              "seen": 56,
+              "compressed": 28
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "v_proj.out": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "o_proj.out": {
+              "seen": 29,
+              "compressed": 0
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0
+            },
+            "up_proj.in": {
+              "seen": 3,
+              "compressed": 0
+            },
+            "down_proj.in": {
+              "seen": 2,
+              "compressed": 0
+            }
+          }
+        },
+        "qk_identity_chan": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.212193012237549,
+            "norm_test": 2.2268168926239014,
+            "diff_norm": 0.03282845392823219,
+            "rel_err": 0.014839778331560438,
+            "cos": 0.9999122619628906,
+            "norm_ratio": 1.0066105806796493
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.9998700022697449,
+              "cos_mean": 0.9999387562274933,
+              "rel_err_max": 0.020354337877724043,
+              "rel_err_mean": 0.01507422498914448,
+              "norm_ratio_min": 1.008600586669005,
+              "norm_ratio_max": 1.0122933974463735,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.9999861717224121,
+              "cos_mean": 0.9999905377626419,
+              "rel_err_max": 0.005262733371618722,
+              "rel_err_mean": 0.004387552777084706,
+              "norm_ratio_min": 0.9984627650064725,
+              "norm_ratio_max": 1.0001614886960961,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 1.0,
+              "cos_mean": 1.0000000298023224,
+              "rel_err_max": 4.181143324800561e-06,
+              "rel_err_mean": 1.0452858312001403e-06,
+              "norm_ratio_min": 1.0,
+              "norm_ratio_max": 1.0,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "unknown": {
+              "seen": 623,
+              "compressed": 0
+            },
+            "q_proj.out": {
+              "seen": 75,
+              "compressed": 47
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "k_proj.out": {
+              "seen": 56,
+              "compressed": 28
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "v_proj.out": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "o_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0
+            },
+            "down_proj.in": {
+              "seen": 4,
+              "compressed": 0
+            },
+            "up_proj.in": {
+              "seen": 2,
+              "compressed": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

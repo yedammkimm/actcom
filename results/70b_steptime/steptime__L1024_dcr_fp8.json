@@ -1,0 +1,179 @@
+{
+  "config": {
+    "mode": "memory",
+    "method": "naive_fp4",
+    "model_id": "unsloth/Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+    "weight_quant": "nf4",
+    "seed": 42,
+    "fp8_ratio": 0.0,
+    "group_size": 128,
+    "min_numel": 1024,
+    "mask_seed": null,
+    "dedupe": false,
+    "pack_stochastic_rounding": false,
+    "sr_seed": null,
+    "pack_4d_mode": "fp8",
+    "body_encoding": "int4",
+    "bf16_rmsnorm": true,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "task": "gsm8k",
+    "n_train": 7473,
+    "epochs": 2,
+    "lr": 0.0002,
+    "batch_size": 1,
+    "grad_accum_steps": 4,
+    "max_seq_len": 512,
+    "padding": false,
+    "data_packing": false,
+    "packed_seq_len": 2048,
+    "grad_clip": 1.0,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.0,
+    "optimizer": "adamw",
+    "eval_samples": 500,
+    "eval_fewshot": 8,
+    "eval_max_new_tokens": 256,
+    "mem_seq_len": 1024,
+    "mem_batch_size": 1,
+    "mem_steps": 15,
+    "mem_warmup": 3,
+    "mem_abort_gb": 100.0,
+    "gc_enabled": false,
+    "checkpoint_every": 50,
+    "output_dir": "results",
+    "output_path": "results/70b_steptime/steptime__L1024_dcr_fp8.json"
+  },
+  "env": {
+    "hostname": "93d447e43e92",
+    "python_version": "3.10.12",
+    "gpu_name": "NVIDIA GB10",
+    "compute_capability": "12.1",
+    "driver_version": "580.173.02",
+    "cuda_version": "12.8",
+    "torch_version": "2.12.0.dev20260407+cu128",
+    "transformers_version": "5.1.0",
+    "peft_version": "0.18.1",
+    "bitsandbytes_version": "0.50.0",
+    "torchao_version": "0.17.0",
+    "git_commit": "16765018042bfab5a0430d66196f13e6f3bc1c2b",
+    "git_dirty": true,
+    "timestamp_start": "2026-09-06T12:36:39.746454",
+    "timestamp_end": "2026-09-06T12:55:11.311392"
+  },
+  "model": {
+    "n_params": 36393721856,
+    "n_trainable": 65536000,
+    "dtype_report": {
+      "weight_quant": "nf4",
+      "bf16_rmsnorm": true,
+      "rmsnorm_swapped": 161,
+      "rmsnorm_classes_seen": [
+        "LlamaRMSNorm"
+      ],
+      "norms": [
+        "torch.bfloat16"
+      ],
+      "embed": [
+        "torch.bfloat16"
+      ],
+      "lm_head": [
+        "torch.bfloat16"
+      ],
+      "lora": [
+        "torch.bfloat16"
+      ],
+      "lm_head_tied": false
+    }
+  },
+  "pack": {
+    "pack_stats": {
+      "kept": 28800,
+      "skip_small": 2898,
+      "skip_head": 36,
+      "skip_non_float": 5724,
+      "skip_misaligned": 11520,
+      "skip_param": 14364,
+      "skip_by_dim": 0,
+      "bilevel": 0,
+      "uniform": 28800,
+      "override_fp8_4d": 11520,
+      "uniform_fp4_3d": 17280,
+      "uniform_fp8_3d": 0,
+      "uniform_fp4_4d": 0,
+      "uniform_fp8_4d": 11520,
+      "chan_int4_4d": 0,
+      "numel_kept": 251500953600,
+      "numel_uniform_fp4_3d": 223566888960,
+      "numel_uniform_fp8_3d": 0,
+      "numel_uniform_fp4_4d": 0,
+      "numel_uniform_fp8_4d": 27934064640,
+      "numel_chan_int4_4d": 0,
+      "numel_bilevel": 0,
+      "n_scale_elems": 1964851200,
+      "dedupe_hit": 0,
+      "dedupe_miss": 0
+    },
+    "coverage_bytes": {
+      "unique": null,
+      "raw": null
+    },
+    "effective_bits": {
+      "element_bits": 4.444277673545966,
+      "byte_bits": 4.569277673545966,
+      "scale_bits": 0.125,
+      "group_size": 128,
+      "fp8_ratio": 0.0,
+      "total_numel": 251500953600,
+      "numel_fp4": 223566888960,
+      "numel_fp8": 27934064640,
+      "numel_chan_int4": 0,
+      "numel_bilevel": 0,
+      "n_scale_elems": 1964851200,
+      "body_encoding": "int4"
+    }
+  },
+  "memory": {
+    "peak_allocated_gb": 61.393538048,
+    "peak_reserved_gb": 62.765662208,
+    "peak_measurement": "per_step_max_after_warmup",
+    "mem_after_load_gb": 39.650378752,
+    "mem_after_optimizer_init_gb": 48.180315136,
+    "mem_after_first_step_gb": null
+  },
+  "sequence": {
+    "seq_len_mean": 1024.0,
+    "seq_len_max": 1024,
+    "seq_len_p95": 1024,
+    "tokens_total": 15360
+  },
+  "throughput": {
+    "tokens_per_second": 19.953145254077462,
+    "seconds_per_step": 42.75809460668049,
+    "train_wall_s": 769.8034472465515,
+    "eval_wall_s": null,
+    "steps": 15
+  },
+  "results": {
+    "step_losses": [],
+    "final_loss": 12.763223648071289,
+    "gsm8k_accuracy": null,
+    "n_correct": null,
+    "n_eval_samples": null,
+    "per_sample": [],
+    "eval_diagnostics": null,
+    "adapter_path": null
+  },
+  "status": "OK",
+  "oom_stage": null,
+  "oom_step": null,
+  "allocated_at_failure_gb": null,
+  "error": null
+}

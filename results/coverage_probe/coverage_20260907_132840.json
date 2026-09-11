@@ -1,0 +1,744 @@
+{
+  "meta": {
+    "model": "meta-llama/Llama-3.2-3B-Instruct",
+    "B": 1,
+    "L": 512,
+    "timestamp": "20260907_132842",
+    "filters_requested": [
+      "dist_stats",
+      "qk_int4_block"
+    ],
+    "note": "Adapter is from pilot_sr_lr (SR+lr=5e-5, 300 steps). Not a pure \u03b3-trained checkpoint; caveats apply for trained-state result."
+  },
+  "checkpoints": {
+    "step0_fresh": {
+      "checkpoint": "step0_fresh",
+      "loss_true": 12.388354301452637,
+      "g_true_norm": 2.2213149070739746,
+      "filters": {
+        "dist_stats": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.2213149070739746,
+            "norm_test": 2.2145938873291016,
+            "diff_norm": 0.025780249387025833,
+            "rel_err": 0.01160585079806845,
+            "cos": 0.9999370574951172,
+            "norm_ratio": 0.9969743057486045
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.9998891949653625,
+              "cos_mean": 0.9999532401561737,
+              "rel_err_max": 0.0157269311540403,
+              "rel_err_mean": 0.010590933000507658,
+              "norm_ratio_min": 0.994234345910731,
+              "norm_ratio_max": 0.9952621314791039,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.9999859929084778,
+              "cos_mean": 0.9999914616346359,
+              "rel_err_max": 0.005295699015049925,
+              "rel_err_mean": 0.004059644101003901,
+              "norm_ratio_min": 0.999401096308465,
+              "norm_ratio_max": 1.0001387131967976,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 1.0,
+              "cos_mean": 1.0000000298023224,
+              "rel_err_max": 3.124973606130532e-06,
+              "rel_err_mean": 7.81243401532633e-07,
+              "norm_ratio_min": 1.0,
+              "norm_ratio_max": 1.0,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "unknown": {
+              "seen": 622,
+              "compressed": 0,
+              "by_rank": {
+                "0": 29,
+                "1": 85,
+                "2": 224,
+                "3": 168,
+                "4": 116
+              },
+              "rank4_heads": {
+                "1": 112,
+                "24": 4
+              },
+              "rank4_shapes": {
+                "(1, 1, 512, 128)": 112,
+                "(1, 24, 512, 128)": 4
+              }
+            },
+            "q_proj.out": {
+              "seen": 77,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28,
+                "4": 49
+              },
+              "rank4_heads": {
+                "24": 49
+              },
+              "rank4_shapes": {
+                "(1, 24, 512, 128)": 49
+              }
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "k_proj.out": {
+              "seen": 56,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28,
+                "4": 28
+              },
+              "rank4_heads": {
+                "8": 28
+              },
+              "rank4_shapes": {
+                "(1, 8, 512, 128)": 28
+              }
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "v_proj.out": {
+              "seen": 56,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28,
+                "4": 28
+              },
+              "rank4_heads": {
+                "8": 28
+              },
+              "rank4_shapes": {
+                "(1, 8, 512, 128)": 28
+              }
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "o_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0,
+              "by_rank": {
+                "3": 56
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "3": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "3": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0,
+              "by_rank": {
+                "3": 54
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "down_proj.in": {
+              "seen": 3,
+              "compressed": 0,
+              "by_rank": {
+                "4": 3
+              },
+              "rank4_heads": {
+                "24": 3
+              },
+              "rank4_shapes": {
+                "(1, 24, 512, 128)": 3
+              }
+            },
+            "up_proj.in": {
+              "seen": 2,
+              "compressed": 0,
+              "by_rank": {
+                "3": 2
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            }
+          },
+          "dist_stats_by_role": {
+            "q_proj.in": {
+              "n_tensors": 28,
+              "n_elements": 44040192,
+              "absmax_mean": 8.675223214285714,
+              "absmax_max": 12.125,
+              "median_abs_mean": 0.17818777901785715,
+              "dynamic_range_mean": 51.48716554739337,
+              "dynamic_range_max": 108.67924528301887,
+              "frac_below_absmax_over_14_mean": 0.9242019099848611,
+              "frac_below_absmax_over_24_mean": 0.7873217208044869,
+              "delta_frac_below_14_vs_24_mean": 0.13688018918037415,
+              "frac_zeroed_int4_mean": 0.4742953564439501,
+              "frac_zeroed_e2m1_mean": 0.30680144312126295,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.16749391332268715,
+              "kurtosis_mean": 38.06344791821071,
+              "kurtosis_max": 64.50669860839844,
+              "numel_share": 0.06298031865042174
+            },
+            "q_proj.out": {
+              "n_tensors": 77,
+              "n_elements": 77299712,
+              "absmax_mean": 8.70118781296365,
+              "absmax_max": 21.75,
+              "median_abs_mean": 0.3327453276928121,
+              "dynamic_range_mean": 41.62024498684151,
+              "dynamic_range_max": 124.69677419354839,
+              "frac_below_absmax_over_14_mean": 0.8030389092038273,
+              "frac_below_absmax_over_24_mean": 0.6347446292070273,
+              "delta_frac_below_14_vs_24_mean": 0.1682942799967999,
+              "frac_zeroed_int4_mean": 0.4480145023050021,
+              "frac_zeroed_e2m1_mean": 0.2905459682938405,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.15746853401116162,
+              "kurtosis_mean": 22.423931389807038,
+              "kurtosis_max": 79.7085189819336,
+              "numel_share": 0.11054358013120899
+            },
+            "k_proj.in": {
+              "n_tensors": 28,
+              "n_elements": 44040192,
+              "absmax_mean": 8.675223214285714,
+              "absmax_max": 12.125,
+              "median_abs_mean": 0.17818777901785715,
+              "dynamic_range_mean": 51.48716554739337,
+              "dynamic_range_max": 108.67924528301887,
+              "frac_below_absmax_over_14_mean": 0.9242019099848611,
+              "frac_below_absmax_over_24_mean": 0.7873217208044869,
+              "delta_frac_below_14_vs_24_mean": 0.13688018918037415,
+              "frac_zeroed_int4_mean": 0.4742953564439501,
+              "frac_zeroed_e2m1_mean": 0.30680144312126295,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.16749391332268715,
+              "kurtosis_mean": 38.06344791821071,
+              "kurtosis_max": 64.50669860839844,
+              "numel_share": 0.06298031865042174
+            },
+            "k_proj.out": {
+              "n_tensors": 56,
+              "n_elements": 14909440,
+              "absmax_mean": 14.800567694024725,
+              "absmax_max": 20.25,
+              "median_abs_mean": 0.891117171402816,
+              "dynamic_range_mean": 16.656713551439523,
+              "dynamic_range_max": 23.730337078651687,
+              "frac_below_absmax_over_14_mean": 0.5652150583791209,
+              "frac_below_absmax_over_24_mean": 0.3643855838985233,
+              "delta_frac_below_14_vs_24_mean": 0.20082947448059757,
+              "frac_zeroed_int4_mean": 0.3790375761933379,
+              "frac_zeroed_e2m1_mean": 0.23461055546016482,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.14442702073317307,
+              "kurtosis_mean": 11.499151828000834,
+              "kurtosis_max": 19.26847267150879,
+              "numel_share": 0.021321462043111528
+            },
+            "v_proj.in": {
+              "n_tensors": 28,
+              "n_elements": 44040192,
+              "absmax_mean": 8.675223214285714,
+              "absmax_max": 12.125,
+              "median_abs_mean": 0.17818777901785715,
+              "dynamic_range_mean": 51.48716554739337,
+              "dynamic_range_max": 108.67924528301887,
+              "frac_below_absmax_over_14_mean": 0.9242019099848611,
+              "frac_below_absmax_over_24_mean": 0.7873217208044869,
+              "delta_frac_below_14_vs_24_mean": 0.13688018918037415,
+              "frac_zeroed_int4_mean": 0.4742953564439501,
+              "frac_zeroed_e2m1_mean": 0.30680144312126295,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.16749391332268715,
+              "kurtosis_mean": 38.06344791821071,
+              "kurtosis_max": 64.50669860839844,
+              "numel_share": 0.06298031865042174
+            },
+            "v_proj.out": {
+              "n_tensors": 56,
+              "n_elements": 14909440,
+              "absmax_mean": 2.78373540521978,
+              "absmax_max": 5.375,
+              "median_abs_mean": 0.17550987830528847,
+              "dynamic_range_mean": 16.54819090745369,
+              "dynamic_range_max": 36.49122807017544,
+              "frac_below_absmax_over_14_mean": 0.5568816132597871,
+              "frac_below_absmax_over_24_mean": 0.35788077888907965,
+              "delta_frac_below_14_vs_24_mean": 0.19900083437070748,
+              "frac_zeroed_int4_mean": 0.2245035360147665,
+              "frac_zeroed_e2m1_mean": 0.1333329085465316,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.0911706274682349,
+              "kurtosis_mean": 5.931181291302482,
+              "kurtosis_max": 11.01856517791748,
+              "numel_share": 0.021321462043111528
+            },
+            "o_proj.in": {
+              "n_tensors": 28,
+              "n_elements": 44040192,
+              "absmax_mean": 1.3893694196428572,
+              "absmax_max": 4.875,
+              "median_abs_mean": 0.024527413504464284,
+              "dynamic_range_mean": 61.81660026227405,
+              "dynamic_range_max": 124.69677419354839,
+              "frac_below_absmax_over_14_mean": 0.9048811325005123,
+              "frac_below_absmax_over_24_mean": 0.7913824873311179,
+              "delta_frac_below_14_vs_24_mean": 0.11349864516939434,
+              "frac_zeroed_int4_mean": 0.42775566450187136,
+              "frac_zeroed_e2m1_mean": 0.2842943173434053,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.14346134715846603,
+              "kurtosis_mean": 27.610017946788243,
+              "kurtosis_max": 79.7085189819336,
+              "numel_share": 0.06298031865042174
+            },
+            "o_proj.out": {
+              "n_tensors": 28,
+              "n_elements": 229376,
+              "absmax_mean": 0.17046247209821427,
+              "absmax_max": 0.58203125,
+              "median_abs_mean": 0.028379167829241072,
+              "dynamic_range_mean": 6.569175390296782,
+              "dynamic_range_max": 10.844444444444445,
+              "frac_below_absmax_over_14_mean": 0.24331229073660715,
+              "frac_below_absmax_over_24_mean": 0.14311872209821427,
+              "delta_frac_below_14_vs_24_mean": 0.10019356863839288,
+              "frac_zeroed_int4_mean": 0.15140206473214285,
+              "frac_zeroed_e2m1_mean": 0.08855329241071429,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.06284877232142856,
+              "kurtosis_mean": 3.1840129579816545,
+              "kurtosis_max": 5.404689788818359,
+              "numel_share": 0.0003280224929709466
+            },
+            "residual_pre_mlp": {
+              "n_tensors": 56,
+              "n_elements": 88080384,
+              "absmax_mean": 282.34458705357144,
+              "absmax_max": 304.0,
+              "median_abs_mean": 0.11435590471540179,
+              "dynamic_range_mean": 3360.451659493769,
+              "dynamic_range_max": 9023.072463768116,
+              "frac_below_absmax_over_14_mean": 0.9824579294238772,
+              "frac_below_absmax_over_24_mean": 0.9698374271392822,
+              "delta_frac_below_14_vs_24_mean": 0.012620502284594992,
+              "frac_zeroed_int4_mean": 0.38533675032002584,
+              "frac_zeroed_e2m1_mean": 0.24249804126364843,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.1428387090563774,
+              "kurtosis_mean": 222418.23463592358,
+              "kurtosis_max": 380255.96875,
+              "numel_share": 0.12596063730084348
+            },
+            "gate_proj.out": {
+              "n_tensors": 28,
+              "n_elements": 117440512,
+              "absmax_mean": 8.041294642857142,
+              "absmax_max": 34.5,
+              "median_abs_mean": 0.26491001674107145,
+              "dynamic_range_mean": 30.23276346836359,
+              "dynamic_range_max": 104.85106382978724,
+              "frac_below_absmax_over_14_mean": 0.7567242043358939,
+              "frac_below_absmax_over_24_mean": 0.5354069215910775,
+              "delta_frac_below_14_vs_24_mean": 0.22131728274481643,
+              "frac_zeroed_int4_mean": 0.2217044404574803,
+              "frac_zeroed_e2m1_mean": 0.13135909182684763,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.09034534863063268,
+              "kurtosis_mean": 11.320849563394274,
+              "kurtosis_max": 45.74720764160156,
+              "numel_share": 0.16794751640112465
+            },
+            "up_proj.out": {
+              "n_tensors": 28,
+              "n_elements": 117440512,
+              "absmax_mean": 6.49609375,
+              "absmax_max": 32.75,
+              "median_abs_mean": 0.16120256696428573,
+              "dynamic_range_mean": 40.39399827892344,
+              "dynamic_range_max": 295.4766355140187,
+              "frac_below_absmax_over_14_mean": 0.8197119576590401,
+              "frac_below_absmax_over_24_mean": 0.6020779779979161,
+              "delta_frac_below_14_vs_24_mean": 0.21763397966112408,
+              "frac_zeroed_int4_mean": 0.2621609994343349,
+              "frac_zeroed_e2m1_mean": 0.15782952308654785,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.10433147634778706,
+              "kurtosis_mean": 27.431636554854258,
+              "kurtosis_max": 451.5856018066406,
+              "numel_share": 0.16794751640112465
+            },
+            "residual_pre_attn": {
+              "n_tensors": 54,
+              "n_elements": 84934656,
+              "absmax_mean": 292.8489583333333,
+              "absmax_max": 304.0,
+              "median_abs_mean": 0.11158130787037036,
+              "dynamic_range_mean": 3650.8130073848615,
+              "dynamic_range_max": 9362.285714285714,
+              "frac_below_absmax_over_14_mean": 0.9997769064373441,
+              "frac_below_absmax_over_24_mean": 0.9992829428778754,
+              "delta_frac_below_14_vs_24_mean": 0.0004939635594686242,
+              "frac_zeroed_int4_mean": 0.39135171086699877,
+              "frac_zeroed_e2m1_mean": 0.24598188311965377,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.145369827747345,
+              "kurtosis_mean": 237901.82261544687,
+              "kurtosis_max": 380826.9375,
+              "numel_share": 0.12146204311152765
+            },
+            "down_proj.in": {
+              "n_tensors": 3,
+              "n_elements": 4718592,
+              "absmax_mean": 1.01171875,
+              "absmax_max": 1.2265625,
+              "median_abs_mean": 0.017252604166666668,
+              "dynamic_range_mean": 57.97348107749354,
+              "dynamic_range_max": 65.67320261437908,
+              "frac_below_absmax_over_14_mean": 0.9003031253814697,
+              "frac_below_absmax_over_24_mean": 0.785965621471405,
+              "delta_frac_below_14_vs_24_mean": 0.1143375039100647,
+              "frac_zeroed_int4_mean": 0.36994723478953045,
+              "frac_zeroed_e2m1_mean": 0.2403140664100647,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.12963316837946576,
+              "kurtosis_mean": 21.586255073547363,
+              "kurtosis_max": 28.727523803710938,
+              "numel_share": 0.006747891283973758
+            },
+            "up_proj.in": {
+              "n_tensors": 2,
+              "n_elements": 3145728,
+              "absmax_mean": 159.0,
+              "absmax_max": 159.0,
+              "median_abs_mean": 0.51953125,
+              "dynamic_range_mean": 306.0451127819549,
+              "dynamic_range_max": 306.0451127819549,
+              "frac_below_absmax_over_14_mean": 0.9985389709472656,
+              "frac_below_absmax_over_24_mean": 0.9972972869873047,
+              "delta_frac_below_14_vs_24_mean": 0.0012416839599609375,
+              "frac_zeroed_int4_mean": 0.42751312255859375,
+              "frac_zeroed_e2m1_mean": 0.3110485076904297,
+              "delta_frac_zeroed_int4_vs_e2m1_mean": 0.11646461486816406,
+              "kurtosis_mean": 862.5493774414062,
+              "kurtosis_max": 862.5493774414062,
+              "numel_share": 0.004498594189315839
+            }
+          },
+          "dist_stats_total_numel": 699269120
+        },
+        "qk_int4_block": {
+          "loss": 12.388354301452637,
+          "aggregate": {
+            "norm_true": 2.2213149070739746,
+            "norm_test": 5.75476598739624,
+            "diff_norm": 5.338119983673096,
+            "rel_err": 2.403135173078512,
+            "cos": 0.3737753927707672,
+            "norm_ratio": 2.590702456941011
+          },
+          "buckets": {
+            "lora_A_layer0": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer0": {
+              "cos_min": 0.2131311595439911,
+              "cos_mean": 0.4437555521726608,
+              "rel_err_max": 1.8651124564408086,
+              "rel_err_mean": 1.6016248856418667,
+              "norm_ratio_min": 1.667538371733066,
+              "norm_ratio_max": 1.956251579022245,
+              "n_params": 4
+            },
+            "lora_A_layer13": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer13": {
+              "cos_min": 0.731315016746521,
+              "cos_mean": 0.8224554806947708,
+              "rel_err_max": 1.4700899796432032,
+              "rel_err_mean": 1.0213532455523069,
+              "norm_ratio_min": 1.3863461973267857,
+              "norm_ratio_max": 2.0336153394642196,
+              "n_params": 4
+            },
+            "lora_A_layer27": {
+              "cos_min": 0.0,
+              "cos_mean": 0.0,
+              "rel_err_max": 0.0,
+              "rel_err_mean": 0.0,
+              "norm_ratio_min": 0.0,
+              "norm_ratio_max": 0.0,
+              "n_params": 4
+            },
+            "lora_B_layer27": {
+              "cos_min": 0.7556772232055664,
+              "cos_mean": 0.8320823013782501,
+              "rel_err_max": 4.693810216055907,
+              "rel_err_mean": 2.588508481386267,
+              "norm_ratio_min": 1.0,
+              "norm_ratio_max": 5.440660865211417,
+              "n_params": 4
+            }
+          },
+          "role_coverage": {
+            "q_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "unknown": {
+              "seen": 624,
+              "compressed": 0,
+              "by_rank": {
+                "0": 29,
+                "1": 85,
+                "2": 224,
+                "3": 166,
+                "4": 120
+              },
+              "rank4_heads": {
+                "1": 112,
+                "24": 8
+              },
+              "rank4_shapes": {
+                "(1, 1, 512, 128)": 112,
+                "(1, 24, 512, 128)": 8
+              }
+            },
+            "q_proj.out": {
+              "seen": 71,
+              "compressed": 43,
+              "by_rank": {
+                "2": 28,
+                "4": 43
+              },
+              "rank4_heads": {
+                "24": 43
+              },
+              "rank4_shapes": {
+                "(1, 24, 512, 128)": 43
+              }
+            },
+            "k_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "k_proj.out": {
+              "seen": 56,
+              "compressed": 28,
+              "by_rank": {
+                "2": 28,
+                "4": 28
+              },
+              "rank4_heads": {
+                "8": 28
+              },
+              "rank4_shapes": {
+                "(1, 8, 512, 128)": 28
+              }
+            },
+            "v_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "v_proj.out": {
+              "seen": 59,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28,
+                "3": 3,
+                "4": 28
+              },
+              "rank4_heads": {
+                "8": 28
+              },
+              "rank4_shapes": {
+                "(1, 8, 512, 128)": 28
+              }
+            },
+            "o_proj.in": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "o_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "2": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "residual_pre_mlp": {
+              "seen": 56,
+              "compressed": 0,
+              "by_rank": {
+                "3": 56
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "gate_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "3": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "up_proj.out": {
+              "seen": 28,
+              "compressed": 0,
+              "by_rank": {
+                "3": 28
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "residual_pre_attn": {
+              "seen": 54,
+              "compressed": 0,
+              "by_rank": {
+                "3": 54
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            },
+            "down_proj.in": {
+              "seen": 5,
+              "compressed": 0,
+              "by_rank": {
+                "4": 5
+              },
+              "rank4_heads": {
+                "24": 5
+              },
+              "rank4_shapes": {
+                "(1, 24, 512, 128)": 5
+              }
+            },
+            "down_proj.out": {
+              "seen": 1,
+              "compressed": 0,
+              "by_rank": {
+                "3": 1
+              },
+              "rank4_heads": {},
+              "rank4_shapes": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

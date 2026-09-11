@@ -1,0 +1,14 @@
+snapshot -> /home/yedam/HMA/HMA_Project/results/mc_mmlu/_run/  (scripts/ is free to edit from here on)
+[09-08 07:42:29] waiting for the GPU lock (/tmp/hma_gpu.lock)
+[09-08 07:42:29] GPU lock acquired
+[09-08 07:42:29] MMLU 5-shot, 14042 items, 9 adapters, batch 16
+[09-08 09:45:00]   1/9 base  exit=0  7350s  acc_sum=59.59  peak=49.4 GB  reclaim #1
+[09-08 11:50:05]   2/9 A_seed42  exit=0  7505s  acc_sum=56.86  peak=47.0 GB  reclaim #1
+[09-08 13:55:58]   3/9 A_seed123  exit=0  7553s  acc_sum=57.09  peak=50.9 GB  reclaim #1
+[09-08 16:01:19]   4/9 A_seed456  exit=0  7521s  acc_sum=56.67  peak=49.1 GB  reclaim #1
+[09-08 18:05:55]   5/9 A_seed789  exit=0  7476s  acc_sum=56.77  peak=47.6 GB  reclaim #1
+[09-08 20:11:30]   6/9 A_seed1011  exit=0  7535s  acc_sum=56.49  peak=47.3 GB  reclaim #1
+[09-08 22:15:37]   7/9 A_seed2024  exit=0  7447s  acc_sum=57.33  peak=47.0 GB  reclaim #1
+[09-09 00:20:20]   8/9 A_seed3033  exit=0  7483s  acc_sum=57.52  peak=48.3 GB  reclaim #1
+[09-09 02:24:51]   9/9 A_seed4042  exit=0  7471s  acc_sum=57.46  peak=47.3 GB  reclaim #1
+[09-09 02:24:51] ===== done: 9 / 9 cells =====

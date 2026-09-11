@@ -1,0 +1,113 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.eggs/
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===== Build / Distribution =====
+build/
+dist/
+develop-eggs/
+downloads/
+sdist/
+wheels/
+*.whl
+
+# ===== CUDA / C++ build =====
+*.o
+*.obj
+*.cubin
+*.fatbin
+*.ptx
+
+# ===== Virtual environments =====
+venv/
+.venv/
+env/
+ENV/
+
+# ===== IDE / OS =====
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+*.ipynb
+
+# ===== LaTeX (auxiliary files) =====
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.synctex.gz
+*.toc
+*.run.xml
+*.bcf
+docs/**/*.log
+docs/**/compilation.log
+docs/**/output.txt
+
+# ===== Logs / Temp =====
+*.log
+nohup.out
+nohup_*.log
+*.tmp
+*.bak
+
+# ===== HuggingFace / Model caches =====
+hf_cache/
+.cache/
+checkpoints/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# ===== Experiment artifacts (keep curated subset only) =====
+# Uncomment if you want to ignore raw result dumps:
+# results/logs/
+# results/archived/
+# results/**/*.log
+
+# ===== Project-specific archived / legacy =====
+archived/
+docs/archived/
+docs/OAMP/OAMP_paper_backup_v1
+**/oamp_cuda_legacy/
+**/oamp_cuda_unused/
+**/old_docs/
+**/old_scripts/
+
+# ===== Personal / private =====
+INTERVIEW_PREP.md
+*.private.md
+TODO.private.md
+
+# ===== Large experiment artifacts (backup via tar, 2026-08-20) =====
+results/**/*_adapter/
+results/**/*.log
+results/**/*.checkpoints.jsonl
+results/**/*.reeval*.log
+
+# ===== Paper evidence tracked in place (see paper_data/MANIFEST.md) =====
+# The ignore rules above are kept for raw dumps; these files are cited by the
+# paper's numbers and are tracked where they were written.
+!results/**/*.checkpoints.jsonl
+!results/rank_probe/rank.log
+!results/audit/shape_coverage_dropout05_094917.log
+!logs/diag_wikitext_ppl.log

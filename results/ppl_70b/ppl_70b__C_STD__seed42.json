@@ -1,0 +1,93 @@
+{
+  "adapter_path": "results/70b_accuracy/accuracy__standard__Meta-Llama-3.1-70B-Instruct-bnb-4bit__nf4__rmsbf16__seed42__20260818_121120_adapter",
+  "base_model": "unsloth/Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+  "weight_quant": "nf4",
+  "bf16_rmsnorm": true,
+  "max_len": 512,
+  "gsm8k_samples": 500,
+  "wikitext_chunks": 200,
+  "seed": 42,
+  "dtype_report": {
+    "weight_quant": "nf4",
+    "bf16_rmsnorm": true,
+    "rmsnorm_swapped": 161,
+    "rmsnorm_classes_seen": [
+      "LlamaRMSNorm"
+    ],
+    "norms": [
+      "torch.bfloat16"
+    ],
+    "embed": [
+      "torch.bfloat16"
+    ],
+    "lm_head": [
+      "torch.bfloat16"
+    ],
+    "lora": [
+      "torch.bfloat16"
+    ],
+    "lm_head_tied": false
+  },
+  "training_config": {
+    "mode": "accuracy",
+    "method": "standard",
+    "model_id": "unsloth/Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+    "weight_quant": "nf4",
+    "seed": 42,
+    "fp8_ratio": 0.2,
+    "group_size": 128,
+    "min_numel": 1024,
+    "mask_seed": null,
+    "dedupe": false,
+    "pack_stochastic_rounding": false,
+    "sr_seed": null,
+    "pack_4d_mode": "fp8",
+    "bf16_rmsnorm": true,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "task": "gsm8k",
+    "n_train": 2000,
+    "epochs": 1,
+    "lr": 5e-05,
+    "batch_size": 1,
+    "grad_accum_steps": 4,
+    "max_seq_len": 512,
+    "padding": false,
+    "data_packing": false,
+    "packed_seq_len": 2048,
+    "grad_clip": 1.0,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.0,
+    "optimizer": "paged_adamw8bit",
+    "eval_samples": 200,
+    "eval_fewshot": 8,
+    "eval_max_new_tokens": 256,
+    "mem_seq_len": 4096,
+    "mem_batch_size": 4,
+    "mem_steps": 100,
+    "mem_warmup": 10,
+    "mem_abort_gb": 80.0,
+    "gc_enabled": false,
+    "checkpoint_every": 25,
+    "output_dir": "results/70b_accuracy"
+  },
+  "gsm8k_test_ppl": 2.402788758833649,
+  "gsm8k_test_tokens": 84402,
+  "gsm8k_test_n_texts": 500,
+  "wikitext2_ppl": 5.9835553814627715,
+  "wikitext2_tokens": 102200,
+  "wikitext2_n_texts": 200,
+  "narrativeqa_ppl": 15.547468665547555,
+  "narrativeqa_tokens": 102200,
+  "narrativeqa_n_texts": 200,
+  "govreport_ppl": 7.021315465307316,
+  "govreport_tokens": 102200,
+  "govreport_n_texts": 200
+}
