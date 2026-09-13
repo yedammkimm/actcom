@@ -65,10 +65,6 @@ Arm membership is always resolved from (method, body encoding, rank-4 mode) join
 
 Re-running the training itself goes through `run_experiment.py`; the shell scripts under `scripts/` are the chains that produced each block of `results/`, kept as they ran (they contain the paths of the machine they ran on). Two of them carry pre-registered quantities in their headers: `scripts/run_axis2_a4dfp4_seeds.sh` (the damage threshold) and `scripts/run_mc_chain.sh` (the MMLU tests).
 
-## Development history
-
-This repository was published as a single commit. The paper's Appendix E cites commit hashes and timestamps from the private development repository in which the experiments were run; that history is not carried here. Its full commit log, with hashes, dates and messages, is archived in `docs/development_history.txt`.
-
 ## Citation
 
 ```bibtex
