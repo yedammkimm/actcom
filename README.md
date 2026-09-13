@@ -39,6 +39,8 @@ figures/               Figures used by the paper
 logs/                  The base-model perplexity diagnostic run cited in Section 5.4
 ```
 
+**Naming.** `oamp` is the historical name of the Python package. The paper's method, DCR, is `--method naive_fp4` with `--pack_4d_mode fp8` (FP8 head views) or `chan_int4` (per-channel INT4). `--method oamp` is the max-abs anchor variant of Section 5.2 (K = `fp8_ratio`), which the paper compares against and does not recommend. The result JSONs record these values verbatim in their `method` and `pack_4d_mode` fields.
+
 ## Installation
 
 ```bash
