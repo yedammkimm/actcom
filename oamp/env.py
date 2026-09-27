@@ -97,7 +97,7 @@ def collect_env(project_root: str | None = None, *, warn_on_dirty: bool = True) 
     git_dirty = _git_dirty(project_root)
     if git_dirty and warn_on_dirty:
         logger.warning(
-            "collect_env: git tree is dirty. Full-scale re-runs must land on a clean commit "
+            "collect_env: git tree is dirty. Full-scale re-runs must land on a clean commit. "
             "Current HEAD=%s", git_commit[:12] or '<no-repo>')
 
     return {

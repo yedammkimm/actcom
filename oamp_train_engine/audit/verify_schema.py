@@ -35,48 +35,10 @@ from oamp.schema import (
 
 
 def _minimal_config() -> dict:
-    return {
-        'mode': 'accuracy',
-        'method': 'oamp',
-        'model_id': 'meta-llama/Llama-3.2-3B-Instruct',
-        'weight_quant': 'nf4',
-        'seed': 42,
-        'fp8_ratio': 0.20,
-        'group_size': 128,
-        'min_numel': 1024,
-        'mask_seed': None,
-        'dedupe': False,
-        'pack_stochastic_rounding': False,
-        'sr_seed': None,
-        'pack_4d_mode': 'fp4',
-        'bf16_rmsnorm': True,
-        'lora_r': 16,
-        'lora_alpha': 32,
-        'lora_dropout': 0.05,
-        'lora_targets': ['q_proj', 'k_proj', 'v_proj', 'o_proj'],
-        'task': 'gsm8k',
-        'n_train': 7473,
-        'epochs': 2,
-        'lr': 2e-4,
-        'batch_size': 1,
-        'grad_accum_steps': 4,
-        'max_seq_len': 512,
-        'padding': False,
-        'grad_clip': 1.0,
-        'scheduler': 'cosine',
-        'warmup_ratio': 0.03,
-        'optimizer': 'adamw',
-        'eval_samples': 500,
-        'eval_fewshot': 8,
-        'eval_max_new_tokens': 256,
-        'mem_seq_len': 4096,
-        'mem_batch_size': 4,
-        'mem_steps': 100,
-        'mem_warmup': 10,
-        'gc_enabled': False,
-        'checkpoint_every': 50,
-        'output_dir': '/tmp/x',
-    }
+    """The paper-default config, built by configs.base exactly as run_experiment.py builds it,
+    so this fixture cannot fall behind REQUIRED_CONFIG_FIELDS."""
+    from configs.base import build_from_cli
+    return build_from_cli(['--mode', 'accuracy', '--method', 'oamp', '--model', '3B']).asdict()
 
 
 def check_env():

@@ -2,8 +2,8 @@
 
 """CUDA-backed version of the anchor-variant quantizer, with a PyTorch fallback.
 
-The extension `oamp_bilevel`, built from oamp_cuda/ with
-`python setup_bilevel.py build_ext --inplace`, provides a per-group max-abs
+The extension `oamp_bilevel`, built inside oamp_cuda/ with
+`python setup.py build_ext --inplace`, provides a per-group max-abs
 kernel and a fused quantize-dequantize kernel; cuda_available() reports
 whether it loaded. Every function here falls back to oamp.bilevel and
 oamp.quantize when it did not, so the same computation runs either way and

@@ -23,7 +23,8 @@ Fine-tuning a 70B model on a single 128 GB device requires compressing the activ
 oamp/                  Python package: saved-tensor pack/unpack hooks, INT4 and E2M1
                        body quantizers, rank-4 dispatch to FP8 or per-channel INT4,
                        filter order, dtype policy, evaluation
-oamp_cuda/             CUDA / C++ packing kernels (optional; a Python fallback exists)
+oamp_cuda/             Optional CUDA kernels for the max-abs anchor variant of Section 5.2;
+                       a PyTorch fallback exists and the paper's runs do not use them
 run_experiment.py      Single entry point for every training, accuracy and memory run
 configs/               Fixed experiment settings (Table 17 of the paper)
 scripts/               Run chains behind each experiment, and scripts/audit/ which
@@ -45,10 +46,11 @@ logs/                  The base-model perplexity diagnostic run cited in Section
 
 ```bash
 pip install torch --index-url https://download.pytorch.org/whl/cu121   # match your CUDA
-pip install -e .            # Python package; the CUDA extension builds if nvcc is present
+pip install -e .                                       # Python package
+cd oamp_cuda && python setup.py build_ext --inplace    # optional CUDA kernels; needs nvcc
 ```
 
-Experiments were run with PyTorch 2.x, CUDA 12.x and Python 3.10 on a single NVIDIA GB10 (128 GB unified memory). Models are read from `$HF_HOME`.
+Experiments were run on a single NVIDIA GB10 (128 GB unified memory) with Python 3.10.12, torch 2.12.0.dev20260407+cu128, transformers 5.1.0, peft 0.18.1, bitsandbytes 0.50.0 and torchao 0.17.0; every run JSON records these under `env`. `oamp.pack_hooks` needs torchao for its 4-bit packing helpers. Models are read from `$HF_HOME`.
 
 ## Reproducing the reported statistics
 

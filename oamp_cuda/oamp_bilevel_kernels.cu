@@ -19,9 +19,6 @@
  * nibble code is q = round(x / scale) in [-7, 7] with scale = absmax / 7,
  * stored as q + 8 in [1, 15] (0 is unused); two codes share a byte, the first
  * in the low nibble.
- *
- * The older oamp_kernels.cu works on 16-element groups with a threshold rule
- * and three levels; this file replaced it.
  */
 
 #include <cuda.h>

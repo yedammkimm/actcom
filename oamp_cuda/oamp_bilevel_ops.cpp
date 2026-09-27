@@ -2,7 +2,7 @@
  * Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
  *
  * PyTorch bindings for oamp_bilevel_kernels.cu, built as the extension
- * `oamp_bilevel` by setup_bilevel.py. Each function checks dtype, device and
+ * `oamp_bilevel` by setup.py in this directory. Each function checks dtype, device and
  * layout, allocates the output and launches the kernel on the current stream:
  * analyze and fused_quantize for the straight-through path, fp8_pack,
  * fp4_pack, fp8_unpack and fp4_unpack for the packing path. Only

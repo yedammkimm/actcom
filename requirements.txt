@@ -1,12 +1,14 @@
-# Core dependencies for OAMP
-# PyTorch with CUDA — install separately matching your CUDA version, e.g.:
+# Core dependencies
+# PyTorch with CUDA: install it separately, matching your CUDA version, e.g.
 #   pip install torch --index-url https://download.pytorch.org/whl/cu121
 torch>=2.0
 transformers>=4.40
 peft>=0.10
+bitsandbytes
+torchao>=0.17
 datasets
 numpy
-tqdm
+safetensors
 
-# Figure regeneration (optional; install with `pip install -e .[viz]`)
+# Figure regeneration (optional; or `pip install -e .[viz]`)
 matplotlib

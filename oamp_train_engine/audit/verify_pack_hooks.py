@@ -1,6 +1,5 @@
 """Verification gates for oamp.pack_hooks.PackHooks.
 
-  V5      fp8_ratio=0.0 (naive_fp4) matches the earlier NaiveFP4AllHooks on peak memory and loss
   V6      parity: the forward loss is bit-exact with and without the pack context
   ERR-1   routing='random' without mask_seed raises ValueError
   ERR-2   missing skip_last_dims or param_ptrs raises TypeError
@@ -8,10 +7,6 @@
 plus the U1, B1, DP1, SR1, SR2 and D4 gates below. Runs on a small
 configuration (B=2, L=512) so it finishes in under two minutes, on
 meta-llama/Llama-3.2-3B-Instruct in BF16 with LoRA, as in the audits.
-
-V5 compares against the earlier implementation in legacy/, which the
-released repository does not include; that import sits at the top of the
-file, so the script does not run as released without it.
 """
 
 from __future__ import annotations
@@ -21,12 +16,9 @@ import sys
 
 os.environ.setdefault("HF_HOME", "/app/hf_cache")
 
-# The V5 comparison imports the earlier hooks from legacy/, which the released
-# repository does not include.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
 sys.path.insert(0, _ROOT)
-sys.path.insert(0, os.path.join(_ROOT, "legacy", "benchmarks"))
 
 import torch
 import torch.nn as nn
@@ -34,7 +26,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig, get_peft_model, TaskType
 
 from oamp.pack_hooks import PackHooks, make_pack_hooks, collect_param_ptrs
-from benchmark_native_packing_vram import NaiveFP4AllHooks, NativeOAMPHooks
 
 MODEL_NAME = "meta-llama/Llama-3.2-3B-Instruct"
 CACHE_DIR = "/app/hf_cache"
@@ -120,55 +111,6 @@ def check_input_validation():
         print(f"  OK: raised TypeError: {e}")
     else:
         raise AssertionError("PackHooks did NOT raise TypeError for missing param_ptrs.")
-
-
-# V5: naive_fp4 (fp8_ratio=0.0) parity with the earlier NaiveFP4AllHooks
-
-def check_v5():
-    print("\n[V5] naive_fp4: PackHooks(fp8_ratio=0.0) vs legacy NaiveFP4AllHooks")
-    vocab = None
-
-    # New PackHooks path
-    m, _ = build_model()
-    vocab = m.config.vocab_size
-    ptrs = collect_param_ptrs(m)
-    new_ctx = make_pack_hooks('naive_fp4',
-                              group_size=128, min_numel=1024,
-                              skip_last_dims={vocab}, param_ptrs=ptrs)
-    loss_new, peak_new = run_one_step(m, new_ctx)
-    stats_new = dict(new_ctx.pack_stats)
-    del m, new_ctx
-    torch.cuda.empty_cache()
-
-    # Legacy path (same seed + fresh model)
-    m, _ = build_model()
-    ptrs = collect_param_ptrs(m)
-    legacy_ctx = NaiveFP4AllHooks(group_size=128, min_numel=1024,
-                                  skip_last_dims={vocab}, param_ptrs=ptrs)
-    loss_legacy, peak_legacy = run_one_step(m, legacy_ctx)
-    stats_legacy = dict(legacy_ctx.pack_stats)
-    del m, legacy_ctx
-    torch.cuda.empty_cache()
-
-    d_loss = abs(loss_new - loss_legacy)
-    d_peak = abs(peak_new - peak_legacy)
-    print(f"  new     loss={loss_new:.6f}  peak={peak_new:.3f} GB  stats={stats_new}")
-    print(f"  legacy  loss={loss_legacy:.6f}  peak={peak_legacy:.3f} GB  stats={stats_legacy}")
-    print(f"  |Δloss|={d_loss:.2e}   |Δpeak|={d_peak*1024:.1f} MB")
-    # Loss must be bit-exact (backward FP4 dequant is deterministic).
-    assert d_loss <= 1e-6, f"V5 FAIL: loss mismatch {d_loss:.2e}"
-    # Peak may differ by allocator noise; require <50 MB.
-    assert d_peak * 1024 < 50.0, f"V5 FAIL: peak drift {d_peak*1024:.1f} MB"
-    # Filter counts must match on all shared branches.
-    for k in ('kept', 'skip_small', 'skip_head', 'skip_non_float',
-              'skip_misaligned', 'skip_param'):
-        assert stats_new[k] == stats_legacy[k], (
-            f"V5 FAIL: {k} differs new={stats_new[k]} legacy={stats_legacy[k]}")
-    # kept must map 1:1 to uniform (new) and fp4_all (legacy).
-    assert stats_new['uniform'] == stats_legacy['fp4_all'], (
-        f"V5 FAIL: uniform={stats_new['uniform']} vs fp4_all={stats_legacy['fp4_all']}")
-    assert stats_new['bilevel'] == 0, "V5 FAIL: naive_fp4 should not use bilevel"
-    print("  V5 PASS")
 
 
 # V6: parity check, forward loss identical with and without the pack context
@@ -535,7 +477,6 @@ if __name__ == '__main__':
     print("PackHooks verification")
     print("=" * 70)
     check_input_validation()
-    check_v5()
     check_v6()
     check_u1_uniform_fp8_roundtrip()
     check_b1_bilevel_degenerate()
