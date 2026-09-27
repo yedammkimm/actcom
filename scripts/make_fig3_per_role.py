@@ -1,4 +1,4 @@
-"""Figure 3 — where the two four-bit grids actually differ.
+"""Figure 3: where the two four-bit grids actually differ.
 
 Each role is compressed in isolation while every other tensor passes through
 uncompressed, so the cosine is attributable to that role alone. The x axis

@@ -3,7 +3,7 @@ computes it, the files it is read from, and their sha256.
 
 Nothing is copied. Each entry points at the file where the experiment wrote it,
 so a script keeps one path and the manifest is a checksummed index of the tree
-as committed. It replaces results/_INDEX.md as the paper's index.
+as committed. It is the paper's index of the result files.
 
 Usage: python scripts/audit/make_manifest.py   (standard library only)
 """

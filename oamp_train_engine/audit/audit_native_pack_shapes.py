@@ -1,13 +1,18 @@
-"""Log every tensor that hits NativeOAMPHooks.pack for one forward+backward step.
+"""Log every tensor that reaches pack() during one forward and backward step.
 
-Answers questions:
-  Q1: What axis does _pack_bilevel group along? (implicit from flattened-order pack)
-  Q2: What tensors reach pack()? (shape / dim / numel / branch)
-  Q3: How does the 4D path handle non-divisible sizes?
+Answers three questions: which axis the anchor packer groups along
+(implicit in the flattened-order pack), which tensors reach pack() at all
+(shape, rank, element count, branch), and how the 4-D path handles sizes
+that are not divisible by the group size.
 
-Sweep dimensions:
-  --sdpa_backend {flash,math,default}  — force SDPA backend
-  --skip_head                           — exclude classification head (last dim == vocab_size)
+Options: --sdpa_backend {flash, math, default} forces the SDPA backend, and
+--skip_head excludes the classification head (last dim equal to the
+vocabulary size).
+
+This script instruments NativeOAMPHooks, the earlier implementation of the
+hooks that lived in legacy/, which the released repository does not
+include, so it does not run as released. It is kept as the record of the
+audit that produced the shape tables.
 """
 
 import argparse
@@ -20,8 +25,7 @@ from transformers import AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-# NativeOAMPHooks lives in legacy until oamp/pack_hooks.py lands.
-# TODO(pack_hooks): delete this insert + switch to `from oamp.pack_hooks import PackHooks`.
+# NativeOAMPHooks is the earlier implementation, which this repository does not include.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'legacy', 'benchmarks')))
 
 from benchmark_native_packing_vram import NativeOAMPHooks  # noqa: E402

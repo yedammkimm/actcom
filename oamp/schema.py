@@ -1,18 +1,16 @@
-"""Result JSON schema + validators + checkpoint helpers.
+"""The result JSON: required keys, validation, status setters and the checkpoint sidecar.
 
-Spec v1 §6. Every ``run_experiment.py`` invocation writes exactly one JSON
-that conforms to :data:`RESULT_TOP_KEYS`. Fields that don't apply to the run
-mode (e.g. ``results.gsm8k_accuracy`` in ``mode='memory'``) may be ``None``
-but the key itself must be present so downstream tooling doesn't KeyError.
+Every run_experiment.py invocation writes exactly one JSON with the
+top-level keys in RESULT_TOP_KEYS. A field that does not apply to the run
+mode (results.gsm8k_accuracy in memory mode, for example) is None, but the
+key is always present so downstream tools never KeyError.
 
-INVARIANT-9: ``validate_schema(config, env)`` is called before any GPU work,
-so a mis-specified run fails in seconds instead of after a 4-hour training.
-
-INVARIANT-10: both ``peak_allocated_gb`` and ``peak_reserved_gb`` are logged
-(GB10 is unified memory; system pressure follows ``reserved``).
-
-INVARIANT-11: mid-run progress is appended to a JSONL sidecar every
-``checkpoint_every`` steps so a killed process still leaves useful data.
+validate_schema(config, env) runs before any GPU work, so a mis-specified
+run fails in seconds rather than after hours of training. Both
+peak_allocated_gb and peak_reserved_gb are recorded, because on the GB10's
+unified memory it is the reserved figure that puts pressure on the system.
+Progress is appended to a JSONL sidecar every checkpoint_every steps, so a
+killed process still leaves data behind.
 """
 
 from __future__ import annotations
@@ -25,7 +23,7 @@ from typing import Any, Optional
 from .env import REQUIRED_ENV_FIELDS
 
 
-# ---------- top-level keys required in every result JSON ----------
+# top-level keys required in every result JSON
 
 RESULT_TOP_KEYS = (
     'config', 'env', 'model', 'pack', 'memory', 'sequence',
@@ -54,14 +52,11 @@ _STATUS_CHOICES = ('OK', 'OOM', 'NAN', 'PARITY_FAIL', 'ERROR')
 _OOM_STAGES = ('pre_flight', 'model_load', 'parity', 'forward', 'backward', 'optimizer', 'memory_sweep', 'eval')
 
 
-# ============================================================
-# INVARIANT-9: pre-GPU validation
-# ============================================================
+# Validation before any GPU work
 
 def validate_schema(config: dict, env: dict) -> None:
-    """Fail fast if config/env are missing required fields.
-
-    Called before any GPU work so a mis-specified run doesn't burn compute.
+    """Raise if `config` or `env` lacks a required field. Called before any GPU
+    work so a mis-specified run does not burn compute.
     """
     if not isinstance(config, dict):
         raise TypeError("validate_schema: config must be a dict (asdict(dataclass))")
@@ -95,12 +90,10 @@ def validate_schema(config: dict, env: dict) -> None:
             "so results can be tied to a SHA.")
 
 
-# ============================================================
 # Result skeleton
-# ============================================================
 
 def make_result_skeleton(config: dict, env: dict) -> dict:
-    """Return a result dict with every required key present (values default to None/[])."""
+    """Return a result dict with every required key present; values default to None or []."""
     return {
         'config': dict(config),
         'env':    dict(env),
@@ -114,7 +107,7 @@ def make_result_skeleton(config: dict, env: dict) -> dict:
             'coverage_bytes':  {'unique': None, 'raw': None},
             'effective_bits':  None,
         },
-        # INVARIANT-10: both allocated and reserved on unified memory hardware.
+        # both allocated and reserved: on unified memory the reserved figure is the one that matters
         'memory': {
             'peak_allocated_gb':      None,
             'peak_reserved_gb':       None,
@@ -147,7 +140,7 @@ def make_result_skeleton(config: dict, env: dict) -> dict:
             'eval_diagnostics': None,
             'adapter_path':     None,
         },
-        # INVARIANT §6.2: OOM is a structured result, not a crash.
+        # OOM is a structured result, not a crash.
         'status':      'PENDING',
         'oom_stage':   None,
         'oom_step':    None,
@@ -156,9 +149,7 @@ def make_result_skeleton(config: dict, env: dict) -> dict:
     }
 
 
-# ============================================================
 # Status setters
-# ============================================================
 
 def mark_ok(result: dict) -> dict:
     result['status'] = 'OK'
@@ -188,12 +179,10 @@ def mark_nan(result: dict, *, step: Optional[int] = None,
     return result
 
 
-# ============================================================
-# INVARIANT-11: checkpoint sidecar (JSONL, append-only)
-# ============================================================
+# Checkpoint sidecar (JSONL, append-only)
 
 def checkpoint_path_for(output_json: str) -> str:
-    """Sidecar path: ``<output>.json`` -> ``<output>.checkpoints.jsonl``."""
+    """Sidecar path for an output: <output>.json becomes <output>.checkpoints.jsonl."""
     base, _ = os.path.splitext(output_json)
     return f'{base}.checkpoints.jsonl'
 
@@ -201,7 +190,7 @@ def checkpoint_path_for(output_json: str) -> str:
 def append_checkpoint(path: str, *, step: int, loss: float,
                       elapsed_s: float, peak_alloc_gb: float,
                       extra: Optional[dict] = None) -> None:
-    """Append one line to the checkpoint JSONL. Safe to call from partial runs."""
+    """Append one line to the checkpoint JSONL. Safe to call from a partial run."""
     rec = {
         'step':          int(step),
         'loss':          float(loss),
@@ -216,12 +205,10 @@ def append_checkpoint(path: str, *, step: int, loss: float,
         f.write(json.dumps(rec) + '\n')
 
 
-# ============================================================
 # Final write
-# ============================================================
 
 def write_result(path: str, result: dict) -> None:
-    """Write the final result JSON. Fails if ``result['status']`` is still 'PENDING'."""
+    """Write the final result JSON. Refuses while result['status'] is still 'PENDING'."""
     if result.get('status') == 'PENDING':
         raise RuntimeError(
             "write_result: status is still 'PENDING'. Call mark_ok / mark_oom / mark_nan first.")

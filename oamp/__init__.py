@@ -1,18 +1,23 @@
-"""OAMP package — unified pipeline (post-2026-08 audit).
+"""The oamp package.
 
-The legacy α-path (``GenericOAMPWrapper``, ``NaiveFP4Wrapper``) and every
-``benchmark_*.py`` file that produced paper v1 results were moved to
-``legacy/`` during the 2026-08 audit. Do not import from ``legacy`` in this
-package; copy code across if reuse is needed. See ``legacy/README.md``.
+`oamp` is the historical name of the package. The paper's method is the
+backward-only compression in pack_hooks.py, selected by `--method naive_fp4`
+in run_experiment.py (see the Naming note in the README). The modules the
+training runs use are:
 
-Planned modules (see docs / spec v1):
-  oamp.dtype_policy — Arm 4 dtype normalization (BF16RMSNorm swap)
-  oamp.pack_hooks   — Single PackHooks class covering all methods
-  oamp.sdpa_utils   — SDPA backend helpers (kept; see oamp_train_engine/benchmarks/)
-  oamp.schema       — Result JSON schema + validate_schema()
-  oamp.env          — Environment capture
-  oamp.data         — GSM8K loading / ordering
-  oamp.evaluate     — GSM8K accuracy eval (ported from test0a)
+    pack_hooks     saved-tensor pack/unpack hooks: the filter chain, the INT4
+                   and E2M1 body grids, FP8 and per-channel INT4 for the head views
+    dtype_policy   bf16 casts and the RMSNorm swap applied after get_peft_model
+    data           GSM8K loading, prompt formatting and answer scoring
+    evaluate       greedy-decoding accuracy loop
+    env, schema    environment snapshot and the result JSON schema
+    sdpa_utils     helpers that keep attention on the flash backend
+
+bilevel, quantize, selector, memory and cuda_ops are an earlier, standalone
+implementation of the max-abs anchor idea: they quantize the activations
+themselves in the forward pass through a straight-through estimator, with
+optional CUDA kernels from oamp_cuda/. Nothing in the training path imports
+them.
 """
 
 from .version import __version__, __author__, __email__

@@ -22,7 +22,7 @@ def chk(name, claimed, got, tol=5e-4):
     print(f"  {'OK ' if ok else 'FAIL':5s} {name:52s} paper {claimed:<12} recomputed {got}")
     if not ok: fails.append(name)
 
-# ---- perplexity by arm, joined on adapter path
+# perplexity by arm, joined on adapter path
 M={}
 for f in glob.glob(R+'results/ppl*/*.json'):
     d=json.load(open(f)); a=norm(d.get('adapter_path'))
@@ -45,7 +45,7 @@ for cb in itertools.combinations(range(16),8):
     if abs(math.log(f))>=abs(math.log(var(A)/var(B)))-1e-12: c+=1
 chk('permutation p 0.0303', 0.0303, round(c/t,4), 1e-9)
 
-# ---- subspace, from the saved matrices
+# subspace, from the saved matrices
 import struct, array
 def loadnpy(p):
     with open(p,'rb') as fh:
@@ -66,7 +66,7 @@ for arm,claim in [('D',0.0829),('A',0.1121),('F',0.1231),('B',0.1339),('C',0.139
 chk('arm B range lower 0.13297', 0.13297, sub('B')[1], 5e-5)
 chk('arm B range upper 0.13495', 0.13495, sub('B')[2], 5e-5)
 
-# ---- item disagreement, from mc_downstream
+# item disagreement, from mc_downstream
 print('\nsection 5.4 -- item disagreement')
 T=['arc_challenge','arc_easy','piqa','winogrande']
 rows=json.load(open(R+'results/_wd/rows.json'))

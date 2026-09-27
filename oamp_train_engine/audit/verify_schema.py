@@ -178,7 +178,7 @@ def check_checkpoints(env):
 
 if __name__ == '__main__':
     print("=" * 70)
-    print("schema + env verification (spec v1 §6)")
+    print("schema + env verification")
     print("=" * 70)
     env = check_env()
     check_validate_schema(env)

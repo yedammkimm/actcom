@@ -75,7 +75,7 @@ def walk(node, path, records, filename, top_seeds):
                     "accs": conv,
                     "single": False,
                 })
-        # detect legacy: seed_results = list of dicts keyed by seed number
+        # older schema: seed_results is a list of dicts keyed by seed number
         for k, v in node.items():
             walk(v, path + [str(k)], records, filename, top_seeds)
     elif isinstance(node, list):

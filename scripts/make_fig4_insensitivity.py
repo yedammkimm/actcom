@@ -1,4 +1,4 @@
-"""Figure 4 — what the four measurement layers can and cannot see.
+"""Figure 4: what the four measurement layers can and cannot see.
 
 The same eight arm-A runs under four metrics. Colour marks the held-out verdict;
 only the rightmost panel separates the colours. Each panel keeps its own y range

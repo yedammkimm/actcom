@@ -1,25 +1,21 @@
-"""ExperimentConfig — spec v1 §5.
+"""ExperimentConfig: every setting that can change a run's numbers.
 
-INVARIANT-8: ``asdict(cfg)`` is the *sole* source of truth for the ``config``
-block of every result JSON. If a scalar is not on this dataclass, it must not
-influence a run. This is why ``pack_hooks.py`` and ``dtype_policy.py`` no
-longer own a default for ``group_size`` or ``fp8_ratio`` at call time — the
-runner injects everything from here.
+asdict(cfg) is the config block of every result JSON and the only source of
+those values. If a scalar is not a field here it must not influence a run,
+which is why pack_hooks.py and dtype_policy.py take every value from the
+runner instead of holding defaults of their own.
 
-Method → routing mapping (§2.1):
+Methods and the pack routing they imply:
 
-    method        fp8_ratio (default)   routing
-    ------------  --------------------  -------
-    standard      —                     (no pack context)
-    naive_fp4     0.0                   'none'
-    uniform_fp8   1.0                   'none'
-    oamp          0.20                  'maxabs'
-    random_mixed  0.20                  'random'  (mask_seed required)
+    standard       no pack context
+    naive_fp4      fp8_ratio 0.0,  routing 'none'     the paper's method
+    uniform_fp8    fp8_ratio 1.0,  routing 'none'
+    oamp           fp8_ratio 0.20, routing 'maxabs'   max-abs anchor variant
+    random_mixed   fp8_ratio 0.20, routing 'random'   mask_seed required
 
-``fp8_ratio`` may be overridden on ``oamp`` / ``random_mixed`` runs for
-ablation. For ``naive_fp4`` / ``uniform_fp8`` the boundary values are
-enforced by :meth:`ExperimentConfig.__post_init__` because the ``pack_hooks``
-boundary handling (§2.3) hinges on them.
+fp8_ratio may be overridden for oamp and random_mixed. For naive_fp4 and
+uniform_fp8 the boundary values are enforced in __post_init__, because the
+pack hooks dispatch on them.
 """
 
 from __future__ import annotations
@@ -55,7 +51,7 @@ _SCHEDULERS = ('cosine', 'linear', 'constant', 'none')
 
 
 def routing_for(method: str) -> str:
-    """Return the pack routing name paired with ``method`` (§2.1)."""
+    """Return the pack routing that goes with `method`."""
     if method == 'oamp':
         return 'maxabs'
     if method == 'random_mixed':
@@ -74,9 +70,9 @@ def total_train_steps(*, n_train: int, batch_size: int,
 class ExperimentConfig:
     """Every parameter that can alter a run's numerical result lives here.
 
-    Non-defaulted fields (top of the dataclass) must be provided by the caller
-    so the intent of a run is explicit. Everything else defaults to the paper
-    condition (Llama-3B, GSM8K, 2 epochs, cosine, warmup 3%).
+    The fields without defaults, at the top, must be given by the caller so the
+    intent of a run is explicit. Everything else defaults to the paper
+    condition: Llama-3.2-3B, GSM8K, two epochs, cosine schedule, no warmup.
     """
 
     # -------- required (no default) --------
@@ -94,15 +90,15 @@ class ExperimentConfig:
     # Off by default: cross-step storage_ptr recycling causes NaN (2026-08-14).
     # See oamp.pack_hooks.PackHooks for the full cache-safety analysis.
     dedupe: bool = False
-    # GACT §5: unbiased stochastic rounding for FP4 quant. Off by default so
-    # existing runs stay comparable; turn on to test whether γ variance drops.
+    # Unbiased stochastic rounding for the 4-bit quantizer, as in GACT. Off by
+    # default so existing runs stay comparable.
     pack_stochastic_rounding: bool = False
     sr_seed: Optional[int] = None
     # Precision routing for 4-D saved tensors (attention head-views + rotary).
     # Gradient-error probe (2026-08-16) showed FP4 body compression of these
     # tensors corrupts backward gradients (cos ~0.4, norm ratio x3), while
     # 'fp8' recovers to cos>=0.99 and drops norm ratio to 1.03. 'skip' bypasses
-    # compression entirely for 4-D. 'fp4' preserves legacy γ behaviour.
+    # compression entirely for 4-D. 'fp4' is the earlier behaviour, four bits everywhere.
     pack_4d_mode: str = 'fp4'
 
     # 4-bit body encoding: 'int4' (uniform signed 4-bit) or 'e2m1' (non-uniform
@@ -139,17 +135,16 @@ class ExperimentConfig:
     grad_accum_steps: int = 4
     max_seq_len: int = 512
     padding: bool = False
-    # INVARIANT-8 (2026-08-18): when data_packing=True, training samples are
+    # When data_packing=True, training samples are
     # concatenated (EOS-separated) and chunked to `packed_seq_len`. The eval
     # loop is untouched (still per-sample fewshot). Runs with data_packing True
-    # vs False MUST NOT be conflated in the results index.
+    # vs False must not be conflated in the results index.
     data_packing: bool = False
     packed_seq_len: int = 2048
     grad_clip: float = 1.0
     scheduler: str = 'cosine'
-    # Legacy benchmark_multiseed (paper Standard ~58%) uses CosineAnnealingLR
-    # with no warmup. Table 19's "3% warmup" is a documentation error; keep 0.0
-    # here so production runs stay comparable to published numbers.
+    # The earlier training script used CosineAnnealingLR with no warmup; keep
+    # 0.0 so runs stay comparable with it.
     warmup_ratio: float = 0.0
     optimizer: str = 'adamw'
 
@@ -187,14 +182,14 @@ class ExperimentConfig:
         if self.task not in _TASKS:
             raise ValueError(f"ExperimentConfig.task must be one of {_TASKS}, got {self.task!r}")
 
-        # Method → fp8_ratio invariants (spec §2.3).
+        # At the boundaries fp8_ratio is fixed by the method.
         if self.method == 'naive_fp4' and self.fp8_ratio != 0.0:
             raise ValueError(
-                "method='naive_fp4' requires fp8_ratio=0.0 (spec §2.3 boundary). "
+                "method='naive_fp4' requires fp8_ratio=0.0 (fixed by the method). "
                 f"Got fp8_ratio={self.fp8_ratio}.")
         if self.method == 'uniform_fp8' and self.fp8_ratio != 1.0:
             raise ValueError(
-                "method='uniform_fp8' requires fp8_ratio=1.0 (spec §2.3 boundary). "
+                "method='uniform_fp8' requires fp8_ratio=1.0 (fixed by the method). "
                 f"Got fp8_ratio={self.fp8_ratio}.")
         if self.method in ('oamp', 'random_mixed'):
             if not (0.0 < self.fp8_ratio < 1.0):
@@ -203,16 +198,16 @@ class ExperimentConfig:
 
         if self.method == 'random_mixed' and self.mask_seed is None:
             raise ValueError(
-                "method='random_mixed' requires mask_seed (spec §2.4 INVARIANT-6). "
+                "method='random_mixed' requires mask_seed (a dedicated RNG stream). "
                 "Pass an integer via ExperimentConfig(mask_seed=...).")
-        # Fallback: SR shares nothing with mask stream; if user didn't set a
-        # dedicated sr_seed, derive it from the run seed. PackHooks itself still
-        # ValueError-s if it receives None — double-defense (INVARIANT-2 pattern).
+        # If no sr_seed was given, derive one from the run seed so the rounding
+        # stream is separate from the mask stream. PackHooks still raises if it
+        # receives None.
         if self.pack_stochastic_rounding and self.sr_seed is None:
             self.sr_seed = self.seed
         # gact_affine's per-group affine quant is stochastic by design; give it
-        # a reproducible RNG stream tied to the run seed if the user didn't set
-        # one explicitly.
+        # a reproducible RNG stream tied to the run seed if none was set
+        # explicitly.
         if self.body_encoding == 'gact_affine' and self.sr_seed is None:
             self.sr_seed = self.seed
         if self.pack_4d_mode not in ('fp4', 'fp8', 'skip', 'chan_int4'):
@@ -275,9 +270,7 @@ class ExperimentConfig:
         return dataclasses.asdict(self)
 
 
-# ==================================================================
 # CLI
-# ==================================================================
 
 def _add_config_args(p: argparse.ArgumentParser) -> None:
     # Identification
@@ -308,7 +301,7 @@ def _add_config_args(p: argparse.ArgumentParser) -> None:
                    help='Optional. Defaults to --seed when --stochastic_rounding is set.')
     p.add_argument('--pack_4d_mode', choices=['fp4', 'fp8', 'skip', 'chan_int4'], default='fp4',
                    help="Precision routing for 4-D saved tensors (attention "
-                        "head-views). 'fp4' = legacy γ; 'fp8' = gradient-recovery "
+                        "head-views). 'fp4' = the earlier behaviour; 'fp8' = gradient-recovery "
                         "config; 'skip' = no compression on 4-D.")
     p.add_argument('--body_encoding',
                    choices=['int4', 'e2m1', 'gact_affine', 'gact_affine_det'],
@@ -349,12 +342,12 @@ def _add_config_args(p: argparse.ArgumentParser) -> None:
     p.add_argument('--padding', action='store_true', default=False)
     p.add_argument('--data_packing', action='store_true', default=False,
                    help='Concatenate GSM8K samples (EOS-separated) and chunk to '
-                        '--packed_seq_len. Eval loop unchanged. INVARIANT-8.')
+                        '--packed_seq_len. Eval loop unchanged.')
     p.add_argument('--packed_seq_len', type=int, default=2048,
                    help='Chunk size when --data_packing is set.')
     p.add_argument('--grad_clip', type=float, default=1.0)
     p.add_argument('--scheduler', default='cosine')
-    # Legacy benchmark_multiseed had no warmup; keep 0.0 to match paper numbers.
+    # The earlier training script had no warmup; keep 0.0 to match it.
     p.add_argument('--warmup_ratio', type=float, default=0.0)
     p.add_argument('--optimizer', default='adamw')
 
@@ -379,7 +372,7 @@ def _add_config_args(p: argparse.ArgumentParser) -> None:
     p.add_argument('--output_dir', default='results')
     p.add_argument('--output', dest='output_path', default=None,
                    help='Explicit output JSON path; overrides --output_dir auto-naming.')
-    # Legacy V1 reproduction preset (test_dtype_policy_3way.py Arm-4 conditions):
+    # --legacy_repro preset (the conditions of test_dtype_policy_3way.py, arm 4):
     #   lora_dropout=0.0, optimizer=paged_adamw8bit (NF4) / adamw (BF16),
     #   scheduler=constant, warmup_ratio=0.0.
     p.add_argument('--legacy_repro', action='store_true', default=False,
@@ -387,13 +380,13 @@ def _add_config_args(p: argparse.ArgumentParser) -> None:
 
 
 def build_from_cli(argv: Optional[List[str]] = None) -> ExperimentConfig:
-    """Parse CLI args and construct :class:`ExperimentConfig`.
+    """Parse the command line and build an ExperimentConfig.
 
-    ``fp8_ratio`` is filled in from the method default (0.0 / 0.20 / 1.0) when
-    the user does not pass ``--fp8_ratio``.
+    fp8_ratio is filled in from the method default (0.0, 0.20 or 1.0) when
+    --fp8_ratio is not given.
     """
     p = argparse.ArgumentParser(
-        description='OAMP experiment runner — spec v1',
+        description='OAMP experiment runner',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     _add_config_args(p)
     args = p.parse_args(argv)
@@ -420,7 +413,7 @@ def build_from_cli(argv: Optional[List[str]] = None) -> ExperimentConfig:
     else:
         fp8_ratio = args.fp8_ratio
 
-    # --legacy_repro preset (only overrides fields the user did NOT pass explicitly).
+    # --legacy_repro preset: overrides only the fields that were not passed explicitly.
     lora_dropout = args.lora_dropout
     optimizer = args.optimizer
     scheduler = args.scheduler

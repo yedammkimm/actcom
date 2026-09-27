@@ -1,18 +1,16 @@
-"""Shape-breakdown audit for OAMP coverage reduction (Arm 4 conditions).
+"""Shape breakdown of what the pack hooks see, under the production dtype policy.
 
-Replicates production loading exactly:
-  1. NF4 base + prepare_model_for_kbit_training(gc=False)
-  2. get_peft_model(LoRA r=16 α=32 dropout=0.0 targets=q/k/v/o)
-  3. apply_dtype_policy(bf16_rmsnorm=True)   ← THE key fix (previous audit missed this)
+Loads the model exactly as production does: NF4 base with
+prepare_model_for_kbit_training (no gradient checkpointing), get_peft_model
+with LoRA r=16, alpha=32, dropout 0 on q/k/v/o, then apply_dtype_policy
+with the RMSNorm swap, which an earlier version of this audit had missed.
 
-Then registers forward hooks on every nn.Linear so pack() can look up which
-module a saved tensor came from — turning "112=4×28 → q/k/v/o line" from an
-identity GUESS into an identity CERTAINTY.
-
-Records per (shape, dtype, module_role) group:
-  count, bytes_raw, bytes_uniq, orig_bytes
-
-Prints raw filter projections A/B/C/D/E for the coverage-reduction study.
+A forward hook on every nn.Linear records the storage pointers of its input
+and output, so pack() can look up which module a saved tensor came from,
+and "112 = 4 x 28, so these are the q/k/v/o inputs" becomes a certainty
+rather than a guess. Per (shape, dtype, module role) it records the count,
+the raw and unique bytes and the original bytes, and prints the filter
+projections A to E for the coverage study.
 """
 
 from __future__ import annotations
@@ -66,9 +64,7 @@ def _load_arm4_model():
     return m, tok, param_ptrs, dtype_report
 
 
-# ----------------------------------------------------------------
 # Module attribution: storage_ptr -> "layers.13.mlp.gate_proj.input"
-# ----------------------------------------------------------------
 
 def _short_name(name: str) -> str:
     # base_model.model.model.layers.5.mlp.gate_proj -> layers.5.mlp.gate_proj
@@ -96,9 +92,7 @@ def register_attribution(model, ptr_map: dict) -> list:
     return handles
 
 
-# ----------------------------------------------------------------
 # Pack instrumentation
-# ----------------------------------------------------------------
 
 def _packed_bytes(packed) -> int:
     if isinstance(packed, torch.Tensor):
@@ -210,9 +204,7 @@ def _bucket_role(role: str) -> str:
     return 'unknown'
 
 
-# ----------------------------------------------------------------
 # Main
-# ----------------------------------------------------------------
 
 def _identity_hint(count: int) -> str:
     for factor, label in [(4, '4x28 q/k/v/o'), (3, '3x28 MLP g/u/d'),
@@ -281,7 +273,7 @@ def run_audit(L: int):
     else:
         print("  (no fp32 among saved tensors)")
 
-    # ---------- DCR branch-level coverage (kept vs skip_param) ----------
+    # branch-level coverage (kept vs skip_param)------
     print("\n[DCR branch-level counters -- pre-pack, from pack_stats deltas]")
     print(f"  {'branch':<20} {'bytes_raw_MB':>14} {'bytes_uniq_MB':>15} "
           f"{'numel_raw_M':>13} {'numel_uniq_M':>14}")
@@ -331,7 +323,7 @@ def run_audit(L: int):
               f"{raw/1e6:>7.2f} {uniq/1e6:>7.2f} {orig/1e6:>7.2f}  "
               f"{_identity_hint(cnt)}")
 
-    # ---------- grouped by last_dim + ndim (from shape only, ignoring role) ----------
+    # grouped by last_dim and ndim, from shape only, ignoring role
     def _group_by(fn):
         agg = defaultdict(lambda: [0, 0, 0, 0])
         for (shape, dtype, role), raw in ctx._agg_raw.items():
@@ -362,7 +354,7 @@ def run_audit(L: int):
         print(f"  {role:<20}  raw {raw/1e6:6.1f} MB ({raw/total_raw*100:4.1f}%)  "
               f"uniq {uniq/1e6:6.1f} MB  count={cnt}")
 
-    # ---------- filter projections ----------
+    # filter projections
     def sum_matching(pred):
         raw = uniq = orig = cnt = 0
         numel_raw = numel_uniq = 0

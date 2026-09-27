@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""Task 2: torchao GB10 4bit weight-only sanity — forward + LoRA backward.
+"""torchao 4-bit weight-only sanity check on the GB10: forward and LoRA backward.
 
-Run inside hma-container:
-  docker exec hma-container python /app/HMA_Project/oamp_train_engine/benchmarks/sanity_torchao_int4.py
+Run: python oamp_train_engine/benchmarks/sanity_torchao_int4.py
 """
 import os, sys, time, traceback
 
@@ -44,13 +43,13 @@ torch.cuda.reset_peak_memory_stats()
 mem_bf16 = torch.cuda.max_memory_allocated() / 1e9
 print(f"    peak VRAM (bf16 load): {mem_bf16:.2f} GB")
 
-# ── Forward-only sanity on bf16 first ──────────────────────────────────
+# Forward-only sanity on bf16 first
 ids = torch.randint(0, tok.vocab_size, (1, 128), device=DEV)
 with torch.no_grad():
     out = model(ids)
 print(f"[2] BF16 forward OK: logits={tuple(out.logits.shape)}")
 
-# ── Apply int4 weight-only ─────────────────────────────────────────────
+# Apply int4 weight-only
 print("\n[3] Applying int4_weight_only ...")
 torch.cuda.reset_peak_memory_stats()
 
@@ -85,7 +84,7 @@ if not _quantized:
 mem_int4 = torch.cuda.max_memory_allocated() / 1e9
 print(f"    peak VRAM after int4: {mem_int4:.2f} GB")
 
-# ── Forward with int4 ──────────────────────────────────────────────────
+# Forward with int4
 try:
     with torch.no_grad():
         out = model(ids)
@@ -93,7 +92,7 @@ try:
 except Exception as e:
     traceback.print_exc(); print(f"[4] int4 forward FAIL: {e}"); sys.exit(3)
 
-# ── LoRA + backward ────────────────────────────────────────────────────
+# LoRA + backward
 print("\n[5] Adding LoRA (r=16) + backward ...")
 try:
     lora_config = LoraConfig(
@@ -112,7 +111,7 @@ try:
 except Exception as e:
     traceback.print_exc(); print(f"[5] LoRA backward FAIL: {e}"); sys.exit(4)
 
-# ── Optimizer step ─────────────────────────────────────────────────────
+# Optimizer step
 try:
     opt = torch.optim.AdamW([p for p in peft_model.parameters() if p.requires_grad], lr=1e-4)
     opt.step(); opt.zero_grad()

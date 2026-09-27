@@ -1,5 +1,6 @@
-// Copyright (c) 2025 OAMP Research Team. All rights reserved.
-// Licensed under the Apache License, Version 2.0.
+// Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
+//
+// Launcher declarations for the earlier packing kernels in oamp_kernels.cu.
 
 #pragma once
 #include <cuda_runtime.h>

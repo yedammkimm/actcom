@@ -1,35 +1,16 @@
-# Copyright (c) 2025 OAMP Research Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0.
+# Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
 
-"""
-oamp.bilevel
-============
-Bi-Level Mixed-Precision Quantizer (model-agnostic, pure tensor operations).
+"""Max-abs anchor routing applied in the forward pass, with a straight-through gradient.
 
-Per-group Algorithm  (cf. Paper §3.2)
--------------------
-  Input hidden_states  (..., D)
-      |
-      v
-  Reshape into groups of 128 (pad if needed)
-      |
-      v
-  compute max-abs per group                                   ... importance
-      |
-      v
-  Top K% groups → fp8_quantize(per-group)  (FP8, 8-bit anchors)
-  Rest          → fp4_quantize(per-group)  (FP4, 4-bit body)
-      |
-      v
-  torch.where(mask, fp8_result, fp4_result)                   ... compose
-      |
-      v
-  Output (..., D)  — STE-differentiable
+The hidden states are cut into groups of 128 elements along the last axis.
+Each group is scored by its largest absolute value, the top `fp8_ratio` of
+groups are quantized to FP8 and the rest to the symmetric 4-bit grid, and the
+two results are composed with torch.where. The forward pass sees the
+quantized values; the backward pass passes gradients through unchanged.
 
-Public API
-----------
-group_bilevel_quantize(hidden_states, fp8_ratio, group_size)  : per-group
-BilevelQuantizer  : nn.Module, configurable quantizer
+This is a standalone simulation of the anchor variant. The training runs in
+the paper compress only the saved tensors, through oamp.pack_hooks, and do
+not import this module.
 """
 
 import torch
@@ -45,9 +26,7 @@ __all__ = [
 ]
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Per-group bi-level quantization 
-# ──────────────────────────────────────────────────────────────────────────────
+# Per-group anchor routing
 
 def group_bilevel_quantize(
     hidden_states: torch.Tensor,
@@ -58,33 +37,19 @@ def group_bilevel_quantize(
     fixed_mask: torch.Tensor | None = None,
     stats: dict | None = None,
 ) -> torch.Tensor:
-    """
-    Group-level bi-level mixed-precision quantization.
+    """Quantize `hidden_states` (..., D) group by group and return a tensor of the
+    same shape and dtype, with the straight-through gradient.
 
-    Routes groups of ``group_size`` elements to FP8 or FP4.
-
-    Parameters
-    ----------
-    hidden_states : Tensor  (..., D)
-    fp8_ratio     : float   Fraction of groups quantized as FP8 anchors (default 0.20).
-    group_size    : int     Group size (default 128).
-    routing       : str     Group routing criterion: 'maxabs' (default) or 'random'.
-    generator     : torch.Generator, optional
-                    Dedicated RNG for 'random' routing. REQUIRED to avoid
-                    perturbing the global torch RNG stream (which would
-                    desynchronize e.g. LoRA dropout across methods).
-    fixed_mask    : BoolTensor (num_hidden_groups,), optional
-                    Precomputed per-hidden-dim group mask ('random_fixed'
-                    routing). Tiled across token positions; overrides
-                    ``routing``. num_hidden_groups = ceil(D / group_size).
-    stats         : dict, optional
-                    If given, 'fp8_groups' / 'total_groups' entries are
-                    incremented in-place (tensor-friendly ints) for
-                    bits/element verification logging.
-
-    Returns
-    -------
-    quantized : Tensor  (..., D)  — STE-differentiable.
+    `fp8_ratio` is the fraction of groups that become FP8 anchors and `group_size`
+    the number of elements per group; a partial trailing group is zero-padded.
+    `routing` picks the anchors by max-abs ('maxabs') or at random ('random').
+    Random routing needs `generator`, a dedicated torch.Generator, so that the
+    global RNG stream, which also drives LoRA dropout, is left untouched.
+    `fixed_mask` is a precomputed boolean mask over the ceil(D / group_size)
+    hidden-dimension groups; it is tiled over token positions and overrides
+    `routing`. If `stats` is given, its 'fp8_groups' and 'total_groups' entries
+    are incremented in place (as tensors, to avoid a host sync) for the
+    bits-per-element bookkeeping.
     """
     orig_shape = hidden_states.shape
     D = hidden_states.shape[-1]
@@ -104,7 +69,7 @@ def group_bilevel_quantize(
     if K >= num_groups:
         return fp8_quantize(hidden_states, group_size)
 
-    # Step 1: Determine FP8 anchor mask (no gradient)
+    # 1. anchor mask, no gradient
     with torch.no_grad():
         if fixed_mask is not None:
             # 'random_fixed': per-hidden-dim mask, tiled over token positions.
@@ -124,16 +89,16 @@ def group_bilevel_quantize(
             fp8_mask.scatter_(0, topk_idx, True)
 
         if stats is not None:
-            # Tensor accumulation (no .item() → no CPU sync per call)
+            # accumulate as tensors; .item() would force a CPU sync on every call
             s = fp8_mask.sum()
             stats['fp8_groups'] = stats.get('fp8_groups', 0) + s
             stats['total_groups'] = stats.get('total_groups', 0) + num_groups
 
-    # Step 2: Quantize all at both precisions (STE)
+    # 2. quantize everything at both precisions (straight-through)
     q_fp8 = fp8_quantize(hidden_states_padded, group_size)
     q_fp4 = fp4_quantize(hidden_states_padded, group_size)
 
-    # Step 3: Compose via group mask
+    # 3. compose with the group mask
     mask_expanded = fp8_mask.unsqueeze(-1).expand_as(x_flat)
     result_flat = torch.where(mask_expanded,
                               q_fp8.reshape(-1, group_size),
@@ -147,27 +112,12 @@ def group_bilevel_quantize(
 
 
 class BilevelQuantizer(nn.Module):
-    """
-    Bi-Level Mixed-Precision Quantizer.
+    """nn.Module wrapper around group_bilevel_quantize with max-abs routing.
 
-    Inserts before any transformer layer to apply OAMP activation compression.
-
-    Parameters
-    ----------
-    fp8_ratio : float
-        Fraction of groups preserved as FP8 anchors (default 0.20 = 20%).
-    group_size : int
-        Group size for per-group quantization (default 128).
-    enabled : bool
-        If False, acts as identity (pass-through).
-
-    Example
-    -------
-    >>> quantizer = BilevelQuantizer(fp8_ratio=0.20)
-    >>> hidden = quantizer(hidden_states)   # apply before each layer
-
-    Hook-based attachment:
-    >>> hook = quantizer.register_pre_hook(layer)
+    `fp8_ratio` and `group_size` are as in the function; with `enabled=False` the
+    module is an identity. It can be called on a hidden-state tensor directly or
+    attached to a layer as a forward pre-hook with register_pre_hook. It counts
+    calls and anchor groups, which fp8_group_ratio and reset_stats expose.
     """
 
     def __init__(
@@ -204,7 +154,9 @@ class BilevelQuantizer(nn.Module):
         return out
 
     def register_pre_hook(self, layer: nn.Module):
-        """Register a forward pre-hook on ``layer`` that applies quantization."""
+        """Attach the quantizer to `layer` as a forward pre-hook on its first tensor
+        argument and return the hook handle.
+        """
         quantizer = self
 
         def _hook(module, args):

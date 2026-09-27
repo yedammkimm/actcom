@@ -1,25 +1,14 @@
-# Copyright (c) 2025 OAMP Research Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0.
+# Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
 
-"""
-oamp.memory
-===========
-Theoretical activation memory savings calculator for bi-level quantization.
+"""Back-of-the-envelope activation memory for the anchor variant.
 
-Formula  (cf. Paper §3.3)
--------
-  BF16 baseline  : 2 bytes / element
-  Bi-level       : fp8_ratio * 1 byte + (1 - fp8_ratio) * 0.5 byte
-  Savings (%)    : 1 - bilevel / bf16
-
-Example (15/85 default)
------------------------
-  15% * 1 + 85% * 0.5 = 0.575 byte  →  71.25% savings vs BF16 (2 bytes)
-
-Public API
-----------
-compute_theoretical_savings(fp8_ratio, ...) → dict
-print_memory_analysis(fp8_ratio)
+BF16 stores two bytes per element. With a fraction fp8_ratio of the groups
+at one byte and the rest at half a byte, the average is
+fp8_ratio + 0.5 * (1 - fp8_ratio) bytes; at a 15/85 split that is 0.575
+bytes, 71.25% below BF16. This counts only the activations of one hidden
+state per layer and ignores the per-group scales, so it is a ceiling on the
+saving, not a measurement. The measured numbers in the paper come from
+run_experiment.py in memory mode.
 """
 
 from __future__ import annotations
@@ -42,28 +31,10 @@ def compute_theoretical_savings(
     num_layers: int  = 28,
     batch_size: int  = 1,
 ) -> dict:
-    """
-    Compute theoretical activation memory savings under bi-level quantization.
-
-    Parameters
-    ----------
-    fp8_ratio  : float  FP8 anchor ratio (default 0.15).
-    seq_len    : int    Sequence length (default 512).
-    hidden_dim : int    Hidden dimension (LLaMA-3.2-3B = 3072).
-    num_layers : int    Number of transformer layers (LLaMA-3.2-3B = 28).
-    batch_size : int    Batch size.
-
-    Returns
-    -------
-    dict with keys:
-        fp8_ratio              : float
-        fp4_ratio              : float
-        bits_per_element       : float  Average bits per element
-        bytes_per_element      : float  Average bytes per element
-        savings_pct            : float  Savings vs BF16 (%)
-        bf16_total_mb          : float  BF16 total activation size (MB)
-        bilevel_total_mb       : float  Bi-level total activation size (MB)
-        saved_mb               : float  Memory saved (MB)
+    """Return a dict with the average bits and bytes per element, the percent saved
+    against BF16, and the BF16 and compressed sizes in MB of one
+    batch_size x seq_len x hidden_dim activation per layer over num_layers
+    layers, for the given fp8_ratio.
     """
     fp4_ratio = 1.0 - fp8_ratio
 
@@ -98,14 +69,7 @@ def print_memory_analysis(
     num_layers: int  = 28,
     batch_size: int  = 1,
 ) -> None:
-    """
-    Pretty-print the activation memory savings analysis.
-
-    Example
-    -------
-    >>> from oamp import print_memory_analysis
-    >>> print_memory_analysis(fp8_ratio=0.15)
-    """
+    """Print the figures from compute_theoretical_savings as a small table."""
     s = compute_theoretical_savings(
         fp8_ratio=fp8_ratio,
         seq_len=seq_len,

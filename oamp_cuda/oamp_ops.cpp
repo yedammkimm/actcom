@@ -1,5 +1,8 @@
-// Copyright (c) 2025 OAMP Research Team. All rights reserved.
-// Licensed under the Apache License, Version 2.0.
+// Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
+//
+// Bindings for oamp_kernels.cu, the earlier three-level packer: pack(x,
+// threshold) returns (packed, meta, offsets, scales) and unpack restores the
+// tensor. Kept for reference; not used by the training path.
 
 #include <torch/extension.h>
 #include <vector>
@@ -13,7 +16,7 @@ extern void launch_hybrid_decompress(
     const uint8_t* packed_buffer, const uint8_t* meta, const int32_t* offsets, const nv_bfloat16* scales,
     nv_bfloat16* output, int num_elements, cudaStream_t stream);
 
-// [Hybrid Pack]
+// pack
 std::vector<torch::Tensor> oamp_pack(torch::Tensor x, float threshold) {
     int num_elements = x.numel();
     int num_groups = num_elements / 16;
@@ -46,7 +49,7 @@ std::vector<torch::Tensor> oamp_pack(torch::Tensor x, float threshold) {
     );
 
     // 3. Create exact-size tensor (shrink to actual compressed size)
-    // Note: .slice() alone doesn't free memory — copy to new tensor
+    // .slice() alone does not free memory; copy into an exact-size tensor
     torch::Tensor packed_exact = torch::empty({total_bytes}, options_u8);
     packed_exact.copy_(temp_packed.slice(0, 0, total_bytes));
 
@@ -55,7 +58,7 @@ std::vector<torch::Tensor> oamp_pack(torch::Tensor x, float threshold) {
     return {packed_exact, meta, offsets, scales};
 }
 
-// [Hybrid Unpack]
+// unpack
 torch::Tensor oamp_unpack(torch::Tensor packed, torch::Tensor meta, torch::Tensor offsets, torch::Tensor scales, std::vector<int64_t> shape) {
     int64_t num_elements = 1;
     for (auto s : shape) num_elements *= s;

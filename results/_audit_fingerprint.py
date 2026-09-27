@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Fingerprint-match paper per-seed values against results/*.json.
+"""Match the per-seed accuracy values printed in an earlier draft of the paper
+against results/*.json.
 
-Paper targets (from user):
+Targets, as printed in that draft (table numbers refer to it):
   Run-A:
     Standard  [58.0, 59.4, 59.2]   (Tables 5, 6)
     OAMP      [58.2, 58.0, 59.6]   (Table 6)

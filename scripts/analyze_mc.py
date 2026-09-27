@@ -62,7 +62,7 @@ def load_mc():
     return out
 
 
-# ------------------------------------------------------------------ statistics
+# statistics
 
 def _ranks(xs):
     """Average ranks, so ties are handled rather than broken arbitrarily."""
@@ -127,7 +127,7 @@ def mannwhitney_exact(a, b):
     return U, hit / tot, f"exact, {tot} splits"
 
 
-# ------------------------------------------------------------------ report
+# report
 
 def main():
     ap = argparse.ArgumentParser()

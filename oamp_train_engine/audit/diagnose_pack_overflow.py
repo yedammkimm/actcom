@@ -1,19 +1,16 @@
-"""Diagnose why Qwen gradient probe shows inf/1e13 norm_test on FP8 filter.
+"""Diagnose why the Qwen gradient probe reports inf or 1e13 norms under the FP8 filter.
 
-Hypothesis: _quantize_fp8's clamp(min=1e-8) creates scale=2.23e-11 when a group
-has absmax=0 (or below clamp). Any noise-level nonzero in that group then
-becomes >_FP8_MAX during (x/scale) → saturates → dequant returns inf →
-gradient corrupts.
+Hypothesis: the clamp(min=1e-8) in _quantize_fp8 gives a scale of about
+2.2e-11 when a group's absmax is zero or below the clamp. Any noise-level
+nonzero value in that group then exceeds the FP8 maximum after division by
+the scale, saturates, dequantizes to inf and corrupts the gradient.
 
-Also checks:
-  1. Are LoRA modules fp32 (would explain Qwen vs Llama differently)?
-  2. Do saved activations contain exact zeros / all-zero groups?
-  3. What fraction of groups hit the clamp?
-  4. Do dequant outputs contain nonfinite values?
+Also checks whether the LoRA modules are fp32 (which would explain a Qwen
+versus Llama difference), whether saved activations contain exact zeros or
+all-zero groups, what fraction of groups hits the clamp, and whether any
+dequantized output is non-finite.
 
-Run:
-  docker exec -e DIAG_MODEL='Qwen/Qwen2.5-3B-Instruct' hma-container \\
-      python oamp_train_engine/audit/diagnose_pack_overflow.py
+Run: DIAG_MODEL='Qwen/Qwen2.5-3B-Instruct' python oamp_train_engine/audit/diagnose_pack_overflow.py
 """
 from __future__ import annotations
 import os, sys, json
@@ -223,7 +220,7 @@ ids = torch.randint(0, vocab, (B, L), generator=g).to(DEV)
 labels = ids.clone()
 
 # Compare two configurations:
-#   (a) uniform_fp8: all FP8 — sanity check (should be clean)
+#   (a) uniform_fp8: all FP8, a sanity check that should be clean
 #   (b) naive_fp4 with pack_4d_mode='fp8': matches actual failing Qwen setup
 CONFIG = os.environ.get('DIAG_CONFIG', 'naive_fp4')  # 'uniform_fp8' | 'naive_fp4'
 print(f"\n[config] pack config: {CONFIG}")

@@ -1,33 +1,25 @@
 """Held-out perplexity for a saved LoRA adapter (2026-08-26).
 
-Loads the base model with the same dtype policy used in training, attaches the
-adapter via ``PeftModel.from_pretrained`` (matches ``batch_eval.py``, differs
-from the ``set_peft_model_state_dict`` path used in the gradient probe), and
-computes token-level perplexity on two held-out corpora:
+Loads the base model with the dtype policy used in training, attaches the
+adapter with PeftModel.from_pretrained (the same path as batch_eval.py; the
+gradient probe uses set_peft_model_state_dict instead), and computes
+token-level perplexity on held-out text: the GSM8K test set under the
+training prompt template, which measures how well the adapter learned the
+training distribution, and WikiText-2 (raw v1, test), natural text
+concatenated and chunked, which measures whether general language ability
+was damaged. Further corpora are listed in _OOD_CORPORA below.
 
-  * GSM8K test set  — same ``format_train_prompt`` template used during LoRA
-    training; measures how well the adapter learned the training distribution.
-  * WikiText-2 raw v1 test — natural text concatenated then chunked; measures
-    whether general LM ability was damaged by compression.
+Load order, bit for bit the one of run_experiment.py and batch_eval.py:
+base model with prepare_model_for_kbit_training for NF4,
+PeftModel.from_pretrained, apply_dtype_policy, then eval() under no_grad.
 
-Load order (bit-for-bit identical to run_experiment.py::main and batch_eval.py):
-    1. Base model + prepare_model_for_kbit_training (NF4 only).
-    2. PeftModel.from_pretrained(base, adapter_dir).
-    3. apply_dtype_policy(model, weight_quant, bf16_rmsnorm).
-    4. model.eval() + torch.no_grad() forward.
-
-Perplexity math:
-
-    out = model(input_ids=ids, labels=ids)     # HF shifts internally
-    n_tok = ids.shape[1] - 1                   # tokens that receive a loss
-    nll_sum += out.loss.item() * n_tok         # HF loss is per-token mean
-    ppl = exp(nll_sum / total_tokens)
+Perplexity: the model is called with labels equal to the input ids (it
+shifts them internally), the per-token mean loss is multiplied back by the
+number of scored tokens (length minus one) and summed over windows, and
+ppl = exp(total nll / total tokens).
 
 Usage:
-    docker exec hma-container bash -c "cd /app/HMA_Project && python \\
-        scripts/eval_perplexity.py \\
-        --adapter_path results/naive4bit_e2m1/....seed42..._adapter \\
-        --wikitext_chunks 200 --gsm8k_samples 500 --max_len 512"
+    python scripts/eval_perplexity.py --adapter_path <adapter dir> --wikitext_chunks 200 --gsm8k_samples 500 --max_len 512
 """
 import argparse
 import json
@@ -98,7 +90,7 @@ def compute_ppl_from_ids(model, id_lists, *, label: str, log_every: int = 25):
     """Token-weighted perplexity from pre-tokenized id lists.
 
     Each element of ``id_lists`` is a python list of int token ids. No further
-    truncation or padding is done — callers are responsible for producing lists
+    truncation or padding is done; callers are responsible for producing lists
     of length in [2, max_len].
     """
     total_nll = 0.0
@@ -155,7 +147,7 @@ def build_wikitext_id_lists(tokenizer, *, max_len: int, n_chunks: int):
 
     Standard PPL protocol: skip empty rows, concatenate remainder, chunk. The
     last (short) chunk is dropped so every window has identical length. No
-    decode+re-encode round-trip — ids are used directly.
+    decode and re-encode round trip; ids are used directly.
     """
     from datasets import load_dataset
     ds = load_dataset("wikitext", "wikitext-2-raw-v1",
@@ -168,14 +160,11 @@ def build_wikitext_id_lists(tokenizer, *, max_len: int, n_chunks: int):
     return [ids[i * max_len : (i + 1) * max_len] for i in range(total_chunks)]
 
 
-# ----------------------------------------------------------------
-# Extra OOD corpora (2026-08-31) — beyond WikiText-2, to show the 4-D FP4
-# damage generalises across distributions.  Each entry lists a HF dataset,
-# a row → text extractor, and a note for the JSON output.
-#
-# Only offline-cached datasets are listed; on-the-fly downloads are avoided
-# in the container. c4 needs network access and is not included by default.
-# ----------------------------------------------------------------
+# Extra held-out corpora (2026-08-31), beyond WikiText-2, to show that the 4-D
+# FP4 damage generalises across distributions. Each entry lists a HF dataset,
+# a row-to-text extractor and a note for the JSON output. Only datasets cached
+# offline are listed; on-the-fly downloads are avoided in the container, and c4
+# needs network access, so it is not included by default.
 
 def _narrativeqa_text(row):
     d = row.get('document') or {}
@@ -332,7 +321,7 @@ def main():
         payload["wikitext2_tokens"] = toks
         payload["wikitext2_n_texts"] = nused
 
-    # Extra OOD corpora — measured with the same chunking protocol as WikiText-2
+    # Extra held-out corpora, measured with the same chunking protocol as WikiText-2
     # so cross-corpus comparisons are apples-to-apples at fixed token budget.
     extra_names = [s.strip() for s in args.extra_corpora.split(",") if s.strip()]
     for corpus_name in extra_names:

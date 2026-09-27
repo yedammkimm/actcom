@@ -1,13 +1,14 @@
-"""2-min pure-forward parity: does γ's saved_tensors_hooks affect forward numerics?
+"""Two-minute forward-only parity check: do the saved-tensor hooks change the forward numerics?
 
-Loads model once, feeds one deterministic sample, computes loss twice:
-  - once as plain HF forward
-  - once wrapped in NativeOAMPHooks context
+Loads the model once, feeds one deterministic sample and computes the loss
+twice, as a plain forward and inside the hooks context. If pack() is truly
+backward-only the two losses match bit for bit, or within 1e-6 of floating
+point noise; a larger difference means pack() is touching the forward
+computation. Runs in eval() mode so dropout cannot add noise.
 
-If pack is truly backward-only, the two losses must match bit-exactly (or within
-1e-6 fp noise). Any larger diff means pack is touching forward computation.
-
-Runs in eval() mode to disable dropout so RNG cannot introduce noise.
+This uses NativeOAMPHooks, the earlier implementation that lived in legacy/,
+which the released repository does not include. run_experiment.py performs
+the same check on PackHooks before every run.
 """
 
 import argparse
@@ -20,8 +21,7 @@ from transformers import AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-# NativeOAMPHooks lives in legacy until oamp/pack_hooks.py lands.
-# TODO(pack_hooks): delete this insert + switch to `from oamp.pack_hooks import PackHooks`.
+# NativeOAMPHooks is the earlier implementation, which this repository does not include.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'legacy', 'benchmarks')))
 
 from benchmark_native_packing_vram import NativeOAMPHooks  # noqa: E402
@@ -93,7 +93,7 @@ def main():
     print(f"[C] plain HF forward (again)   loss={loss_std2!r}", flush=True)
 
     print()
-    print(f"|A - B| (γ vs Standard) = {abs(loss_std - loss_gamma):.6e}")
+    print(f"|A - B| (hooks vs standard) = {abs(loss_std - loss_gamma):.6e}")
     print(f"|A - C| (reproducibility) = {abs(loss_std - loss_std2):.6e}")
     print(f"logits max abs (A vs B) = {(logits_std - logits_gamma).abs().max().item():.6e}")
     print(f"logits max abs (A vs C) = {(logits_std - logits_std2).abs().max().item():.6e}")
@@ -101,7 +101,7 @@ def main():
     verdict_ab = abs(loss_std - loss_gamma) < 1e-4
     verdict_ac = abs(loss_std - loss_std2) < 1e-6
     print()
-    print(f"PASS (γ forward-invariant): {verdict_ab}")
+    print(f"PASS (forward unchanged by the hooks): {verdict_ab}")
     print(f"PASS (HF reproducible):     {verdict_ac}")
 
 

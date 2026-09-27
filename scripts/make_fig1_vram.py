@@ -1,4 +1,4 @@
-"""Figure 1 — activation memory against sequence length on 70B.
+"""Figure 1: activation memory against sequence length on 70B.
 
 Measured points are markers on solid segments; everything past the last
 measurement is a dashed linear extrapolation. Weights and optimiser state are a

@@ -1,36 +1,23 @@
-# Copyright (c) 2025 OAMP Research Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0.
+# Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
 
-"""
-oamp.cuda_ops
-=============
-CUDA-accelerated bi-level quantization operations.
+"""CUDA-backed version of the anchor-variant quantizer, with a PyTorch fallback.
 
-Falls back transparently to pure-PyTorch paths (``oamp.bilevel``) when
-the CUDA extension is not built.
+The extension `oamp_bilevel`, built from oamp_cuda/ with
+`python setup_bilevel.py build_ext --inplace`, provides a per-group max-abs
+kernel and a fused quantize-dequantize kernel; cuda_available() reports
+whether it loaded. Every function here falls back to oamp.bilevel and
+oamp.quantize when it did not, so the same computation runs either way and
+only the speed differs.
 
-Building the CUDA extension
-----------------------------
-  cd oamp_cuda/
-  python setup_bilevel.py build_ext --inplace
+Two paths are exposed. bilevel_quantize_cuda is the straight-through
+quantizer, a drop-in for group_bilevel_quantize. bilevel_pack and
+bilevel_unpack store the anchor groups at one byte per element and the body
+groups at two elements per byte in a BilevelPacked container, which is what
+a checkpointing scheme would keep between forward and backward; the PyTorch
+fallback of that path produces the same values but does not shrink memory.
 
-Verify installation
--------------------
-  >>> import oamp
-  >>> oamp.cuda_available()
-  True   ← CUDA kernels active
-  False  ← PyTorch fallback in use
-
-Uses per-group max-abs routing (GROUP_SIZE=128) matching the final algorithm.
-
-Public API
-----------
-  cuda_available()                        → bool
-  analyze(x, group_size)                  → Tensor  (per-group max-abs)
-  fused_quantize(x, fp8_mask, group_size) → Tensor
-  bilevel_quantize_cuda(x, fp8_ratio)     → Tensor  (unified entry)
-  bilevel_pack(x, fp8_ratio)              → BilevelPacked
-  bilevel_unpack(packed)                  → Tensor
+The training runs in the paper use neither path; they compress saved
+tensors through oamp.pack_hooks.
 """
 
 from __future__ import annotations
@@ -56,7 +43,7 @@ __all__ = [
     "BilevelPacked",
 ]
 
-# ── CUDA extension import ─────────────────────────────────────────────────────
+# CUDA extension import
 
 _BILEVEL_EXT = None
 _CUDA_READY  = False
@@ -82,31 +69,18 @@ _try_load_extension()
 
 
 def cuda_available() -> bool:
-    """
-    Return True if the CUDA extension (``oamp_bilevel``) is built and usable.
-
-    When False, all functions fall back to PyTorch implementations.
+    """Return True if the oamp_bilevel extension is built and importable. When
+    False, every function in this module runs its PyTorch fallback.
     """
     return _CUDA_READY
 
 
-# ── Per-group analysis ────────────────────────────────────────────────────────
+# Per-group analysis
 
 def analyze(x: torch.Tensor, group_size: int = GROUP_SIZE):
-    """
-    Compute per-group max-abs importance score.
-
-    When CUDA extension is available, uses a single kernel launch.
-    Falls back to PyTorch otherwise.
-
-    Parameters
-    ----------
-    x          : Tensor  (..., D)
-    group_size : int     (default GROUP_SIZE=128)
-
-    Returns
-    -------
-    importance : float32 [num_groups] — max absolute value per group
+    """Return the max-abs of each group of `x` (..., D) as a float32 tensor of
+    shape (num_groups,), from a single kernel launch when the extension is
+    available and from PyTorch otherwise.
     """
     D = x.shape[-1]
     if D % group_size != 0:
@@ -121,13 +95,12 @@ def analyze(x: torch.Tensor, group_size: int = GROUP_SIZE):
     return x_flat.float().abs().amax(dim=-1)
 
 
-# ── Per-group fused quantize ──────────────────────────────────────────────────
+# Per-group fused quantize
 
 class _FusedQuantizeSTE(torch.autograd.Function):
-    """
-    Per-group fused bi-level quantization with STE.
-    Forward: quantize each group as FP8 or FP4 based on group mask.
-    Backward: gradient passes through unchanged (Straight-Through).
+    """autograd.Function for the fused kernel: each group is quantized and
+    dequantized as FP8 or 4-bit according to the group mask, and the backward
+    pass returns the incoming gradient unchanged.
     """
     @staticmethod
     def forward(ctx, x_padded, fp8_group_mask, group_size):
@@ -161,43 +134,24 @@ def fused_quantize(
     fp8_group_mask: torch.Tensor,
     group_size:     int = GROUP_SIZE,
 ) -> torch.Tensor:
-    """
-    Per-group bi-level quantize + dequantize with STE.
-
-    Parameters
-    ----------
-    x              : BF16  (..., D)  — D must be divisible by group_size (pad first).
-    fp8_group_mask : bool  [num_groups]   True = FP8 anchor group
-    group_size     : int   (default GROUP_SIZE=128)
-
-    Returns
-    -------
-    BF16 (..., D)
+    """Quantize and dequantize `x` (BF16, (..., D) with D a multiple of
+    `group_size`; pad first) group by group, FP8 where `fp8_group_mask` is True
+    and 4-bit elsewhere. Returns BF16 of the same shape, with a straight-through
+    gradient.
     """
     return _FusedQuantizeSTE.apply(x, fp8_group_mask, group_size)
 
 
-# ── Unified interface: bilevel_quantize_cuda ───────────────────────────────────
+# Unified entry point
 
 def bilevel_quantize_cuda(
     hidden_states: torch.Tensor,
     fp8_ratio: float = 0.20,
     group_size: int = GROUP_SIZE,
 ) -> torch.Tensor:
-    """
-    Bi-level quantization (CUDA-accelerated version).
-
-    Uses per-group max-abs routing (GROUP_SIZE=128).
-
-    Parameters
-    ----------
-    hidden_states : BF16 Tensor  (..., D)
-    fp8_ratio     : float         FP8 anchor ratio (default 0.20)
-    group_size    : int           Group size (default 128)
-
-    Returns
-    -------
-    BF16 Tensor  (same shape)
+    """The anchor-variant quantizer on the CUDA path: score groups by max-abs,
+    mark the top `fp8_ratio` as anchors, and run the fused quantize. Takes a
+    BF16 tensor (..., D) and returns one of the same shape.
     """
     D = hidden_states.shape[-1]
 
@@ -216,7 +170,7 @@ def bilevel_quantize_cuda(
     if K >= num_groups:
         return fp8_quantize(hidden_states, group_size)
 
-    # ── Step 1: per-group importance (max-abs) ───────────────────────────
+    # 1. per-group importance (max-abs)
     with torch.no_grad():
         importance = x_flat.float().abs().amax(dim=-1)
         _, topk_idx = importance.topk(K)
@@ -224,7 +178,7 @@ def bilevel_quantize_cuda(
                                device=hidden_states.device)
         fp8_mask.scatter_(0, topk_idx, True)
 
-    # ── Step 2: fused quantize (per-group) ───────────────────────────────
+    # 2. fused quantize
     result = fused_quantize(x_padded, fp8_mask, group_size)
 
     if pad_size > 0:
@@ -233,25 +187,20 @@ def bilevel_quantize_cuda(
     return result.to(hidden_states.dtype)
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Physical Pack / Unpack  (for gradient checkpointing)
-# ══════════════════════════════════════════════════════════════════════════════
+# Physical pack / unpack
 
 @dataclass
 class BilevelPacked:
-    """
-    Container for physically packed bi-level compressed activations (per-group).
+    """Physically packed anchor-variant activations.
 
-    Attributes
-    ----------
-    fp8_packed   : uint8[N_fp8, gs]     FP8 anchor groups (INT8 encoded)
-    fp4_packed   : uint8[N_fp4, gs/2]   FP4 body groups (nibble-packed)
-    fp8_absmax   : float32[N_fp8]       Per-group absmax for FP8 groups
-    fp4_absmax   : float32[N_fp4]       Per-group absmax for FP4 groups
-    fp8_indices  : LongTensor[N_fp8]    Group indices for FP8
-    fp4_indices  : LongTensor[N_fp4]    Group indices for FP4
-    orig_shape   : tuple                Original tensor shape (B, L, D)
-    group_size   : int                  Group size used for quantization
+        fp8_packed    uint8 [N_fp8, group_size]       anchor groups, one byte per element
+        fp4_packed    uint8 [N_fp4, group_size / 2]   body groups, two elements per byte
+        fp8_absmax    float32 [N_fp8]                 per-group scale of the anchor groups
+        fp4_absmax    float32 [N_fp4]                 per-group scale of the body groups
+        fp8_indices   int64 [N_fp8]                   which groups are anchors
+        fp4_indices   int64 [N_fp4]                   which groups are body
+        orig_shape    the (B, L, D) shape of the original tensor
+        group_size    elements per group
     """
     fp8_packed:  torch.Tensor
     fp4_packed:  torch.Tensor
@@ -263,7 +212,7 @@ class BilevelPacked:
     group_size:  int = GROUP_SIZE
 
     def memory_bytes(self) -> int:
-        """Total physical bytes used for storage."""
+        """Bytes held by the packed payloads and scales."""
         return (
             self.fp8_packed.numel()   # 1 byte/elem
             + self.fp4_packed.numel() # 0.5 byte/elem (nibble-packed)
@@ -274,7 +223,7 @@ class BilevelPacked:
         )
 
     def savings_vs_bf16(self) -> float:
-        """Savings (%) compared to BF16 baseline."""
+        """Percent saved against storing the original tensor in BF16."""
         B, L, D = self.orig_shape
         bf16_bytes = B * L * D * 2
         our_bytes  = self.memory_bytes()
@@ -286,22 +235,13 @@ def bilevel_pack(
     fp8_ratio: float = 0.20,
     group_size: int = GROUP_SIZE,
 ) -> BilevelPacked:
-    """
-    Physically pack a BF16 activation tensor via per-group bi-level compression.
-
-    When CUDA kernels are available, uses ``fp8_pack`` / ``fp4_pack`` for
-    real memory savings.  PyTorch fallback provides simulated packing
-    (functional correctness, no actual VRAM reduction).
-
-    Parameters
-    ----------
-    x          : BF16 Tensor  (B, L, D)
-    fp8_ratio  : float
-    group_size : int
-
-    Returns
-    -------
-    BilevelPacked
+    """Pack a BF16 tensor (B, L, D) into a BilevelPacked container: score groups
+    by max-abs, mark the top `fp8_ratio` as anchors, and store anchors at one
+    byte per element and the body at two elements per byte. With the extension
+    the packing is done by the fp8_pack and fp4_pack kernels and the memory is
+    actually smaller; the PyTorch fallback produces the same values but keeps
+    uint8 tensors of full size, so it is for checking results, not for saving
+    memory.
     """
     assert x.dim() == 3, "x must be (B, L, D)"
     B, L, D = x.shape
@@ -318,7 +258,7 @@ def bilevel_pack(
     num_groups = x_flat.shape[0]
     K = max(1, int(num_groups * fp8_ratio))
 
-    # ── Step 1: per-group max-abs importance ──────────────────────────────
+    # 1. per-group max-abs importance
     with torch.no_grad():
         absmax = x_flat.float().abs().amax(dim=-1)  # [num_groups]
         _, topk_idx = absmax.topk(K)
@@ -333,7 +273,7 @@ def bilevel_pack(
     am_fp8 = absmax[fp8_idx]
     am_fp4 = absmax[fp4_idx]
 
-    # ── Step 2: physical packing ──────────────────────────────────────────
+    # 2. physical packing
     if _CUDA_READY and x.is_cuda:
         fp8_packed = _BILEVEL_EXT.fp8_pack(x_fp8.contiguous(), am_fp8.contiguous())
         fp4_packed = _BILEVEL_EXT.fp4_pack(x_fp4.contiguous(), am_fp4.contiguous())
@@ -354,16 +294,8 @@ def bilevel_pack(
 
 
 def bilevel_unpack(packed: BilevelPacked) -> torch.Tensor:
-    """
-    Restore a BilevelPacked container to a BF16 tensor.
-
-    Parameters
-    ----------
-    packed : BilevelPacked
-
-    Returns
-    -------
-    BF16 Tensor  (B, L, D)  — same shape as original, includes quantization noise.
+    """Restore a BilevelPacked container to a BF16 tensor of the original
+    (B, L, D) shape. The values carry the quantization error.
     """
     B, L, D = packed.orig_shape
     gs = packed.group_size
@@ -372,7 +304,7 @@ def bilevel_unpack(packed: BilevelPacked) -> torch.Tensor:
     D_padded = D if D % gs == 0 else D + (gs - D % gs)
     num_groups = (B * L * D_padded) // gs
 
-    # ── FP8 / FP4 unpack ─────────────────────────────────────────────────
+    # FP8 / FP4 unpack
     if _CUDA_READY and packed.fp8_packed.is_cuda:
         x_fp8 = _BILEVEL_EXT.fp8_unpack(packed.fp8_packed, packed.fp8_absmax, gs)
         x_fp4 = _BILEVEL_EXT.fp4_unpack(packed.fp4_packed, packed.fp4_absmax, gs)
@@ -380,7 +312,7 @@ def bilevel_unpack(packed: BilevelPacked) -> torch.Tensor:
         x_fp8 = _pytorch_fp8_unpack(packed.fp8_packed, packed.fp8_absmax)
         x_fp4 = _pytorch_fp4_unpack(packed.fp4_packed, packed.fp4_absmax, gs)
 
-    # ── scatter back to original group positions ─────────────────────────
+    # scatter back to the original group positions
     out_flat = torch.empty(num_groups, gs, dtype=torch.bfloat16, device=device)
     out_flat[packed.fp8_indices] = x_fp8
     out_flat[packed.fp4_indices] = x_fp4
@@ -391,10 +323,12 @@ def bilevel_unpack(packed: BilevelPacked) -> torch.Tensor:
     return result
 
 
-# ── PyTorch fallback packing (no VRAM savings, for functional validation) ────
+# PyTorch fallback packing: same values, no memory saving
 
 def _pytorch_fp8_pack(x: torch.Tensor, absmax: torch.Tensor) -> torch.Tensor:
-    """Per-group BF16 → uint8 (INT8 simulated, no real memory saving in Python)."""
+    """Fallback for the FP8 pack kernel: per-group BF16 to a signed 8-bit code
+    stored in uint8. Same values, no size reduction.
+    """
     N, D  = x.shape
     scale = (absmax / 127.0 + 1e-8).unsqueeze(1)   # [N, 1]
     q     = (x.float() / scale).round().clamp(-127, 127).to(torch.int8)
@@ -402,7 +336,9 @@ def _pytorch_fp8_pack(x: torch.Tensor, absmax: torch.Tensor) -> torch.Tensor:
 
 
 def _pytorch_fp4_pack(x: torch.Tensor, absmax: torch.Tensor) -> torch.Tensor:
-    """Per-group BF16 → uint8 (nibble simulated, stored as uint8 but not half-size in Python)."""
+    """Fallback for the 4-bit pack kernel: two 4-bit codes per byte, computed in
+    PyTorch. Same values as the kernel.
+    """
     N, D  = x.shape
     assert D % 2 == 0
     scale = (absmax / 7.0 + 1e-8).unsqueeze(1)   # [N, 1]
@@ -417,7 +353,7 @@ def _pytorch_fp4_pack(x: torch.Tensor, absmax: torch.Tensor) -> torch.Tensor:
 
 def _pytorch_fp8_unpack(packed: torch.Tensor, absmax: torch.Tensor) -> torch.Tensor:
     N    = packed.shape[0]
-    q    = packed.view(torch.int8).float()        # uint8 bit-cast → int8 → float
+    q    = packed.view(torch.int8).float()        # uint8 bit-cast to int8, then float
     scale= (absmax / 127.0 + 1e-8).unsqueeze(1)
     return (q * scale).to(torch.bfloat16)
 

@@ -1,20 +1,17 @@
-"""Two 5-min pre-sweep probes (2026-08-17).
+"""Two short probes run before the group-size sweep (2026-08-17).
 
-Probe A -- zero-collapse ratio per group_size
-    For each gs in {128, 32, 16, 8}, count what fraction of packed elements
-    map to x_q == 0 after FP4 quantize on real Qwen activations. Predicts
-    gs sweep success: if gs=32 halves the collapse fraction vs gs=128, the
-    sweep is promising; if gs=32 stays > 80% collapse, no.
+Probe A, zero collapse per group size: for each group size in {128, 32, 16,
+8}, the fraction of packed elements that quantize to exactly zero under the
+4-bit quantizer on real Qwen activations. If group size 32 halves the
+collapse seen at 128 the sweep is promising; if it stays above 80% it is
+not.
 
-Probe B -- per-layer absmax distribution
-    For each transformer layer's attention/MLP saved-activation tensors,
-    record the maximum absmax observed. Predicts per-layer K feasibility: if
-    only layer 0 is extreme, K_layer0 = 0.8 with K_rest = 0.2 fixes it; if all
-    layers are extreme, group_size axis is the correct fix.
+Probe B, per-layer absmax: the largest absmax seen in each layer's saved
+attention and MLP activations. If only layer 0 is extreme, a larger anchor
+ratio for layer 0 alone (0.8 against 0.2 elsewhere) would fix it; if every
+layer is extreme, the group size is the right axis.
 
-Run:
-    docker exec -e PROBE_MODEL='Qwen/Qwen2.5-3B-Instruct' hma-container \\
-        python oamp_train_engine/audit/probe_zero_collapse_and_absmax.py
+Run: PROBE_MODEL='Qwen/Qwen2.5-3B-Instruct' python oamp_train_engine/audit/probe_zero_collapse_and_absmax.py
 """
 from __future__ import annotations
 import os, sys, json, math, re
@@ -55,9 +52,7 @@ vocab = m.config.vocab_size
 ids = torch.randint(0, vocab, (B, L), generator=g_rng).to(DEV)
 labels = ids.clone()
 
-# ======================================================================
-# Probe A: zero-collapse ratio per gs
-# ======================================================================
+# Probe A: zero-collapse ratio per group size
 # harmful_zeros = elements whose |x| > absmax/128 (i.e. > 1 FP4 half-step)
 #                 but that quantize to 0. These are true information losses.
 # benign_zeros  = elements whose |x| <= absmax/128 (already near zero).
@@ -127,9 +122,7 @@ def wrap_pack(self, tensor):
 
 PackHooks.pack = wrap_pack
 
-# ======================================================================
 # Probe B: per-layer absmax distribution
-# ======================================================================
 # Also on each pack call, extract the layer index from param_ptrs role or from
 # the layer counter via a module-hook fallback. We use a forward hook on each
 # transformer layer to bracket which layer's activations are seen.
@@ -229,9 +222,7 @@ with hooks:
 for h in handles:
     h.remove()
 
-# ======================================================================
 # Report
-# ======================================================================
 print()
 print("="*72)
 print("PROBE A: zero-collapse fraction per gs (harmful = collapsed & |x| > absmax/128)")

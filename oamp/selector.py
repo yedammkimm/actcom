@@ -1,19 +1,11 @@
-# Copyright (c) 2025 OAMP Research Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0.
+# Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
 
-"""
-oamp.selector
-=============
-Importance scoring and anchor selection for bi-level quantization.
+"""Group importance scores and anchor selection for the max-abs anchor variant.
 
-Per-group max-abs importance scoring: each group of GROUP_SIZE elements
-is scored by its maximum absolute value: $I_j = \max_{i \in g_j} |h_i|$.
-The top-K% groups are selected as FP8 anchors.
-
-Public API
-----------
-compute_group_importance(hidden_states, group_size)  → Tensor       (num_groups,)
-select_anchor_groups(hidden_states, ratio, group_size) → BoolTensor (num_groups,)
+Each group of `group_size` elements along the last axis is scored by its
+largest absolute value, and the top `ratio` of groups are marked as FP8
+anchors. Used by oamp.bilevel; the pack hooks carry their own copy of the
+rule.
 """
 
 import torch
@@ -27,29 +19,15 @@ __all__ = [
 ]
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Per-group importance & selection (default, matches experiments)
-# ──────────────────────────────────────────────────────────────────────────────
+# Per-group importance and selection
 
 def compute_group_importance(
     hidden_states: torch.Tensor,
     group_size: int = GROUP_SIZE,
 ) -> torch.Tensor:
-    """
-    Compute per-group max-abs as importance score.
-
-    Reshapes hidden_states into groups of ``group_size`` elements and
-    computes the maximum absolute value within each group. Handles
-    non-divisible hidden dimensions via zero-padding.
-
-    Parameters
-    ----------
-    hidden_states : Tensor  (..., D)
-    group_size    : int     Group size (default 128).
-
-    Returns
-    -------
-    importance : Tensor  (num_groups,)  — float32, no gradient attached.
+    """Return the max-abs of every group of `hidden_states` (..., D) as a float32
+    tensor of shape (num_groups,), detached from the graph. A partial trailing
+    group is zero-padded before scoring.
     """
     D = hidden_states.shape[-1]
     if D % group_size != 0:
@@ -67,20 +45,9 @@ def select_anchor_groups(
     ratio: float = 0.20,
     group_size: int = GROUP_SIZE,
 ) -> torch.BoolTensor:
-    """
-    Select the top ``ratio`` fraction of groups as FP8 anchors.
-
-    Parameters
-    ----------
-    hidden_states : Tensor  (..., D)
-    ratio         : float   Fraction of groups designated as FP8 anchors (default 0.20).
-    group_size    : int     Group size (default 128).
-
-    Returns
-    -------
-    fp8_mask : BoolTensor  (num_groups,)
-               True  → FP8 anchor group
-               False → FP4 body group
+    """Return a boolean mask of shape (num_groups,) that is True for the top
+    `ratio` fraction of groups by max-abs, the FP8 anchors, and False for the
+    4-bit body groups.
     """
     D = hidden_states.shape[-1]
     if D % group_size != 0:

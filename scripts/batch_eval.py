@@ -1,23 +1,19 @@
-"""Batch re-evaluation of a saved LoRA adapter (2026-08-18).
+"""Re-evaluate a saved LoRA adapter on GSM8K without retraining (2026-08-18).
 
-Purpose: run GSM8K accuracy on a saved `_adapter/` directory without retraining.
-Useful when the eval protocol needs to change (e.g. longer max_new_tokens
-because trunc=n_samples/n_samples) or an initial eval crashed on OOM.
+Useful when the evaluation protocol changes (a longer max_new_tokens, for
+example, after every sample was found truncated) or when the evaluation at
+the end of training crashed on an OOM.
 
-Order matches run_experiment.py::main so forward numerics are bit-for-bit
-identical to the training-time forward:
-
-    1. Load base model (NF4 online or unsloth pre-quantized -bnb-4bit).
-    2. prepare_model_for_kbit_training (NF4 only).
-    3. PeftModel.from_pretrained(base, adapter_dir)   # replaces get_peft_model.
-    4. apply_dtype_policy (BF16RMSNorm swap + bf16 embed/lm_head/norm/LoRA).
-    5. evaluate.
+The order matches run_experiment.py, so the forward numerics are bit for
+bit those of the training-time forward: load the base model (NF4 online,
+or the pre-quantized unsloth bnb-4bit checkpoint), run
+prepare_model_for_kbit_training for NF4, attach the adapter with
+PeftModel.from_pretrained in place of get_peft_model, apply the dtype
+policy (RMSNorm swap and bf16 embed, lm_head, norms and LoRA), then
+evaluate.
 
 Usage:
-    docker exec hma-container bash -c "cd /app/HMA_Project && python \
-        scripts/batch_eval.py \
-        --adapter_path results/70b_accuracy/accuracy__standard__...__adapter \
-        --n_samples 500 --max_new_tokens 384"
+    python scripts/batch_eval.py --adapter_path results/<run>_adapter --n_samples 500 --max_new_tokens 384
 """
 import argparse
 import json
@@ -84,7 +80,7 @@ def main():
     else:
         stop_strings = default_stop_strings(args.task)
 
-    # ---- Infer base model from adapter config if not provided.
+    # Infer base model from adapter config if not provided.
     base_model_id = args.base_model
     if base_model_id is None:
         cfg_path = os.path.join(args.adapter_path, "adapter_config.json")
@@ -111,7 +107,7 @@ def main():
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    # ---- Step 1-2: base model + prepare_model_for_kbit_training.
+    # Step 1-2: base model + prepare_model_for_kbit_training.
     t0 = time.time()
     if args.weight_quant == "nf4":
         if base_model_id.endswith("-bnb-4bit"):
@@ -138,18 +134,18 @@ def main():
     print(f"[batch_eval] base loaded in {time.time()-t0:.1f}s  "
           f"cuda_alloc={torch.cuda.memory_allocated(DEVICE)/1e9:.2f} GB", flush=True)
 
-    # ---- Step 3: attach the saved LoRA adapter (replaces get_peft_model).
+    # Step 3: attach the saved LoRA adapter (replaces get_peft_model).
     t1 = time.time()
     model = PeftModel.from_pretrained(model, args.adapter_path, is_trainable=False)
     print(f"[batch_eval] adapter loaded in {time.time()-t1:.1f}s", flush=True)
 
-    # ---- Step 4: dtype policy AFTER PEFT (matches run_experiment.py::main).
+    # Step 4: dtype policy AFTER PEFT (matches run_experiment.py::main).
     model, _param_ptrs, dtype_report = apply_dtype_policy(
         model, weight_quant=args.weight_quant, bf16_rmsnorm=args.bf16_rmsnorm)
     print(f"[batch_eval] dtype_report: rmsnorm_swapped={dtype_report.get('rmsnorm_swapped')}  "
           f"norms={dtype_report.get('norms')}", flush=True)
 
-    # ---- Step 5: eval.
+    # Step 5: eval.
     test_data = load_task(args.task, "test", n_samples=args.n_samples,
                           seed=args.seed, cache_dir=CACHE_DIR, shuffle=False)
     res = evaluate(
@@ -160,7 +156,7 @@ def main():
         label="batch_eval", log_every=50,
     )
 
-    # ---- Save.
+    # Save.
     if args.output is None:
         args.output = args.adapter_path.rstrip("/") + \
             f"_reeval_n{args.n_samples}_mnt{args.max_new_tokens}.json"

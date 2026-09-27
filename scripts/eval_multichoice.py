@@ -57,7 +57,7 @@ DEVICE = EP.DEVICE
 TASKS = ("mmlu", "hellaswag", "arc_challenge", "arc_easy", "piqa", "winogrande")
 
 
-# ----------------------------------------------------------------- datasets
+# datasets
 
 def _load(path, cfg=None):
     from datasets import load_dataset
@@ -147,7 +147,7 @@ BUILDERS = {"mmlu": build_mmlu, "hellaswag": build_hellaswag,
             "piqa": build_piqa, "winogrande": build_winogrande}
 
 
-# ----------------------------------------------------------------- scoring
+# scoring
 
 @torch.no_grad()
 def score_shared_single(model, tok, ctxs, choice_ids, fast=True):
@@ -438,7 +438,7 @@ def items_hash(items):
     return h.hexdigest()[:16]
 
 
-# ----------------------------------------------------------------- main
+# main
 
 def main():
     p = argparse.ArgumentParser()

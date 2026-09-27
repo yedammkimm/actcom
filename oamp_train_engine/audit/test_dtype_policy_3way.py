@@ -1,7 +1,7 @@
 """3-way loss curve + peak VRAM check for dtype policy decision.
 
   Arm 1: fp32 everything (default prepare_model_for_kbit_training, LoRA inherits fp32)
-  Arm 2: restore_bf16 (norms + lm_head + embed → bf16) but LoRA stays fp32
+  Arm 2: restore_bf16 (norms + lm_head + embed to bf16) but LoRA stays fp32
   Arm 3: restore_bf16 + LoRA also cast to bf16 (full unification)
   Arm 4: with BF16RMSNorm
 
@@ -9,7 +9,7 @@ Runs 100 identical training steps (seed=42, 3B NF4, synthetic random token strea
 so results are deterministic across arms). Records per-step CE loss, checks for
 NaN/Inf, and reports max_memory_allocated after training completes.
 
-Judgment: |Δloss| < 5e-3 elementwise vs Arm 1 → PASS.
+Judgment: |Δloss| < 5e-3 elementwise against Arm 1 passes.
 """
 
 import argparse

@@ -1,8 +1,8 @@
-"""Task-agnostic evaluation loop.
+"""Greedy-decoding accuracy loop over a task from oamp.data.
 
-Wraps the task backends from :mod:`oamp.data` in a single greedy generation
-loop. Bit-exact deterministic verified in Test 0a on Llama-3.2-3B-Instruct
-(500/500 samples identical across two consecutive passes, 2026-08-12).
+The loop is deterministic: two consecutive passes over 500 GSM8K samples on
+Llama-3.2-3B-Instruct produced identical outputs sample by sample
+(2026-08-12).
 """
 
 from __future__ import annotations
@@ -39,20 +39,19 @@ def evaluate(model, tokenizer, task: str, test_data: List[dict], *,
              abort_gb: Optional[float] = None,
              abort_check_every: int = 20,
              on_abort: Optional[callable] = None) -> dict:
-    """Task-agnostic accuracy loop. Returns the ``results.*`` block for the JSON.
+    """Score `test_data` by greedy generation and return the results block of the
+    JSON.
 
-    ``stop_strings=None`` disables text-based early stopping (preserves the
-    pre-2026-08-19 protocol). Pass ``default_stop_strings(task)`` from
-    :mod:`oamp.data` to enable few-shot boundary stopping.
+    `stop_strings=None` disables text-based early stopping, which is the
+    protocol of the runs before 2026-08-19; pass default_stop_strings(task)
+    from oamp.data to stop at the next few-shot boundary.
 
-    Memory watchdog (2026-08-31):
-      * If ``abort_gb`` is set, every ``abort_check_every`` samples the loop
-        checks ``torch.cuda.memory_reserved(device) / 1e9`` and, if it exceeds
-        the threshold, calls ``on_abort(diag)`` (if provided — meant to save a
-        partial JSON) and then ``sys.exit(1)``.
-      * ``sys.exit(1)`` is used because SystemExit propagates past bare
-        ``except Exception`` handlers, so a training driver that swallows
-        exceptions cannot silently continue past an abort.
+    Memory watchdog: if `abort_gb` is set, every `abort_check_every` samples
+    the loop reads torch.cuda.memory_reserved(device) and, above the threshold,
+    calls `on_abort(diag)` if given (meant to save a partial JSON) and then
+    sys.exit(1). SystemExit is used because it propagates past a bare
+    `except Exception`, so a driver that swallows exceptions cannot continue
+    past an abort.
     """
     import sys
     fs = fewshot if fewshot is not None else default_fewshot(task)
@@ -107,7 +106,7 @@ def evaluate(model, tokenizer, task: str, test_data: List[dict], *,
             elapsed = time.time() - t0
             print(f"  [{label}] {i+1}/{n}  acc={correct/(i+1)*100:.2f}%  "
                   f"elapsed={elapsed:.1f}s", flush=True)
-        # ---- Memory watchdog ----
+        # memory watchdog
         if abort_gb is not None and (i + 1) % abort_check_every == 0:
             r = torch.cuda.memory_reserved(device) / 1e9
             if r > abort_gb:

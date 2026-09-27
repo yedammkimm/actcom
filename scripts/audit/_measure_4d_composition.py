@@ -2,7 +2,7 @@
 
 pack_stats lumps every 4-D saved tensor into one counter, so the rotary share
 has to be measured by shape. Rotary cos/sin arrive as (1, 1, L, head_dim);
-head views have shape[1] > 1. Two optimiser steps is enough — the composition
+head views have shape[1] > 1. Two optimiser steps is enough: the composition
 is a property of the architecture, not of training.
 """
 import os as _os

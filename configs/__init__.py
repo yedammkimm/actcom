@@ -1,4 +1,4 @@
-"""configs package — ``ExperimentConfig`` and CLI helpers."""
+"""ExperimentConfig and the command-line helpers that build it."""
 
 from .base import (
     ExperimentConfig,

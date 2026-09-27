@@ -1,24 +1,14 @@
-"""Task-agnostic data loading + prompt formatting + scoring.
+"""Task data: loading, prompt formatting and answer scoring.
 
-Spec v1 §5 (extension). GSM8K is the only backend today; the interface below
-is what future tasks (MATH / HumanEval / MBPP) must implement.
+GSM8K is the only task implemented. A task backend is the set of functions
+below, each taking the task name first: load_task, format_train_prompt,
+format_eval_prompt, extract_answer, is_correct, default_fewshot and
+default_stop_strings. Every sample is a dict with 'question', 'answer_text'
+and 'answer_number'; for GSM8K, answer_text is the original chain-of-thought
+string and answer_number the final number after '####'.
 
-Interface
----------
-
-``load_task(task, split, ...)``           -> ``list[dict]``
-``format_train_prompt(task, sample)``      -> ``str`` (target text for LoRA loss)
-``format_eval_prompt(task, sample, fewshot)`` -> ``str`` (few-shot eval prompt)
-``extract_answer(task, gen_text)``         -> ``str``
-``is_correct(task, pred, gold)``           -> ``bool``
-``default_fewshot(task)``                  -> ``list[dict]``
-
-Sample schema (uniform across tasks)::
-
-    {'question': str, 'answer_text': str, 'answer_number': str}
-
-For GSM8K, ``answer_text`` is the original CoT string and ``answer_number`` is
-the extracted final number.
+pack_samples_causal and seq_len_stats serve the training loop in
+run_experiment.py.
 """
 
 from __future__ import annotations
@@ -29,9 +19,7 @@ from statistics import mean
 from typing import Callable, List, Optional
 
 
-# ============================================================
 # Task backend: GSM8K
-# ============================================================
 
 _GSM8K_FEWSHOT = [
     {"q": "Janet's ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells every duck egg at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?",
@@ -78,7 +66,7 @@ def _gsm8k_load(split: str, cache_dir: str) -> List[dict]:
 
 
 def _gsm8k_format_train(sample: dict) -> str:
-    # Matches legacy benchmark_multiseed.format_training_prompt exactly.
+    # Same template as the earlier training script, kept verbatim.
     return (f"Question: {sample['question']}\n"
             f"Let's solve this step by step.\n"
             f"{sample['answer_text']}")
@@ -93,12 +81,14 @@ def _gsm8k_format_eval(sample: dict, fewshot: List[dict]) -> str:
 
 
 def _gsm8k_extract_with_source(text: str) -> tuple:
-    """Returns (pred, source). source ∈ {'answer_is','hash','fallback','empty'}.
+    """Return (pred, source), where source is one of 'answer_is', 'hash', 'fallback'
+    and 'empty' and says which rule produced the prediction.
 
-    The 3-stage fallback matters for diagnostics: training targets end with
-    '#### N' while few-shot demos end with 'The answer is N.' — a model that
-    can't produce either falls through to 'last-number', which may pick up a
-    calculator subexpression like <<16-3-4=9>> instead of the final answer.
+    The three-stage fallback matters for diagnostics. Training targets end with
+    '#### N' while the few-shot demonstrations end with 'The answer is N.', so a
+    model that produces neither falls through to the last number in the text,
+    which may be a calculator sub-expression such as <<16-3-4=9>> rather than
+    the answer.
     """
     m = re.search(r'[Tt]he answer is\s*([\-\d\.,]+)', text)
     if m:
@@ -124,9 +114,7 @@ def _gsm8k_is_correct(pred: str, gold: str) -> bool:
         return pred.strip() == gold.strip()
 
 
-# ============================================================
 # Backend registry
-# ============================================================
 
 class _TaskBackend:
     __slots__ = ('load', 'format_train', 'format_eval', 'extract',
@@ -164,19 +152,17 @@ def _backend(task: str) -> _TaskBackend:
     return _BACKENDS[task]
 
 
-# ============================================================
-# Public API
-# ============================================================
+# Task-independent entry points
 
 def load_task(task: str, split: str, *,
               n_samples: int, seed: int,
               cache_dir: str,
               shuffle: bool = True) -> List[dict]:
-    """Load ``n_samples`` from a task split with a deterministic seed shuffle.
+    """Load `n_samples` from a split of `task`, shuffled with a fixed seed.
 
-    When ``n_samples`` is 0 or negative, the whole split is returned. When
-    ``shuffle=False`` the natural dataset order is preserved (useful for eval
-    reproducibility of Test 0a).
+    With `n_samples` at or below zero the whole split is returned. With
+    `shuffle=False` the dataset order is kept, which makes an evaluation
+    reproducible sample by sample.
     """
     data = _backend(task).load(split, cache_dir)
     if shuffle:
@@ -204,7 +190,7 @@ def extract_answer(task: str, text: str) -> str:
 
 
 def extract_answer_with_source(task: str, text: str):
-    """Returns ``(pred, source)`` for diagnostics. See ``_gsm8k_extract_with_source``."""
+    """Return (pred, source) for diagnostics; see _gsm8k_extract_with_source."""
     return _backend(task).extract_with_source(text)
 
 
@@ -222,17 +208,15 @@ def default_stop_strings(task: str) -> List[str]:
 
 def pack_samples_causal(samples: List[dict], tokenizer, task: str,
                         packed_seq_len: int) -> List[List[int]]:
-    """Concatenate training samples with EOS and chunk to ``packed_seq_len``.
+    """Concatenate training samples with EOS between them and cut the stream into
+    blocks of `packed_seq_len` tokens.
 
-    Each sample's text (from ``format_train_prompt``) is tokenized without
-    special tokens, followed by a single EOS token as delimiter. All ids are
-    then chunked in order into ``packed_seq_len``-sized blocks. The trailing
-    remainder is discarded (never enough for a full opt step).
-
-    Uses causal-LM label semantics: label = input_ids (all tokens are
-    predicted). No block-diagonal attention mask is emitted — samples share
-    causal-only attention exactly like pretraining packed sequences. This
-    keeps SDPA on the FLASH backend (INVARIANT: mask=None + is_causal=True).
+    Each sample's text (from format_train_prompt) is tokenized without special
+    tokens and followed by one EOS token. The ids are then chunked in order; the
+    trailing remainder is dropped. Labels equal the input ids, so every token is
+    predicted, and no block-diagonal attention mask is built: samples share
+    plain causal attention, as in pretraining, which keeps scaled-dot-product
+    attention on the flash backend (mask=None with is_causal=True).
     """
     eos = tokenizer.eos_token_id
     if eos is None:
@@ -247,16 +231,12 @@ def pack_samples_causal(samples: List[dict], tokenizer, task: str,
     return [ids[i * packed_seq_len : (i + 1) * packed_seq_len] for i in range(n_chunks)]
 
 
-# ============================================================
-# Sequence-length statistics (schema.sequence.*)
-# ============================================================
+# Sequence-length statistics for the result JSON
 
 def seq_len_stats(lengths: List[int]) -> dict:
-    """Compute the ``sequence.*`` fields of the result JSON.
-
-    Returns ``{seq_len_mean, seq_len_max, seq_len_p95, tokens_total}``. Empty
-    input yields zeros so a run with no training tokens still has a valid
-    JSON block.
+    """Return the sequence fields of the result JSON: seq_len_mean, seq_len_max,
+    seq_len_p95 and tokens_total. Empty input gives zeros, so a run with no
+    training tokens still writes a valid block.
     """
     if not lengths:
         return {'seq_len_mean': 0.0, 'seq_len_max': 0,

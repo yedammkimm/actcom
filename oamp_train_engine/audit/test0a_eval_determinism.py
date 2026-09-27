@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Test 0a — eval determinism on GSM8K (500 samples, 8-shot CoT, greedy).
+"""Eval determinism on GSM8K: 500 samples, 8-shot chain of thought, greedy.
 
-Loads Llama-3.2-3B-Instruct (bf16, no LoRA), runs the exact evaluate_gsm8k
-loop used by benchmark_multiseed.py twice back-to-back in the same process,
-and reports per-sample agreement.
-
-Purpose: separate eval-time non-determinism from training-time non-determinism.
-Setup mirrors the paper's eval: greedy, batch=1, max_new_tokens=256.
+Loads Llama-3.2-3B-Instruct in bf16 without LoRA, runs the same evaluation
+loop the earlier training script used twice in one process, and reports
+per-sample agreement. The point is to separate evaluation-time
+non-determinism from training-time non-determinism. The setup mirrors the
+paper's evaluation: greedy, batch size 1, 256 new tokens.
 """
 import os
 os.environ["HF_HOME"] = "/app/hf_cache"
@@ -22,7 +21,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.abspath(os.path.join(_HERE, "..")))
 sys.path.insert(0, _HERE)
 
-# Prevent benchmark_multiseed's file-logging side-effects from creating clutter:
+# Log to the console only:
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",
                     handlers=[logging.StreamHandler()], force=True)
@@ -158,7 +157,7 @@ def main():
     set_seed(42)
     acc1, samples1 = eval_pass(model, tokenizer, device, test_data, "pass1")
 
-    # No re-load, no seed reset between passes — measure raw eval determinism.
+    # No reload and no seed reset between passes, to measure raw eval determinism.
     acc2, samples2 = eval_pass(model, tokenizer, device, test_data, "pass2")
 
     # Compare

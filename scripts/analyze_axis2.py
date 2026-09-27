@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""Aggregate axis 2 A_4DFP4 seed-instability results (2026-08-31).
+"""Aggregate the axis 2 results, the seed-instability frequency of arm A (2026-08-31).
 
-Reads all A_4DFP4 PPL JSONs from both the earlier 3 seeds and the axis-2
-5 seeds, computes per-corpus damage counts against the pre-registered
-threshold, and does the cross-corpus rank-concordance check the user asked
-for after axis 2 completes.
+Reads every A_4DFP4 perplexity JSON, the earlier three seeds and the five
+axis 2 seeds, counts damaged seeds per corpus against the pre-registered
+threshold, and runs the cross-corpus rank concordance check that was
+planned for when axis 2 completed.
 
-Pre-registered threshold (locked before axis-2 launch):
-    Standard mean + 3 * B(4D FP8) sd  =  16.08 + 3*0.19  =  16.65
-    A seed with WikiText PPL > 16.65 counts as damaged.
+Pre-registered threshold, fixed before the axis 2 launch:
+    standard mean + 3 x sd of the FP8 arm = 16.08 + 3 x 0.19 = 16.65
+    a seed with WikiText perplexity above 16.65 counts as damaged.
 
-Usage:
-    python3 scripts/analyze_axis2.py
+Usage: python3 scripts/analyze_axis2.py
 """
 import json
 import glob
@@ -22,11 +21,11 @@ from statistics import mean, stdev
 ROOT = '/home/yedam/HMA/HMA_Project'
 THRESHOLD_WT = 16.65
 
-# ---- Locate all A_4DFP4 PPL JSONs (both original and axis-2) ----
+# Locate every A_4DFP4 perplexity JSON, original and axis 2
 def load_a_ppls():
     """Returns dict[seed] = {'gsm': ..., 'wiki': ..., 'narr': ..., 'gov': ...}."""
     out = {}
-    # 1. Original 3 seeds — gsm/wiki from ppl_eval, narr/gov from ppl_ood_extra
+    # 1. The original three seeds: gsm/wiki from ppl_eval, narr/gov from ppl_ood_extra
     for f in glob.glob(os.path.join(ROOT, 'results/ppl_eval/ppl__A_4DFP4__seed*.json')):
         seed = int(os.path.basename(f).replace('ppl__A_4DFP4__seed','').replace('.json',''))
         d = json.load(open(f))
@@ -39,7 +38,7 @@ def load_a_ppls():
         out.setdefault(seed, {})
         out[seed]['narr'] = d.get('narrativeqa_ppl')
         out[seed]['gov']  = d.get('govreport_ppl')
-    # 2. Axis-2 five seeds — all four corpora in one file
+    # 2. The five axis 2 seeds: all four corpora in one file
     for f in glob.glob(os.path.join(ROOT, 'results/ppl_axis2/ppl_axis2__A_4DFP4__seed*.json')):
         seed = int(os.path.basename(f).replace('ppl_axis2__A_4DFP4__seed','').replace('.json',''))
         d = json.load(open(f))
@@ -72,8 +71,8 @@ def main():
         def f(v): return f'{v:>7.4f}' if v is not None else '   ?'
         print(f"  {s:>5d}  {f(r.get('gsm'))}  {f(wt)}  {f(r.get('narr'))}  {f(r.get('gov'))}  {dmg}")
 
-    # ---- Damage count per corpus (WikiText: pre-registered + sensitivity sweep) ----
-    B_wiki_sd = 0.19    # measured from B_4DFP8 3 seeds (user rounded 0.186→0.19)
+    # Damage count per corpus (WikiText: pre-registered + sensitivity sweep)
+    B_wiki_sd = 0.19    # measured from the three B_4DFP8 seeds (0.186, rounded to 0.19)
     B_narr_sd = 0.101
     B_gov_sd  = 0.037
     C_wiki_mean = 16.08
@@ -95,7 +94,7 @@ def main():
         dmg_seeds = [s for s, v in vals if v > th]
         print(f"  {k:>8s}  {th:>10.3f}  {note:<20s}  {dmg}/{len(vals)}   seeds: {dmg_seeds}")
 
-    # ---- WikiText threshold sensitivity (2σ / 3σ / 4σ) ----
+    # WikiText threshold sensitivity (2σ / 3σ / 4σ)
     print()
     print("=" * 90)
     print("WikiText threshold sensitivity — how robust is the damage count?")
@@ -108,11 +107,11 @@ def main():
     for k_sigma in (2, 3, 4):
         th = C_wiki_mean + k_sigma * B_wiki_sd
         dmg_seeds = [(s, v) for s, v in wiki_vals if v > th]
-        marker = '  ← pre-registered' if k_sigma == 3 else ''
+        marker = '  <- pre-registered' if k_sigma == 3 else ''
         seed_str = ', '.join(f'{s}({v:.2f})' for s, v in dmg_seeds) or '—'
         print(f"  {k_sigma}σ   {th:>10.3f}   {len(dmg_seeds):>2d}/{len(wiki_vals):<2d}            {seed_str}{marker}")
 
-    # ---- Cross-corpus rank concordance ----
+    # Cross-corpus rank concordance
     # Are corpora giving independent evidence, or is one seed's damage showing up
     # in every corpus? For n=8 this is a proper concordance analysis.
     print()
@@ -173,7 +172,7 @@ def main():
         sig = '  *' if p < 0.05 else ''
         print(f"  {n1:>10s}  vs  {n2:>10s}   {tau:+5.2f}   p={p:.3f}{sig}   {conc}/{disc}")
 
-    # ---- Damage overlap (which seeds are damaged in multiple corpora?) ----
+    # Damage overlap (which seeds are damaged in multiple corpora?)
     print()
     print("=" * 90)
     print("Cross-corpus damage overlap — is the same seed damaged everywhere?")
@@ -196,7 +195,7 @@ def main():
     print()
     print(f"  Seeds damaged in ALL 4 corpora:  {sorted(all_damaged)}")
 
-    # Union — seeds damaged in AT LEAST ONE corpus
+    # Union: seeds damaged in at least one corpus
     any_dmg = set()
     for dset in damaged.values():
         any_dmg |= dset

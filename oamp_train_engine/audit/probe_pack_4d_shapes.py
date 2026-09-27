@@ -1,15 +1,14 @@
-"""Diagnose which 4-D tensors reach PackHooks.pack in a single fresh
-Llama-3.2-3B forward+backward. Answers the question: does attn_4d filter
-compress attention weights (B, H, L, L)? If yes -> MATH backend, softmax
-output is materialised and packed; if not -> FLASH backend (expected).
+"""Which 4-D tensors reach PackHooks.pack in one fresh Llama-3.2-3B forward and
+backward? In particular, does the attn_4d filter compress the attention
+weights (B, H, L, L)? If it does, the MATH backend is in use and the softmax
+output is materialised and packed; if not, attention runs on the flash
+backend, as expected.
 
-Usage:
-  docker exec hma-container bash -c "cd /app/HMA_Project && \
-    python oamp_train_engine/audit/probe_pack_4d_shapes.py"
+Usage: python oamp_train_engine/audit/probe_pack_4d_shapes.py
 
-Output: shape histogram sorted by total elements packed, annotated with
-the module-attribution role (from Linear .in/.out hooks). Unknown-role
-entries are the "internal" tensors born inside the attention block.
+Output: a shape histogram sorted by total elements packed, annotated with
+the module-attribution role from the Linear input and output hooks.
+Entries without a role are the tensors created inside the attention block.
 """
 import os
 import sys

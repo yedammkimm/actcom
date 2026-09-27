@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""bitsandbytes NF4 sanity on GB10 (Blackwell SM 12.1).
+"""bitsandbytes NF4 sanity check on the GB10 (Blackwell, SM 12.1).
 
-Answers ONE question: does NF4 4bit weight + LoRA backward work on GB10?
-Run inside hma-container:
-  docker exec hma-container python /app/HMA_Project/oamp_train_engine/benchmarks/sanity_bnb_nf4.py
+Answers one question: does an NF4 4-bit base with a LoRA backward pass work
+on this GPU?
+
+Run: python oamp_train_engine/benchmarks/sanity_bnb_nf4.py
 """
 import os, sys, traceback
 os.environ.setdefault('HF_HOME', '/app/hf_cache')
@@ -120,7 +121,7 @@ if have_grad < total:
 else:
     print("    All LoRA params receive gradient — training path viable.")
 
-# 7. Optimizer step (paged AdamW 8bit — QLoRA reference)
+# 7. Optimizer step (paged AdamW 8-bit, as in QLoRA)
 print("\n[7] Paged 8bit AdamW step ...")
 try:
     opt = bnb.optim.PagedAdamW8bit(

@@ -1,5 +1,7 @@
-"""Run legacy benchmark_native_packing_vram.py on ONE config to compare against
-the new pipeline. Same code path, same measurement, one (B=4, L=4096) Standard.
+"""Run the earlier memory benchmark, legacy/benchmarks/benchmark_native_packing_vram.py,
+on one configuration (B=4, L=4096, uncompressed) so its measurement can be
+compared with the new pipeline on the same code path. The earlier code is
+not part of the released repository, so this does not run as released.
 """
 import os, sys
 os.environ.setdefault("HF_HOME", "/app/hf_cache")

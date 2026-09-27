@@ -1,31 +1,19 @@
 /*
- * Copyright (c) 2025 OAMP Research Team. All rights reserved.
- * Licensed under the Apache License, Version 2.0.
+ * Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
  *
- * oamp_bilevel_ops.cpp
- * ===================
- * PyTorch C++ bindings — exposes oamp_bilevel CUDA kernels to Python.
- *
- * Module name: oamp_bilevel
- *
- * Public Functions
- * ---------
- *  [QAT Path]
- *   analyze(x, group_size)                → absmax (per-group importance)
- *   fused_quantize(x, fp8_mask, absmax, group_size) → quantized_x
- *
- *  [Physical Pack Path]
- *   fp8_pack  (x_fp8, absmax_fp8)    → packed uint8  [N, D]
- *   fp4_pack  (x_fp4, absmax_fp4)    → packed uint8  [N, D/2]
- *   fp8_unpack(packed, absmax, D)    → BF16  [N, D]
- *   fp4_unpack(packed, absmax, D)    → BF16  [N, D]
+ * PyTorch bindings for oamp_bilevel_kernels.cu, built as the extension
+ * `oamp_bilevel` by setup_bilevel.py. Each function checks dtype, device and
+ * layout, allocates the output and launches the kernel on the current stream:
+ * analyze and fused_quantize for the straight-through path, fp8_pack,
+ * fp4_pack, fp8_unpack and fp4_unpack for the packing path. Only
+ * oamp/cuda_ops.py calls these.
  */
 
 #include <torch/extension.h>
 #include <ATen/cuda/CUDAContext.h>
 #include <vector>
 
-// ── Launcher declarations (defined in oamp_bilevel_kernels.cu) ───────────────────
+// Launchers defined in oamp_bilevel_kernels.cu
 
 extern "C" {
 
@@ -86,12 +74,8 @@ void launch_fp4_nibble_unpack(
 } // extern "C"
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// [QAT Path]  analyze
-//
-//  Input  : BF16 tensor x [num_groups, group_size] (pre-reshaped)
-//  Output : float32 [num_groups] — per-group max-abs importance
-// ══════════════════════════════════════════════════════════════════════════════
+// analyze: BF16 [num_groups, group_size] to float32 [num_groups], the max-abs
+// of each group.
 torch::Tensor group_analyze(torch::Tensor x) {
     TORCH_CHECK(x.is_cuda(),               "x must be a CUDA tensor");
     TORCH_CHECK(x.scalar_type() == torch::kBFloat16, "x must be BF16");
@@ -118,16 +102,9 @@ torch::Tensor group_analyze(torch::Tensor x) {
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// [QAT Path]  fused_quantize
-//
-//  Input
-//    x        : BF16  [num_groups, group_size]
-//    fp8_mask : bool  [num_groups]  True = FP8 anchor group
-//    absmax   : float32 [num_groups]  per-group max-abs
-//
-//  Output : BF16 [num_groups, group_size] — quantized+dequantized
-// ══════════════════════════════════════════════════════════════════════════════
+// fused_quantize: x BF16 [num_groups, group_size], fp8_mask bool [num_groups]
+// (true = anchor group), absmax float32 [num_groups]; returns the quantized
+// and dequantized BF16 tensor of the same shape.
 torch::Tensor group_fused_quantize(
     torch::Tensor x,
     torch::Tensor fp8_mask,
@@ -165,13 +142,8 @@ torch::Tensor group_fused_quantize(
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// [Physical Pack]  fp8_pack
-//
-//  Input  : BF16  [N, D] — FP8 anchor tokens (already gathered)
-//          absmax float32 [N]
-//  Output : uint8 [N, D]  (1 byte per element: INT8 encoding)
-// ══════════════════════════════════════════════════════════════════════════════
+// fp8_pack: anchor rows BF16 [N, D] with absmax float32 [N] to uint8 [N, D],
+// one byte per element.
 torch::Tensor fp8_pack(torch::Tensor x, torch::Tensor absmax) {
     TORCH_CHECK(x.is_cuda() && absmax.is_cuda(), "tensors must be CUDA");
     TORCH_CHECK(x.scalar_type() == torch::kBFloat16, "x must be BF16");
@@ -200,13 +172,8 @@ torch::Tensor fp8_pack(torch::Tensor x, torch::Tensor absmax) {
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// [Physical Pack]  fp4_pack
-//
-//  Input  : BF16  [N, D] — FP4 body tokens
-//          absmax float32 [N]
-//  Output : uint8 [N, D/2]  (nibble packed: 2 elements per byte)
-// ══════════════════════════════════════════════════════════════════════════════
+// fp4_pack: body rows BF16 [N, D] with absmax float32 [N] to uint8 [N, D/2],
+// two elements per byte.
 torch::Tensor fp4_pack(torch::Tensor x, torch::Tensor absmax) {
     TORCH_CHECK(x.is_cuda() && absmax.is_cuda(), "tensors must be CUDA");
     TORCH_CHECK(x.scalar_type() == torch::kBFloat16, "x must be BF16");
@@ -236,14 +203,8 @@ torch::Tensor fp4_pack(torch::Tensor x, torch::Tensor absmax) {
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// [Physical Unpack]  fp8_unpack
-//
-//  Input  : uint8  [N, D]
-//          absmax float32 [N]
-//          D      int (hidden_dim, for validation)
-//  Output : BF16   [N, D]
-// ══════════════════════════════════════════════════════════════════════════════
+// fp8_unpack: uint8 [N, D] with absmax float32 [N] back to BF16 [N, D]; D is
+// passed for validation.
 torch::Tensor fp8_unpack(torch::Tensor packed, torch::Tensor absmax, int64_t D) {
     TORCH_CHECK(packed.is_cuda() && absmax.is_cuda(), "tensors must be CUDA");
     TORCH_CHECK(packed.scalar_type() == torch::kUInt8,  "packed must be uint8");
@@ -271,14 +232,7 @@ torch::Tensor fp8_unpack(torch::Tensor packed, torch::Tensor absmax, int64_t D) 
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// [Physical Unpack]  fp4_unpack
-//
-//  Input  : uint8  [N, D/2]
-//          absmax float32 [N]
-//          D      int
-//  Output : BF16   [N, D]
-// ══════════════════════════════════════════════════════════════════════════════
+// fp4_unpack: uint8 [N, D/2] with absmax float32 [N] back to BF16 [N, D].
 torch::Tensor fp4_unpack(torch::Tensor packed, torch::Tensor absmax, int64_t D) {
     TORCH_CHECK(packed.is_cuda() && absmax.is_cuda(), "tensors must be CUDA");
     TORCH_CHECK(packed.scalar_type() == torch::kUInt8,  "packed must be uint8");
@@ -307,38 +261,37 @@ torch::Tensor fp4_unpack(torch::Tensor packed, torch::Tensor absmax, int64_t D) 
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// PYBIND11 Registration
-// ══════════════════════════════════════════════════════════════════════════════
+// Python module
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.doc() = "OAMP Bi-Level CUDA Kernels";
 
-    // QAT Path
+    // straight-through path
     m.def("analyze",
           &group_analyze,
           "Compute per-group max-abs importance score.\n"
-          "  x: BF16[num_groups, group_size] → float32[num_groups]");
+          "  x: BF16[num_groups, group_size] -> float32[num_groups]");
 
     m.def("fused_quantize",
           &group_fused_quantize,
-          "Fused per-group bi-level quantize+dequant. 1 memory pass (vs 6 in PyTorch).\n"
+          "Fused per-group quantize and dequantize in one pass over memory.
+"
           "  x: BF16[num_groups, gs], fp8_mask: bool[num_groups], absmax: float32[num_groups]\n"
-          "  → BF16[num_groups, gs]");
+          "  -> BF16[num_groups, gs]");
 
-    // Physical Pack/Unpack
+    // packing path
     m.def("fp8_pack",   &fp8_pack,
           "Pack FP8 anchor tokens to INT8 bytes.\n"
-          "  x: BF16[N,D], absmax: float[N] → uint8[N,D]");
+          "  x: BF16[N,D], absmax: float[N] -> uint8[N,D]");
 
     m.def("fp4_pack",   &fp4_pack,
           "Pack FP4 body tokens to nibble-packed bytes.\n"
-          "  x: BF16[N,D], absmax: float[N] → uint8[N,D/2]");
+          "  x: BF16[N,D], absmax: float[N] -> uint8[N,D/2]");
 
     m.def("fp8_unpack", &fp8_unpack,
           "Unpack INT8 bytes to BF16.\n"
-          "  packed: uint8[N,D], absmax: float[N], D: int → BF16[N,D]");
+          "  packed: uint8[N,D], absmax: float[N], D: int -> BF16[N,D]");
 
     m.def("fp4_unpack", &fp4_unpack,
           "Unpack nibble-packed bytes to BF16.\n"
-          "  packed: uint8[N,D/2], absmax: float[N], D: int → BF16[N,D]");
+          "  packed: uint8[N,D/2], absmax: float[N], D: int -> BF16[N,D]");
 }

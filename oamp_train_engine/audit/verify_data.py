@@ -1,4 +1,4 @@
-"""Verify oamp.data + oamp.evaluate (spec v1 §5 extension).
+"""Verify oamp.data and oamp.evaluate.
 
 Gates:
   D1  load_task('gsm8k', 'test', n_samples=8, seed=42) returns 8 well-formed samples.
@@ -89,7 +89,7 @@ def d6_d7_seq_len_stats():
 
     print("\n[D7] seq_len_stats([1..20]) hand-checked")
     stats = seq_len_stats(list(range(1, 21)))
-    # mean = 10.5, max = 20, p95 → index round(0.95*19)=18 → value 19, total = 210
+    # mean = 10.5, max = 20, p95 is index round(0.95*19)=18, value 19, total = 210
     assert stats['seq_len_mean'] == 10.5, stats
     assert stats['seq_len_max'] == 20, stats
     assert stats['seq_len_p95'] == 19, stats
@@ -125,7 +125,7 @@ def d9_config_field():
 
 if __name__ == '__main__':
     print("=" * 70)
-    print("data + evaluate verification (spec v1 §5 extension)")
+    print("data + evaluate verification")
     print("=" * 70)
     sample_data = d1_load_test()
     d2_format_eval(sample_data[0])

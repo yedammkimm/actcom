@@ -1,4 +1,4 @@
-"""Verify configs.base ExperimentConfig (spec v1 §5).
+"""Verify configs.base.ExperimentConfig.
 
 Gates:
   C1  asdict(cfg) contains every REQUIRED_CONFIG_FIELDS entry.
@@ -23,7 +23,7 @@ from oamp.schema import REQUIRED_CONFIG_FIELDS
 
 
 def check_c1_c4():
-    print("[C1/C4] paper default cfg → asdict covers REQUIRED_CONFIG_FIELDS, steps=3736")
+    print("[C1/C4] paper default cfg: asdict covers REQUIRED_CONFIG_FIELDS, steps=3736")
     cfg = ExperimentConfig(
         mode='accuracy', method='oamp',
         model_id=MODEL_ALIASES['3B'], weight_quant='nf4', seed=42)
@@ -98,7 +98,7 @@ def check_c7():
 
 if __name__ == '__main__':
     print("=" * 70)
-    print("configs.base verification (spec v1 §5)")
+    print("configs.base verification")
     print("=" * 70)
     check_c1_c4()
     check_c2()

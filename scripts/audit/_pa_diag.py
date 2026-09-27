@@ -1,3 +1,4 @@
+"""Quartiles of the within-arm and cross-arm row-space cosines for arms A and B."""
 import os as _os
 ROOT = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))) + '/'  # repository root
 import json, itertools, numpy as np

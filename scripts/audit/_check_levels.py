@@ -37,9 +37,9 @@ Sources, read directly:
                                        angles and the Frobenius distances
 
 Nothing here reads results/_wd or calls another script. Needs numpy, torch and
-safetensors (the adapters are stored in bfloat16), so run it in the container:
+safetensors (the adapters are stored in bfloat16) and the adapter archive:
 
-    docker exec -w /app/HMA_Project hma-container python3 scripts/audit/_check_levels.py
+    python3 scripts/audit/_check_levels.py
 """
 import glob
 import itertools
@@ -85,7 +85,7 @@ def norm(p):
     return re.sub(r"^/app/HMA_Project/", "", (p or "").rstrip("/"))
 
 
-# ----------------------------------------------------------------- collection
+# collection
 
 def collect_runs():
     runs = {}
@@ -193,7 +193,7 @@ def pair_matrices(runs):
     return aps, PA, Dw, rank_ok, len(mods)
 
 
-# ------------------------------------------------------------------ statistics
+# statistics
 
 def var(v):
     v = np.asarray(v, dtype=float)
@@ -287,7 +287,7 @@ def fmt_match(paper, value):
     return "yes" if round(value, dec) == paper else "NO"
 
 
-# ------------------------------------------------------------------------ main
+# main
 
 def main():
     runs = collect_runs()

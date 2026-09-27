@@ -1,4 +1,4 @@
-"""Method figure — when compression happens, and what it dispatches on.
+"""Method figure: when compression happens, and what it dispatches on.
 
 Two things a reader gets wrong about backward-only compression, and the figure
 exists to prevent both.
@@ -6,7 +6,7 @@ exists to prevent both.
 (a) That the forward pass consumes the compressed value. It does not: the
     original tensor flows into the next operation, and the packed copy is only
     what sits in memory between the two passes. run_experiment.py enforces this
-    before every run (INVARIANT-12): it computes the loss with hooks off and
+    before every run: it computes the loss with hooks off and
     with hooks on and raises ParityError unless the difference is exactly 0.0,
     so this is an asserted invariant rather than a measured approximation.
 
@@ -16,9 +16,9 @@ exists to prevent both.
     the vocabulary filter would route them into four-bit quantization.
 
 Numbers, all traced to source:
-  - min_numel is 1024 (configs/base.py:92, and every result JSON). 128 is the
+  - min_numel is 1024 (the default in configs/base.py, and every result JSON). 128 is the
     group size and appears only on the INT4 route; the two must not be conflated.
-  - the filter order is pack_hooks.py:252-280, verbatim.
+  - the filter order is the pack() method of oamp/pack_hooks.py, verbatim.
   - the rank test is `tensor.dim() == 4`, not >= 4.
   - 15.04 / 84.96 % are numel_uniform_fp8_4d and numel_uniform_fp4_3d over
     numel_kept = 4,076,467,118,080, identical across all 3B runs.
@@ -54,11 +54,11 @@ def arrow(ax, p, q, color=INK, lw=1.0, ls='-', head=2.6, z=4):
         f'head_length={head}', color=color, lw=lw, ls=ls,
         shrinkA=0, shrinkB=0, mutation_scale=3.2, zorder=z))
 
-# ───────────────────────── (a) when ─────────────────────────
+# (a) when
 a.text(0, 99, '(a)', fontsize=10, fontweight='bold', color=INK)
 a.text(7.5, 99, 'when', fontsize=9.2, color=MID)
 
-# forward lane — the original tensor dominates it: solid, heavy
+# forward lane: the original tensor dominates it, solid and heavy
 a.text(0, 87, 'F O R W A R D', fontsize=7.2, color=GREY, fontweight='bold')
 a.text(6, 75, r'$t$', fontsize=12, color=INK, ha='center', va='center')
 arrow(a, (10, 75), (36, 75), INK, lw=2.1, head=3.5)
@@ -97,7 +97,7 @@ a.text(84, 18.5, r'$|\Delta L_{\mathrm{on}}-\Delta L_{\mathrm{off}}| = 0$',
        fontsize=9, color=INK, ha='center', va='center')
 a.text(84, 12, 'asserted before every run', fontsize=7.2, color=MID, ha='center')
 
-# ───────────────────────── (b) what ─────────────────────────
+# (b) what
 b.text(0, 99, '(b)', fontsize=10, fontweight='bold', color=INK)
 b.text(7.5, 99, 'what', fontsize=9.2, color=MID)
 

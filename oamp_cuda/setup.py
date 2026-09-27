@@ -1,5 +1,8 @@
-# Copyright (c) 2025 OAMP Research Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0.
+# Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
+"""Build the earlier three-level packer (oamp_ops.cpp, oamp_kernels.cu) as the
+extension `oamp_cuda`. Kept for reference; the anchor variant is built by
+setup_bilevel.py, and the training runs in the paper use neither.
+"""
 
 from setuptools import setup
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension

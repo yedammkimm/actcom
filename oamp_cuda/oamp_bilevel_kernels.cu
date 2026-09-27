@@ -1,58 +1,27 @@
 /*
- * Copyright (c) 2025 OAMP Research Team. All rights reserved.
- * Licensed under the Apache License, Version 2.0.
+ * Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
  *
- * oamp_bilevel_kernels.cu
- * ======================
- * OAMP Bi-Level Mixed-Precision CUDA Kernels
+ * CUDA kernels for the max-abs anchor variant, exposed to Python through
+ * oamp_bilevel_ops.cpp as the extension `oamp_bilevel` and used only by
+ * oamp/cuda_ops.py. The training runs in the paper do not use them.
  *
- * Differences from oamp_kernels.cu
- * --------------------------------
- * Legacy   : Block-level (16 elements/group), Tri-Level (FP4/FP8-active/FP8-outlier)
- *            Threshold-based decision, threshold is a layer-global scalar
+ * Every kernel handles one group of `group_size` elements per block. The
+ * straight-through path has two kernels: group_analyze_kernel writes the
+ * max-abs of each group, Python marks the top groups as FP8 anchors, and
+ * group_fused_quantize_kernel quantizes and dequantizes every group in one
+ * pass, on the e4m3 range for anchors and on [-7, 7] for the rest. The
+ * packing path stores anchor groups at one byte per element
+ * (fp8_byte_pack_kernel) and body groups at two elements per byte
+ * (fp4_nibble_pack_kernel), with matching unpack kernels.
  *
- * Current  : Group-level (128 elements/group), Bi-Level (FP8 anchor 20% / FP4 body 80%)
- *            Max-abs based top-K routing, per-group quantization
+ * Storage formats. The one-byte code is q = clamp(round(x / scale), -127, 127)
+ * with scale = absmax / 127, a signed 8-bit integer stored as uint8. The
+ * nibble code is q = round(x / scale) in [-7, 7] with scale = absmax / 7,
+ * stored as q + 8 in [1, 15] (0 is unused); two codes share a byte, the first
+ * in the low nibble.
  *
- * ┌─────────────────────────────────────────────────────────────────────┐
- * │  QAT Path (STE simulation during training)                              │
- * │                                                                      │
- * │  [Kernel A] group_analyze_kernel                                     │
- * │    Grid=(num_groups), Block=256                                       │
- * │    Per-group: max-abs  →  importance[num_groups]                      │
- * │                                                                      │
- * │  [Python]  topk → fp8_mask[num_groups]                                │
- * │                                                                      │
- * │  [Kernel B] group_fused_quantize_kernel                               │
- * │    Grid=(num_groups), Block=256                                       │
- * │    Per-group: FP8(absmax/448) or FP4(absmax/7) → dequant → BF16      │
- * │    1 memory pass (vs 6 separate PyTorch ops)                         │
- * │                                                                      │
- * ├─────────────────────────────────────────────────────────────────────┤
- * │  Physical Pack Path (Gradient Checkpointing / Inference)             │
- * │                                                                      │
- * │  [Kernel C] fp8_byte_pack_kernel                                     │
- * │    BF16[N_fp8, D]  →  uint8[N_fp8, D]   (INT8 absmax/127)           │
- * │                                                                      │
- * │  [Kernel D] fp4_nibble_pack_kernel                                   │
- * │    BF16[N_fp4, D]  →  uint8[N_fp4, D/2] (2 nibbles per byte)        │
- * │                                                                      │
- * │  [Kernel E] fp8_byte_unpack_kernel                                   │
- * │  [Kernel F] fp4_nibble_unpack_kernel                                 │
- * └─────────────────────────────────────────────────────────────────────┘
- *
- * Nibble Format (FP4)
- * -------------------
- *   Quantize : q = round(val / scale) ∈ [-7, 7]
- *   Store    : stored = q + 8 ∈ [1, 15]  (0 = reserved / zero)
- *   Packing  : byte = (lo & 0xF) | ((hi & 0xF) << 4)
- *   Unpack   : q = (stored & 0xF) - 8,  val ≈ q * scale
- *
- * FP8 Physical Format (INT8-based, 1 byte per element)
- * -------------------------------------------------------
- *   scale    : absmax / 127
- *   Quantize : q = clamp(round(val / scale), -127, 127)  →  int8 stored as uint8
- *   Unpack   : val ≈ (int8)q * scale
+ * The older oamp_kernels.cu works on 16-element groups with a threshold rule
+ * and three levels; this file replaced it.
  */
 
 #include <cuda.h>
@@ -60,8 +29,7 @@
 #include <cuda_bf16.h>
 #include <stdint.h>
 
-// Common constants / inline helpers
-// ──────────────────────────────────────────────────────────────────────────────
+// Common constants and inline helpers
 
 #define BLOCK_SIZE   256       // threads per block (L2 cache-line friendly)
 #define FP8_SCALE_MAX 448.0f   // E4M3FN max
@@ -72,17 +40,8 @@ __device__ __forceinline__ float bf16_to_f32(nv_bfloat16 v) { return __bfloat162
 __device__ __forceinline__ nv_bfloat16 f32_to_bf16(float v)  { return __float2bfloat16(v); }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Kernel A : group_analyze_kernel
-//
-//  For each group (= one row, group_size elements):
-//    Compute max-abs importance score.
-//  Computed via shared memory reduction in a single pass.
-//
-//  Grid : (num_groups)     — one block per group
-//  Block: BLOCK_SIZE threads
-//  Smem : BLOCK_SIZE * sizeof(float)   (for absmax)
-// ══════════════════════════════════════════════════════════════════════════════
+// group_analyze_kernel: the max-abs of each group, one block per group, by a
+// tree reduction in shared memory.
 __global__ void group_analyze_kernel(
     const nv_bfloat16* __restrict__ x,          // [num_groups, group_size]
     float*             __restrict__ absmax_out, // [num_groups]  max-abs importance
@@ -94,7 +53,7 @@ __global__ void group_analyze_kernel(
 
     const nv_bfloat16* row = x + (long long)grp * group_size;
 
-    // Phase 1: Per-thread partial max-abs
+    // per-thread partial max-abs
     float local_abs_max = 0.0f;
 
     for (int i = tid; i < group_size; i += BLOCK_SIZE) {
@@ -102,7 +61,7 @@ __global__ void group_analyze_kernel(
         local_abs_max   = fmaxf(local_abs_max, fabsf(v));
     }
 
-    // Phase 2: Shared Memory Tree Reduction
+    // tree reduction in shared memory
     __shared__ float smem_am[BLOCK_SIZE];
 
     smem_am[tid] = local_abs_max;
@@ -116,27 +75,17 @@ __global__ void group_analyze_kernel(
         __syncthreads();
     }
 
-    // Phase 3: Thread 0 writes final result
+    // thread 0 writes the result
     if (tid == 0) {
         absmax_out[grp] = smem_am[0];
     }
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Kernel B : group_fused_quantize_kernel
-//
-//  Applies FP8 or FP4 simulated quantization per group based on fp8_mask.
-//  No intermediate tensors — single memory pass.
-//
-//  Performance vs PyTorch:
-//    before : importance → topk → fp8_quantize(all) → fp4_quantize(all)
-//             → where(mask, fp8, fp4)     ← 6 memory round trips
-//    after  : analyze + fused_quantize    ← 2 memory round trips
-//
-//  Grid : (num_groups)
-//  Block: BLOCK_SIZE threads
-// ══════════════════════════════════════════════════════════════════════════════
+// group_fused_quantize_kernel: quantize and dequantize every group in one
+// pass, integers on the e4m3 range for anchor groups and on [-7, 7] for the
+// rest. The PyTorch path makes six passes over memory (importance, topk, two
+// quantizations and a where); this path makes two, analyze and fused_quantize.
 __global__ void group_fused_quantize_kernel(
     const nv_bfloat16* __restrict__ x,       // [num_groups, group_size]  input
           nv_bfloat16* __restrict__ out,      // [num_groups, group_size]  output
@@ -153,10 +102,7 @@ __global__ void group_fused_quantize_kernel(
     const bool is_fp8 = fp8_mask[grp];
     const float am    = absmax[grp];
 
-    /* Scale computation:
-     * FP8 : absmax / 448  (E4M3FN range scaling — non-uniform interval simulation)
-     * FP4 : absmax / 7    (signed 4-bit symmetric)
-     */
+    // scale: absmax / 448 for an anchor group, absmax / 7 otherwise
     const float scale     = is_fp8 ? (am / FP8_SCALE_MAX + 1e-8f)
                                    : (am / FP4_SCALE_MAX + 1e-8f);
     const float inv_scale = 1.0f / scale;
@@ -166,11 +112,11 @@ __global__ void group_fused_quantize_kernel(
         float v  = bf16_to_f32(__ldg(&row_in[i]));
         float qv;
         if (is_fp8) {
-            // E4M3FN simulation: clamp to [-448, 448], then round
+            // anchor: round, then clamp to [-448, 448]
             qv = __float2int_rn(v * inv_scale);
             qv = fmaxf(-FP8_SCALE_MAX, fminf(FP8_SCALE_MAX, qv));
         } else {
-            // FP4 absmax symmetric: clamp to [-7, 7]
+            // body: round, then clamp to [-7, 7]
             qv = __float2int_rn(v * inv_scale);
             qv = fmaxf(-FP4_SCALE_MAX, fminf(FP4_SCALE_MAX, qv));
         }
@@ -179,15 +125,8 @@ __global__ void group_fused_quantize_kernel(
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Kernel C : fp8_byte_pack_kernel  (Physical Packing)
-//
-//  Physically packs N rows to INT8 (absmax/127 scale).
-//  BF16[N, D]  ->  uint8[N, D]   (1 byte per element)
-//
-//  Grid : (N)
-//  Block: BLOCK_SIZE threads
-// ══════════════════════════════════════════════════════════════════════════════
+// fp8_byte_pack_kernel: one row per block, BF16 [N, D] to one signed 8-bit code
+// per element (scale = absmax / 127), stored as uint8 [N, D].
 __global__ void fp8_byte_pack_kernel(
     const nv_bfloat16* __restrict__ x,      // [N_fp8, D]
           uint8_t*      __restrict__ packed, // [N_fp8, D]
@@ -213,18 +152,8 @@ __global__ void fp8_byte_pack_kernel(
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Kernel D : fp4_nibble_pack_kernel  (Physical Packing)
-//
-//  Physically packs N rows to nibble-packed uint8.
-//  BF16[N, D]  ->  uint8[N, D/2]  (2 nibbles per byte)
-//
-//  D must be even.
-//
-//  Grid : (N)
-//  Block: BLOCK_SIZE threads
-//  Each thread reads 2 elements (4 bytes) and stores 1 nibble-packed byte.
-// ══════════════════════════════════════════════════════════════════════════════
+// fp4_nibble_pack_kernel: one row per block, BF16 [N, D] to uint8 [N, D/2].
+// D must be even; each thread reads two elements and writes one byte.
 __global__ void fp4_nibble_pack_kernel(
     const nv_bfloat16* __restrict__ x,      // [N_fp4, D]
           uint8_t*      __restrict__ packed, // [N_fp4, D/2]
@@ -261,11 +190,7 @@ __global__ void fp4_nibble_pack_kernel(
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Kernel E : fp8_byte_unpack_kernel  (Physical Unpacking)
-//
-//  uint8[N_fp8, D]  →  BF16[N_fp8, D]
-// ══════════════════════════════════════════════════════════════════════════════
+// fp8_byte_unpack_kernel: uint8 [N, D] back to BF16 [N, D].
 __global__ void fp8_byte_unpack_kernel(
     const uint8_t*     __restrict__ packed, // [N_fp8, D]
           nv_bfloat16* __restrict__ out,    // [N_fp8, D]
@@ -287,11 +212,7 @@ __global__ void fp8_byte_unpack_kernel(
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Kernel F : fp4_nibble_unpack_kernel  (Physical Unpacking)
-//
-//  uint8[N_fp4, D/2]  →  BF16[N_fp4, D]
-// ══════════════════════════════════════════════════════════════════════════════
+// fp4_nibble_unpack_kernel: uint8 [N, D/2] back to BF16 [N, D].
 __global__ void fp4_nibble_unpack_kernel(
     const uint8_t*     __restrict__ packed, // [N_fp4, D/2]
           nv_bfloat16* __restrict__ out,    // [N_fp4, D]
@@ -324,9 +245,7 @@ __global__ void fp4_nibble_unpack_kernel(
 }
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Launcher functions (called from C++ bindings)
-// ══════════════════════════════════════════════════════════════════════════════
+// Launchers called from the C++ bindings
 
 extern "C" {
 

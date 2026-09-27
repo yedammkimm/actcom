@@ -7,7 +7,7 @@ Supersedes analyze_axis2.py, which had two defects this script fixes:
      arm-level offset (A sits ~+0.007 above C on every seed), so a threshold
      marks 8/8 "damaged" and the number is meaningless. GSM8K is reported here
      as an in-distribution stability metric only: per-arm spread alongside the
-     arm-level offset vs C_STD. Small does not mean absent — +0.2% that is
+     arm-level offset vs C_STD. Small does not mean absent: +0.2% that is
      identical across every seed is a clean systematic observation, and this
      script reports it rather than calling it "no difference".
 
@@ -160,7 +160,7 @@ def load_training():
 
 
 def load_accuracy():
-    """§5 accuracy row — ONLY the unified protocol (stop_strings + mnt=512, n=200)."""
+    """The accuracy row: only the unified protocol (stop_strings, 512 new tokens, n=200)."""
     out = {a: {} for a in ARMS}
     for f in sorted(glob.glob(os.path.join(ROOT, 'results/reeval_stop_mnt512_n200/*.json'))):
         d = json.load(open(f))
@@ -214,7 +214,7 @@ def main():
         for arm, s, dirs in collisions:
             print(f'    {arm} seed {s}: {" , ".join(dirs)}  ->  using {dirs[-1]}')
 
-    # ---------------- Per-arm perplexity ----------------
+    # Per-arm perplexity
     print()
     print('=' * 92)
     print(f'Perplexity by arm — damage counted on WikiText ONLY (pre-registered tau = {THRESHOLD_WT})')
@@ -243,7 +243,7 @@ def main():
                 print(f'    bimodality: safe max {max(safe_v):.4f} -> damaged min {min(dmg_v):.4f}'
                       f'   gap {gap:.4f} = {gap / B_WIKI_SD:.2f} sd')
 
-    # ---------------- GSM8K: offset, not threshold ----------------
+    # GSM8K: offset, not threshold
     print()
     print('=' * 92)
     print('In-distribution stability (GSM8K PPL) — NOT threshold-tested')
@@ -274,7 +274,7 @@ def main():
                   f'{st.mean(a) - base:+.4f} — the offset is ~{(st.mean(a) - base) / (max(a) - min(a)):.1f}x')
             print('    the seed-to-seed spread, so it is systematic, not seed-dependent.')
 
-    # ---------------- WikiText sensitivity sweep ----------------
+    # WikiText sensitivity sweep
     print()
     print('=' * 92)
     print('WikiText threshold sensitivity (2 / 3 / 4 sd) — is the damage count robust?')
@@ -293,7 +293,7 @@ def main():
             names = ', '.join(f'{s}({v:.2f})' for s, v in hit) or '-'
             print(f'    {k}sd  tau={th:>7.3f}   {len(hit):>2}/{len(vals):<2}   {names}{tag}')
 
-    # ---------------- Fisher exact, A vs B ----------------
+    # Fisher exact, A vs B
     print()
     print('=' * 92)
     print('Damage frequency: A_4DFP4 vs B_4DFP8 — Fisher exact test')
@@ -325,7 +325,7 @@ def main():
             o, t = fisher_exact_2x2(da, na - da, hyp, 8 - hyp)
             print(f'      B = {hyp}/8 damaged  ->  one-tailed p = {o:.4f}   two-tailed p = {t:.4f}')
 
-    # ---------------- Detection depth ----------------
+    # Detection depth
     print()
     print('=' * 92)
     print('Detection depth — which layer does each failure mode become visible at?')
@@ -353,7 +353,7 @@ def main():
     print('    Read down the columns, not across the arms: each failure mode surfaces at')
     print('    a different depth, and accuracy is the one column that separates nothing.')
 
-    # ---------------- Per-seed grad detail ----------------
+    # Per-seed grad detail
     print()
     print('=' * 92)
     print('Gradient norms per seed — does the gradient layer separate ARMS or SEEDS?')
@@ -373,7 +373,7 @@ def main():
             print(f'    seed {s:<5} mean {st.mean(g):>8.2f}  med {st.median(g):>7.2f}  '
                   f'max {max(g):>9.1f}  clip {clip:>5.1f}%{verdict}{note}')
 
-    # ---------------- Accuracy, protocol-isolated ----------------
+    # Accuracy, protocol-isolated
     print()
     print('=' * 92)
     print('§5 accuracy row — unified protocol ONLY (stop_strings + max_new_tokens=512, n=200)')
@@ -401,7 +401,7 @@ def main():
         mnts = {v['mnt'] for _, v in rows}
         print(f'      {arm:<9} mnt={sorted(mnts)}  {cells}')
 
-    # ---------------- Supporting OOD evidence ----------------
+    # Supporting OOD evidence
     print()
     print('=' * 92)
     print('Supporting evidence for already-damaged seeds (NOT counted)')

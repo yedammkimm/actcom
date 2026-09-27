@@ -3,7 +3,7 @@
 Measures WikiText-2 perplexity on the identical 200 windows used by every run
 in this project, for four models in one process:
 
-    base           no adapter at all — establishes what the eval path reports
+    base           no adapter at all: establishes what the eval path reports
                    for an untouched model
     C_STD@3736     known-good reference; must reproduce 16.0717
     C_STD@500 s456 the catastrophic run; must reproduce 5646.1273

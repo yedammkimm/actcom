@@ -1,10 +1,10 @@
-"""Environment capture — snapshot of the exact stack a run executed on.
+"""Snapshot of the software and hardware a run executed on.
 
-Spec v1 §6.1. All fields are safe to call before GPU work so ``env`` can be
-fed to :func:`oamp.schema.validate_schema` on the CPU-only path.
-
-Emits a warning if the git tree is dirty. Full-scale re-runs must land on a
-clean commit so results can be tied to a SHA.
+collect_env returns the fields that oamp.schema.validate_schema requires:
+Python, torch, CUDA and library versions, the GPU name and compute
+capability, the driver, and the git commit with its dirty flag. All of it
+can be gathered before any GPU work. A dirty git tree produces a warning,
+because a result should be tied to a commit.
 """
 
 from __future__ import annotations
@@ -29,11 +29,11 @@ def _run(cmd, cwd=None, env=None) -> str:
 
 
 def _git(cwd, *args) -> str:
-    """Run git with safe.directory injected via GIT_CONFIG_* env vars.
+    """Run git with safe.directory supplied through GIT_CONFIG_* variables.
 
-    Older git (2.34) ignores ``-c safe.directory=...`` from the command line
-    when the value doesn't come from a config file. GIT_CONFIG_COUNT is the
-    portable path documented in git's manpage.
+    git 2.34 ignores `-c safe.directory=...` on the command line when the value
+    does not come from a config file; GIT_CONFIG_COUNT is the portable route
+    documented in the git manual.
     """
     env = os.environ.copy()
     if cwd is not None:
@@ -71,20 +71,14 @@ def _nvidia_driver() -> str:
 
 
 def collect_env(project_root: str | None = None, *, warn_on_dirty: bool = True) -> dict:
-    """Return the environment snapshot required by :func:`schema.validate_schema`.
-
-    Parameters
-    ----------
-    project_root : Optional[str]
-        Directory where ``git rev-parse`` should run. Defaults to the parent
-        of this file's package.
-    warn_on_dirty : bool
-        Emit a logger.warning when ``git status --porcelain`` is non-empty.
+    """Return the environment snapshot. `project_root` is where git runs (default:
+    the parent of this package); with `warn_on_dirty` a non-empty
+    `git status --porcelain` logs a warning.
     """
     if project_root is None:
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
-    # torch / cuda info — import lazily so this module stays cheap without torch
+    # torch / cuda info; imported lazily so this module stays cheap without torch
     try:
         import torch
         torch_version = torch.__version__
@@ -104,7 +98,7 @@ def collect_env(project_root: str | None = None, *, warn_on_dirty: bool = True) 
     if git_dirty and warn_on_dirty:
         logger.warning(
             "collect_env: git tree is dirty. Full-scale re-runs must land on a clean commit "
-            "(see spec v1 §6.1). Current HEAD=%s", git_commit[:12] or '<no-repo>')
+            "Current HEAD=%s", git_commit[:12] or '<no-repo>')
 
     return {
         'hostname':                platform.node(),

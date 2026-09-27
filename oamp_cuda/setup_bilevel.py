@@ -1,28 +1,18 @@
-# Copyright (c) 2025 OAMP Research Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0.
+# Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
 
-"""
-setup_bilevel.py
-================
-OAMP Bi-Level CUDA Extension build script.
+"""Build the anchor-variant CUDA kernels as the extension `oamp_bilevel`.
 
-Build
----------
-  cd /path/to/oamp_cuda
-  python setup_bilevel.py build_ext --inplace
+    cd oamp_cuda
+    python setup_bilevel.py build_ext --inplace
 
-Or install from project root:
-  pip install -e . --no-build-isolation
+writes oamp_bilevel.cpython-*.so into this directory, where oamp/cuda_ops.py
+looks for it.
 
-Output: oamp_bilevel.cpython-*.so  (in oamp_cuda/ directory)
-
-Architecture Strategy
--------------
-  System nvcc(12.1) supports: up to sm_90
-  Current GPU (GB10, sm_121): requires CUDA 12.8+
-
-  -> Generate sm_90 PTX with nvcc 12.1, CUDA 12.8 runtime JIT-compiles for sm_121.
-  -> PTX is forward-compatible: sm_90 PTX runs directly on sm_121.
+Architecture flags: when nvcc supports the GPU's compute capability the
+extension is compiled for it natively, with PTX as well. When the GPU is
+newer than nvcc (the GB10 is sm_121 and nvcc 12.1 stops at sm_90), only PTX
+for the highest supported architecture is generated, and the CUDA runtime
+compiles it for the GPU the first time the extension loads.
 """
 
 from setuptools import setup
@@ -32,10 +22,8 @@ import subprocess
 
 
 def get_nvcc_max_arch() -> str:
-    """
-    Return the highest compute capability supported by the system nvcc.
-    nvcc 12.1  -> sm_90
-    nvcc 12.8+ -> sm_121 etc.
+    """Return the highest compute capability nvcc lists ('90' for nvcc 12.1), or
+    '90' when nvcc cannot be queried.
     """
     try:
         out = subprocess.check_output(
@@ -55,9 +43,8 @@ def get_nvcc_max_arch() -> str:
 
 
 def get_cuda_arch_flags() -> list:
-    """
-    GPU arch <= nvcc max supported  -> compile natively for that arch
-    GPU arch  > nvcc max supported  -> generate PTX at nvcc max (forward-compatible JIT)
+    """Return the -gencode flags: native code plus PTX when nvcc supports the
+    GPU, otherwise PTX for nvcc's highest architecture.
     """
     nvcc_max = get_nvcc_max_arch()
 
@@ -67,14 +54,14 @@ def get_cuda_arch_flags() -> list:
     else:
         gpu_arch = "80"
 
-    # If nvcc supports the GPU arch directly, generate both native binary + PTX
+    # nvcc supports the GPU directly: native code plus PTX
     if int(gpu_arch) <= int(nvcc_max):
         return [
             f"-gencode=arch=compute_{gpu_arch},code=sm_{gpu_arch}",
             f"-gencode=arch=compute_{gpu_arch},code=compute_{gpu_arch}",
         ]
     else:
-        # GPU arch exceeds nvcc range -> generate max PTX, runtime JIT handles the rest
+        # GPU newer than nvcc: PTX for the highest supported architecture, compiled at load time
         print(
             f"[setup_bilevel] GPU sm_{gpu_arch} > nvcc max sm_{nvcc_max}. "
             f"PTX fallback: computing PTX for sm_{nvcc_max}, "

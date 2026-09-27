@@ -1,30 +1,16 @@
-# Copyright (c) 2025 OAMP Research Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0.
+# Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
 
-"""
-oamp.quantize
-=============
-FP4 / FP8 E4M3FN quantization kernels (pure PyTorch, with STE).
+"""Per-group 4-bit and FP8 quantizers with a straight-through gradient.
 
-Two granularity modes:
-  - Per-token  (legacy): single scale per token (dim=-1)
-  - Per-group  (default): scale per GROUP_SIZE block of elements
+Both work on groups of `group_size` elements along the last axis with one
+absmax scale per group; a partial trailing group is zero-padded. The 4-bit
+quantizer rounds x / scale onto the symmetric integer grid -7..7 (the code
+calls this FP4). The FP8 quantizer casts x / scale to torch.float8_e4m3fn,
+whose largest value is 448. Both return dequantized values in the input
+dtype, and both pass the gradient through unchanged.
 
-Per-group quantization (GROUP_SIZE=128) provides finer-grained scaling,
-reducing quantization error especially for activations with non-uniform
-magnitude distributions across the hidden dimension.
-
-Design Principles  (cf. Paper §3.2)
------------------
-* FP4  : 4-bit symmetric absmax, per-group scaling (signed → [-7, 7])
-* FP8  : Native ``torch.float8_e4m3fn``, per-group absmax scaling (max 448)
-* STE  : Straight-Through Estimator — forward emits quantized values,
-         backward passes gradients through unchanged.
-
-Public API
-----------
-fp4_quantize(x, group_size=128) → Tensor   (FP4 per-group, STE)
-fp8_quantize(x, group_size=128) → Tensor   (FP8 per-group, STE)
+Only oamp.bilevel and oamp.cuda_ops use these; the pack hooks have their own
+quantizers.
 """
 
 import torch
@@ -43,21 +29,14 @@ __all__ = [
 GROUP_SIZE: int = 128
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# FP4 — Per-group 4-bit absmax symmetric quantization + STE (default)
-# ──────────────────────────────────────────────────────────────────────────────
+# 4-bit: per-group absmax symmetric quantization with a straight-through gradient
 
 class FP4PerGroupSTE(torch.autograd.Function):
-    """
-    Per-group absmax symmetric 4-bit quantization with STE.
+    """The 4-bit quantizer as an autograd.Function.
 
-    Each group of ``group_size`` elements gets its own scale factor:
-      scale = absmax(group) / 7.0
-      x_q   = round(x / scale).clamp(-7, 7)
-      x_out = x_q * scale  (dequantize, same dtype as input)
-
-    Handles non-divisible hidden dimensions via zero-padding.
-    Backward: gradient passes through unchanged (STE).
+    Per group, scale = absmax / 7, q = clamp(round(x / scale), -7, 7), and the
+    output is q * scale in the input dtype. The backward pass returns the
+    incoming gradient unchanged.
     """
 
     @staticmethod
@@ -87,16 +66,11 @@ class FP4PerGroupSTE(torch.autograd.Function):
 
 
 class FP8PerGroupSTE(torch.autograd.Function):
-    """
-    Per-group FP8 E4M3FN quantization with Straight-Through Estimator.
+    """The FP8 (e4m3fn) quantizer as an autograd.Function.
 
-    Each group of ``group_size`` elements gets its own scale factor:
-      scale  = absmax(group) / 448
-      x_fp8  = cast_to_E4M3FN(x / scale)
-      x_out  = x_fp8 * scale  (dequantize, same dtype as input)
-
-    Handles non-divisible hidden dimensions via zero-padding.
-    Backward: gradient passes through unchanged (STE).
+    Per group, scale = absmax / 448, x / scale is cast to float8_e4m3fn, and the
+    output is the cast value times the scale, in the input dtype. The backward
+    pass returns the incoming gradient unchanged.
     """
 
     FP8_MAX: float = torch.finfo(torch.float8_e4m3fn).max  # 448.0
@@ -129,12 +103,16 @@ class FP8PerGroupSTE(torch.autograd.Function):
 
 
 def fp4_quantize(x: torch.Tensor, group_size: int = GROUP_SIZE) -> torch.Tensor:
-    """Per-group FP4 quantization with STE (default). Input: any shape with last dim D."""
+    """Per-group 4-bit quantize-dequantize of `x` (any shape, groups along the
+    last dim) with a straight-through gradient.
+    """
     return FP4PerGroupSTE.apply(x, group_size)
 
 
 def fp8_quantize(x: torch.Tensor, group_size: int = GROUP_SIZE) -> torch.Tensor:
-    """Per-group FP8 E4M3FN quantization with STE (default). Input: any shape with last dim D."""
+    """Per-group FP8 quantize-dequantize of `x` (any shape, groups along the last
+    dim) with a straight-through gradient.
+    """
     return FP8PerGroupSTE.apply(x, group_size)
 
 

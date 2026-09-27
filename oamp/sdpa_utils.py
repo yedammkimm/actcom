@@ -1,6 +1,8 @@
-"""Common utilities for γ-based OAMP experiments.
+"""Helpers that keep scaled-dot-product attention on the flash backend.
 
-Ensures FlashAttention gets used and vocab-head tensors are excluded from packing.
+An all-ones attention mask is enough to push Transformers onto the MATH
+backend, which materialises the (B, H, L, L) attention weights; these
+helpers make sure that does not happen silently.
 """
 
 import contextlib
@@ -15,14 +17,13 @@ except Exception:  # pragma: no cover
 
 
 def flash_sdp_context(force: bool = True):
-    """Return a context manager that restricts SDPA to FlashAttention.
+    """Return a context manager that restricts SDPA to the flash backend.
 
-    Strict: no MATH fallback. If FLASH is ineligible (e.g. non-null attn_mask),
-    the underlying scaled_dot_product_attention call raises RuntimeError. That
-    is the intended failure mode for audit runs.
-
-    Set force=False to get nullcontext for production paths that need default
-    dispatch (but log the selected backend separately).
+    Strict: there is no MATH fallback, so if flash is not eligible (a non-null
+    attention mask, for instance) scaled_dot_product_attention raises a
+    RuntimeError, which is the failure mode audit runs want. With force=False
+    it returns a nullcontext for paths that need default dispatch; log the
+    selected backend separately in that case.
     """
     if not force or sdpa_kernel is None:
         return contextlib.nullcontext()
@@ -30,13 +31,12 @@ def flash_sdp_context(force: bool = True):
 
 
 def probe_backend_availability(seq_len: int = 64, dtype=torch.bfloat16):
-    """Return which SDPA backends this device *can* use on a synthetic causal, no-mask call.
+    """Return which SDPA backend this device can use on a synthetic causal call
+    without a mask: 'FLASH', 'EFFICIENT', 'CUDNN', 'MATH' or 'UNKNOWN'.
 
-    NOTE: this measures *availability*, not what a real model forward actually selects.
-    For that, force FLASH via flash_sdp_context(force=True) and let the call error out
-    if the model's real inputs make FLASH ineligible.
-
-    Returns one of: 'FLASH', 'EFFICIENT', 'CUDNN', 'MATH', 'UNKNOWN'.
+    This measures availability, not what a real model forward selects. For
+    that, force flash with flash_sdp_context(force=True) and let the call fail
+    if the model's real inputs make flash ineligible.
     """
     if sdpa_kernel is None:
         return 'UNKNOWN'
@@ -60,16 +60,13 @@ def probe_backend_availability(seq_len: int = 64, dtype=torch.bfloat16):
 
 
 def normalize_attention_mask(attention_mask):
-    """Return None if the mask is all-ones (trivial), else return as-is.
+    """Return None when the mask is all ones, otherwise the mask unchanged.
 
-    Passing an all-ones mask to Transformers still forces sdpa fallback to MATH.
-    Returning None lets Transformers set `is_causal=True` and select FLASH.
-
-    Caveat (batch>1 + padding): with padding tokens the mask is not all-ones and
-    must be preserved. The current callers all use batch=1 no-padding so this is
-    fine, but any future multi-batch pipeline must handle padding-aware masks
-    separately (e.g. via a boolean mask compatible with FLASH's future variants,
-    or by grouping by length).
+    An all-ones mask still forces Transformers onto the MATH backend; returning
+    None lets it set is_causal=True and select flash. With padding the mask is
+    not all ones and must be kept. Every caller here uses batch size 1 without
+    padding, so that is fine, but a batched pipeline would need a padding-aware
+    mask of its own.
     """
     if attention_mask is None:
         return None

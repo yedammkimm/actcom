@@ -1,32 +1,27 @@
-"""Anchor churn probe — how stable is OAMP's fp8 anchor mask across steps?
+"""Anchor churn probe: how stable is the max-abs anchor mask from step to step?
 
-Motivation: γ selects K = ratio × G groups per tensor by max-abs importance.
-If max-abs is data-dependent, the selected set (fp8 mask) may drift step to
-step. Seed-specific data ordering → seed-specific anchor trajectories → seed
-variance. This probe measures consecutive-step Jaccard(M_t, M_{t+1}) at
-representative layers.
+The anchor variant selects K = ratio x G groups per tensor by max-abs. If
+max-abs is data-dependent, the selected set can drift between steps, and a
+seed-specific data order would then give seed-specific anchor trajectories,
+one candidate explanation of seed variance. This probe measures the Jaccard
+overlap of consecutive masks at representative layers.
 
-Setup:
-  - Arm 4 (NF4 + apply_dtype_policy + LoRA r=16 targets=q/k/v/o)
-  - 100 optimizer steps, batch_size=1, grad_accum=4 (matches production)
-  - Fixed input sequence per step (deterministic tokenizer replay) so
-    routing variation comes purely from parameter drift, not batch shuffle.
-  - Monkey-patch `_select_anchor_mask`: record (step, role_key, shape, mask.cpu())
-  - Only track buckets {layer 0/13/27} × {up_proj.in, up_proj.out,
-    gate_proj.out, down_proj.in, o_proj.in} (avoid mask storage blowup).
+Setup: NF4 base with apply_dtype_policy and LoRA r=16 on q/k/v/o; 100
+optimizer steps at batch size 1 with gradient accumulation 4, as in
+production; the same input sequence at every step (a deterministic
+tokenizer replay), so any variation in routing comes from parameter drift
+alone. _select_anchor_mask is monkey-patched to record (step, role, shape,
+mask) for layers 0, 13 and 27 and the roles up_proj.in, up_proj.out,
+gate_proj.out, down_proj.in and o_proj.in, which keeps the stored masks
+small.
 
-Metric per (role, layer):
-    jacc[t] = |M_t ∩ M_{t+1}| / |M_t ∪ M_{t+1}|
-Report min / mean / max Jaccard, plus mask-size and how many groups the mask
-selects (= K = ratio × G).
+For each (role, layer) the Jaccard index of M_t and M_t+1 is reported as
+min, mean and max, with the mask size and K. A mean at or above 0.9 means
+the anchor set is essentially frozen after warmup; 0.3 to 0.7 means it
+rotates every step; below 0.3 the masks are barely correlated, which would
+call for a smoothed importance score.
 
-Interpretation guide:
-    mean ≥ 0.9  : anchor set essentially frozen after warmup (churn hypothesis rejected)
-    0.3 - 0.7   : rapid rotation each step → data-driven churn is real
-    < 0.3       : mask barely correlated across steps → strong candidate for
-                  EMA-smoothed importance rescore.
-
-Output: results/anchor_churn_probe_<ts>.json + printed summary.
+Output: results/anchor_churn_probe_<timestamp>.json and a printed summary.
 """
 
 from __future__ import annotations

@@ -1,19 +1,15 @@
-"""Single entry point for all OAMP experiments — spec v1 §7.
+"""The single entry point for every training, accuracy and memory run.
 
-Flow:
-    1. build_from_cli()                          -> ExperimentConfig
-    2. collect_env()                             -> env dict
-    3. validate_schema(cfg.asdict(), env)        <<< pre-GPU (INVARIANT-9)
-    4. load model                                (device_map='auto' forbidden)
-    5. apply_dtype_policy()                      -> (model, param_ptrs, dtype_report)
-       (INVARIANT-7 order is enforced by the tuple return)
-    6. build pack context                        (standard -> nullcontext)
-    7. parity check                              <<< INVARIANT-12
-    8. mode dispatch: 'accuracy' or 'memory'
-    9. write result
+Order of operations: build the ExperimentConfig from the command line,
+collect the environment, validate both before touching the GPU, load the
+model (device_map='auto' is refused), apply the dtype policy, which returns
+the parameter pointers the pack hooks need, build the pack context
+(nullcontext for method 'standard'), run the parity check, then dispatch on
+the mode, 'accuracy' or 'memory', and write the result JSON.
 
-All exceptions are caught and structured (§6.2). The process never crashes on
-CUDA OOM — a 70B BF16 OOM record must be citable evidence.
+Every exception is caught and written as a structured status. The process
+never crashes on a CUDA OOM: an out-of-memory record for 70B in BF16 is a
+result the paper cites, so it has to be written like any other.
 """
 
 from __future__ import annotations
@@ -26,7 +22,7 @@ import traceback
 from datetime import datetime
 from typing import Any, Optional
 
-# ------- ensure oamp/ is importable when run as a script -------
+# ensure oamp/ is importable when run as a script
 _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
@@ -68,12 +64,10 @@ CACHE_DIR = os.environ.get("HF_HOME", "/app/hf_cache")
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-# ============================================================
-# Exceptions used to route OOM/NaN into structured status
-# ============================================================
+# Exceptions used to route OOM/NaN into a structured status
 
 class ParityError(RuntimeError):
-    """Forward loss diverged between hooks-off and hooks-on paths (§7.1)."""
+    """The forward loss differed between the hooks-off and hooks-on paths."""
 
 
 class NaNError(RuntimeError):
@@ -83,14 +77,12 @@ class NaNError(RuntimeError):
 class MemoryBudgetError(RuntimeError):
     """Reserved memory crossed HMA_MEMORY_WATCHDOG_GB during a sweep step.
 
-    Raised by _measure_one so the process exits gracefully with an OOM record
-    instead of tripping the docker cgroup SIGKILL (2026-08-18).
+    Raised by _measure_one so the process exits with an OOM record instead of
+    being killed by the docker cgroup (2026-08-18).
     """
 
 
-# ============================================================
 # Model loading
-# ============================================================
 
 def _load_model(cfg: ExperimentConfig):
     tokenizer = AutoTokenizer.from_pretrained(
@@ -120,7 +112,7 @@ def _load_model(cfg: ExperimentConfig):
         # only one layer's BF16 shard sits in CPU RAM at a time. .to(DEVICE)
         # instead built the whole quantized model on CPU first, blowing anon RAM
         # past the 110 GB cgroup ceiling on 70B (2026-08-18).
-        # 'auto' would trigger meta-device offload on GB10 (§8 forbidden list).
+        # 'auto' would trigger meta-device offload on the GB10, which is why it is refused.
         # max_memory tells accelerate the GPU budget explicitly; without it the
         # dispatcher can silently keep spilling BF16 tensors to CPU.
         model = AutoModelForCausalLM.from_pretrained(
@@ -130,10 +122,10 @@ def _load_model(cfg: ExperimentConfig):
             device_map={"": 0},
             max_memory={0: "95GiB"},
         )
-        # INVARIANT-7: gradient checkpointing is applied *after* get_peft_model,
-        # never through prepare_model_for_kbit_training. Enabling it here would
-        # also toggle enable_input_require_grads on the embedding, which was NOT
-        # part of the 4-way (Arm 4) validated setup.
+        # Gradient checkpointing is applied after get_peft_model, never through
+        # prepare_model_for_kbit_training: enabling it here would also toggle
+        # enable_input_require_grads on the embedding, which the validated dtype
+        # setup did not have.
         model = prepare_model_for_kbit_training(
             model, use_gradient_checkpointing=False)
     else:
@@ -153,20 +145,18 @@ def _load_model(cfg: ExperimentConfig):
     model = get_peft_model(model, lora_cfg)
 
     # GC applied after PEFT wrapping. Combining GC with a pack context is not
-    # validated (legacy LoRA+GC arm used hooks_ctx=None); refuse for safety.
+    # validated (the earlier LoRA+GC arm ran without hooks); refuse for safety.
     if cfg.gc_enabled:
         if cfg.method != 'standard':
             raise ValueError(
-                "gc_enabled=True is only supported with method='standard' (spec v1). "
+                "gc_enabled=True is only supported with method='standard'. "
                 "GC + pack combination has not been validated.")
         model.gradient_checkpointing_enable()
 
     return model, tokenizer
 
 
-# ============================================================
 # Pack context factory
-# ============================================================
 
 def _build_pack_ctx(cfg: ExperimentConfig, *, param_ptrs: set, vocab_size: int):
     """Return a context manager and (optional) PackHooks reference.
@@ -184,7 +174,7 @@ def _build_pack_ctx(cfg: ExperimentConfig, *, param_ptrs: set, vocab_size: int):
         fp8_ratio=cfg.fp8_ratio,
         group_size=cfg.group_size,
         min_numel=cfg.min_numel,
-        # INVARIANT-3/4/5: filter set from the loaded model's config, not the tokenizer.
+        # Filter set from the loaded model's config, not the tokenizer.
         skip_last_dims={vocab_size},
         param_ptrs=param_ptrs,
         mask_seed=cfg.mask_seed,
@@ -197,21 +187,20 @@ def _build_pack_ctx(cfg: ExperimentConfig, *, param_ptrs: set, vocab_size: int):
     return ctx, ctx
 
 
-# ============================================================
-# Parity check (INVARIANT-12)
-# ============================================================
+# Parity check
 
 def _parity_check(model, pack_ctx, tokenizer, cfg: ExperimentConfig,
                   vocab_size: int) -> None:
-    """Forward-only parity: hooks-off vs hooks-on losses must be bit-exact.
+    """Forward-only parity: the hooks-off and hooks-on losses must be bit-exact.
 
     Runs on a synthetic (B=2, L=cfg.max_seq_len) batch in eval() so dropout
-    doesn't inject noise. Grads are enabled so hooks actually fire (kept > 0
-    check), but each forward's graph is torn down between calls so parity's
-    peak doesn't inflate the training-run peak. Also resets peak stats after
-    parity so ``memory.peak_*`` reflects only the real workload.
+    adds no noise. Gradients are enabled so the hooks fire (the kept count must
+    be positive), but each forward's graph is torn down between the two calls
+    so the check does not inflate the training run's peak, and the peak
+    statistics are reset afterwards so memory.peak_* reflects only the real
+    workload.
     """
-    print("[parity] running INVARIANT-12 forward-only parity check ...", flush=True)
+    print("[parity] running the forward-only parity check ...", flush=True)
     model.eval()
     torch.manual_seed(cfg.seed)
     ids = torch.randint(0, vocab_size, (2, cfg.max_seq_len), device=DEVICE)
@@ -247,9 +236,7 @@ def _parity_check(model, pack_ctx, tokenizer, cfg: ExperimentConfig,
     torch.cuda.reset_peak_memory_stats(DEVICE)
 
 
-# ============================================================
 # Optimizer / scheduler
-# ============================================================
 
 def _build_optimizer(model, cfg: ExperimentConfig, n_effective_samples: int = None):
     lora_params = [p for p in model.parameters() if p.requires_grad]
@@ -257,7 +244,7 @@ def _build_optimizer(model, cfg: ExperimentConfig, n_effective_samples: int = No
     if opt_name == 'adamw':
         opt = torch.optim.AdamW(lora_params, lr=cfg.lr, weight_decay=0.01)
     elif opt_name == 'paged_adamw8bit':
-        # bitsandbytes PagedAdamW8bit — matches legacy NF4 runs.
+        # bitsandbytes PagedAdamW8bit, as in the earlier NF4 runs.
         try:
             import bitsandbytes as bnb
         except ImportError as e:
@@ -284,9 +271,7 @@ def _build_optimizer(model, cfg: ExperimentConfig, n_effective_samples: int = No
     return opt, sched, total_steps, lora_params
 
 
-# ============================================================
 # Accuracy mode
-# ============================================================
 
 def _tokenize_train(tokenizer, cfg: ExperimentConfig, text: str):
     """Tokenize a single training example. Natural length; no padding."""
@@ -320,7 +305,7 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
             print(f"[adapter:partial] save FAILED: "
                   f"{type(e).__name__}: {e}", flush=True)
 
-    # legacy test_dtype_policy_3way: random.Random(seed).shuffle(train) -> [:n_train].
+    # test_dtype_policy_3way used random.Random(seed).shuffle(train) -> [:n_train].
     # oamp.data.load_task(shuffle=True) uses the same Python random.Random(seed),
     # so the exact 500-sample slice matches when n_train=500.
     train_data = load_task(cfg.task, 'train',
@@ -350,7 +335,7 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
     # AdamW state is lazy; this is memory pre-first-step, not post-state-alloc.
     result['memory']['mem_after_optimizer_init_gb'] = torch.cuda.memory_allocated(DEVICE) / 1e9
     # Reset peak so 'memory.peak_*' captures only the training loop, matching
-    # the legacy test_dtype_policy timing.
+    # the timing of test_dtype_policy_3way.
     torch.cuda.reset_peak_memory_stats(DEVICE)
 
     model.train()
@@ -364,7 +349,7 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
     skipped_step_indices = []   # opt_step values at each skip (first 100 only)
     t_train0 = time.time()
 
-    # legacy build_data_order: one np.random.RandomState(seed) reused across epochs.
+    # As in the earlier build_data_order: one np.random.RandomState(seed) reused across epochs.
     # Pre-materializing avoids interference with the global RNG stream used by
     # dropout / bnb during training.
     rng = np.random.RandomState(cfg.seed)
@@ -530,7 +515,7 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
     result['results']['grad_norm_trace'] = grad_norm_trace
     result['results']['skipped_step_indices'] = skipped_step_indices
 
-    # ---------- Save LoRA adapter BEFORE eval ----------
+    # Save the LoRA adapter before eval
     # Eval on 70B risks KV-cache OOM; if that happens post-eval save would lose
     # the trained adapter (2026-08-18). Save first so re-evaluation is cheap.
     if output_path.endswith('.json'):
@@ -545,9 +530,9 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
         result['results']['adapter_path'] = None
         print(f"[adapter] WARNING: save failed: {type(e).__name__}: {e}", flush=True)
 
-    # ---------- Eval ----------
+    # Eval
     # on_abort: persist a partial JSON with the abort diagnostics before
-    # sys.exit(1) — so postmortem can distinguish "OOM in eval" from silent hang.
+    # sys.exit(1), so a postmortem can distinguish "OOM in eval" from a silent hang.
     def _persist_partial_eval(diag: dict) -> None:
         result['results']['eval_aborted'] = True
         result['results']['eval_abort_diagnostics'] = {
@@ -583,9 +568,7 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
     result['throughput']['eval_wall_s'] = eval_out['eval_wall_s']
 
 
-# ============================================================
-# Memory mode (INVARIANT-13)
-# ============================================================
+# Memory mode
 
 def _run_memory(model, tokenizer, cfg: ExperimentConfig,
                 pack_ctx, param_ptrs, result: dict,
@@ -600,7 +583,7 @@ def _run_memory(model, tokenizer, cfg: ExperimentConfig,
     opt, _, _, lora_params = _build_optimizer(model, cfg)
     result['memory']['mem_after_optimizer_init_gb'] = torch.cuda.memory_allocated(DEVICE) / 1e9
 
-    # INVARIANT-13: dedicated Generator so global RNG is untouched.
+    # Dedicated Generator so the global RNG is untouched.
     gen = torch.Generator(device=DEVICE).manual_seed(cfg.seed)
     vocab = model.config.vocab_size
 
@@ -612,7 +595,7 @@ def _run_memory(model, tokenizer, cfg: ExperimentConfig,
                          B=B, L=L, vocab=vocab, gen=gen,
                          result=result, output_path=output_path)
 
-    # Flat schema — no per-(B, L) sweep list.
+    # Flat schema: no per-(B, L) sweep list.
     result['memory']['peak_allocated_gb'] = stats['peak_allocated_gb']
     result['memory']['peak_reserved_gb']  = stats['peak_reserved_gb']
     result['memory']['peak_measurement']  = stats['peak_measurement']
@@ -637,11 +620,12 @@ def _run_memory(model, tokenizer, cfg: ExperimentConfig,
 def _measure_one(model, cfg: ExperimentConfig, pack_ctx, lora_params, opt,
                  *, B: int, L: int, vocab: int, gen: torch.Generator,
                  result: dict, output_path: str) -> dict:
-    """Measure one (B, L) config.
+    """Measure one (B, L) configuration.
 
-    Peak is taken as max(per-step peak_allocated after warmup) — matches
-    legacy ``benchmark_native_packing_vram.py::run_training``. This isolates
-    the true forward+backward peak from model-load and optimizer-init residue.
+    The peak is the largest per-step peak_allocated after warmup, the same
+    definition as the earlier memory benchmark, which isolates the
+    forward-plus-backward peak from what model loading and optimizer
+    initialisation leave behind.
     """
     torch.cuda.empty_cache()
     model.train()
@@ -713,9 +697,7 @@ def _measure_one(model, cfg: ExperimentConfig, pack_ctx, lora_params, opt,
     }
 
 
-# ============================================================
 # Path helper
-# ============================================================
 
 def _default_output_path(cfg: ExperimentConfig) -> str:
     if getattr(cfg, 'output_path', None):
@@ -728,16 +710,14 @@ def _default_output_path(cfg: ExperimentConfig) -> str:
     return os.path.join(cfg.output_dir, stem)
 
 
-# ============================================================
 # main
-# ============================================================
 
 def main(argv=None) -> int:
     cfg = build_from_cli(argv)
     env = collect_env()
     env['timestamp_start'] = datetime.now().isoformat()
 
-    # (3) INVARIANT-9: pre-GPU validation
+    # (3) validation before any GPU work
     validate_schema(cfg.asdict(), env)
 
     output_path = _default_output_path(cfg)
@@ -751,7 +731,7 @@ def main(argv=None) -> int:
 
     current_stage = 'model_load'
     try:
-        # (4)+(5): load model + INVARIANT-7 dtype policy
+        # (4)+(5): load model, apply the dtype policy
         set_seed(cfg.seed)
         model, tokenizer = _load_model(cfg)
         model, param_ptrs, dtype_report = apply_dtype_policy(
@@ -769,7 +749,7 @@ def main(argv=None) -> int:
         pack_ctx, pack_hooks_ref = _build_pack_ctx(
             cfg, param_ptrs=param_ptrs, vocab_size=vocab_size)
 
-        # (7) INVARIANT-12: parity check
+        # (7) parity check
         if pack_hooks_ref is not None:
             current_stage = 'parity'
             _parity_check(model, pack_hooks_ref, tokenizer, cfg, vocab_size)

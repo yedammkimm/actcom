@@ -1,13 +1,17 @@
-"""Spec v1 §10 verification for oamp.pack_hooks.PackHooks.
+"""Verification gates for oamp.pack_hooks.PackHooks.
 
-Runs four gates:
-  V5      : fp8_ratio=0.0 (naive_fp4) matches legacy NaiveFP4AllHooks on peak+loss.
-  V6      : parity check — forward loss is bit-exact with/without pack context.
-  ERR-1   : routing='random' + mask_seed=None -> ValueError.
-  ERR-2   : missing skip_last_dims / param_ptrs -> TypeError.
+  V5      fp8_ratio=0.0 (naive_fp4) matches the earlier NaiveFP4AllHooks on peak memory and loss
+  V6      parity: the forward loss is bit-exact with and without the pack context
+  ERR-1   routing='random' without mask_seed raises ValueError
+  ERR-2   missing skip_last_dims or param_ptrs raises TypeError
 
-Runs on a small toy config (B=2, L=512) so it finishes in <2 minutes.
-Uses meta-llama/Llama-3.2-3B-Instruct in BF16 with LoRA (matches audit setup).
+plus the U1, B1, DP1, SR1, SR2 and D4 gates below. Runs on a small
+configuration (B=2, L=512) so it finishes in under two minutes, on
+meta-llama/Llama-3.2-3B-Instruct in BF16 with LoRA, as in the audits.
+
+V5 compares against the earlier implementation in legacy/, which the
+released repository does not include; that import sits at the top of the
+file, so the script does not run as released without it.
 """
 
 from __future__ import annotations
@@ -17,8 +21,8 @@ import sys
 
 os.environ.setdefault("HF_HOME", "/app/hf_cache")
 
-# Make legacy hooks importable for the V5 comparison — we do NOT ship any
-# runtime dependency on legacy; this is a one-off verification.
+# The V5 comparison imports the earlier hooks from legacy/, which the released
+# repository does not include.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
 sys.path.insert(0, _ROOT)
@@ -78,9 +82,7 @@ def clone_model(m):
     return build_model()
 
 
-# ------------------------------------------------------------
 # ERR-1 / ERR-2
-# ------------------------------------------------------------
 
 def check_input_validation():
     print("\n[ERR-1] routing='random' without mask_seed -> ValueError")
@@ -120,9 +122,7 @@ def check_input_validation():
         raise AssertionError("PackHooks did NOT raise TypeError for missing param_ptrs.")
 
 
-# ------------------------------------------------------------
-# V5: naive_fp4 (fp8_ratio=0.0) parity with legacy NaiveFP4AllHooks
-# ------------------------------------------------------------
+# V5: naive_fp4 (fp8_ratio=0.0) parity with the earlier NaiveFP4AllHooks
 
 def check_v5():
     print("\n[V5] naive_fp4: PackHooks(fp8_ratio=0.0) vs legacy NaiveFP4AllHooks")
@@ -171,9 +171,7 @@ def check_v5():
     print("  V5 PASS")
 
 
-# ------------------------------------------------------------
-# V6: parity check — forward loss identical with/without pack context
-# ------------------------------------------------------------
+# V6: parity check, forward loss identical with and without the pack context
 
 def check_v6():
     print("\n[V6] parity: forward loss with/without OAMP pack context (bit-exact)")
@@ -188,7 +186,7 @@ def check_v6():
     m.eval()
     torch.manual_seed(0)
     ids = torch.randint(0, vocab, (B, L), device=DEVICE)
-    # Forward only — no backward. γ is backward-only so forward must be bit-exact.
+    # Forward only, no backward. The hooks are backward-only, so the forward must be bit-exact.
     loss_off = m(input_ids=ids, labels=ids).loss
     with ctx:
         loss_on = m(input_ids=ids, labels=ids).loss
@@ -201,9 +199,7 @@ def check_v6():
     print("  V6 PASS")
 
 
-# ------------------------------------------------------------
 # U1: uniform_fp8 round-trip precision
-# ------------------------------------------------------------
 
 def check_u1_uniform_fp8_roundtrip():
     print("\n[U1] uniform_fp8 pack -> unpack round-trip precision")
@@ -232,9 +228,7 @@ def check_u1_uniform_fp8_roundtrip():
     print("  U1 PASS")
 
 
-# ------------------------------------------------------------
-# B1: bilevel degenerate branch corrects pack_stats
-# ------------------------------------------------------------
+# B1: the degenerate anchor branch corrects pack_stats
 
 def check_b1_bilevel_degenerate():
     print("\n[B1] bilevel degenerate (K >= num_groups) reroutes stats to 'uniform'")
@@ -255,9 +249,7 @@ def check_b1_bilevel_degenerate():
     print("  B1 PASS")
 
 
-# ------------------------------------------------------------
 # DP1: dedupe cache
-# ------------------------------------------------------------
 
 def check_dp1_dedupe():
     print("\n[DP1] dedupe=True: same storage packed twice -> one miss + one hit")
@@ -310,9 +302,7 @@ def check_dp1_dedupe():
     print("  DP1 PASS")
 
 
-# ------------------------------------------------------------
-# SR1: stochastic rounding is unbiased + sr_seed required
-# ------------------------------------------------------------
+# SR1: stochastic rounding is unbiased, and sr_seed is required
 
 def check_sr1_stochastic_rounding():
     print("\n[SR1] stochastic_rounding=True: E[q(x)] ~= x (unbiased)")
@@ -340,7 +330,7 @@ def check_sr1_stochastic_rounding():
     torch.manual_seed(1)
     x = torch.randn(8, 128, dtype=torch.bfloat16, device=DEVICE) * 0.5
 
-    # Deterministic path — repeatable single quant.
+    # Deterministic path: a repeatable single quantization.
     p1, s1 = ctx_det._quantize_fp4_groups(x)
     p2, s2 = ctx_det._quantize_fp4_groups(x)
     assert torch.equal(p1, p2), "SR1 FAIL: deterministic path not repeatable"
@@ -400,10 +390,8 @@ def check_sr1_stochastic_rounding():
     print("  SR1 PASS")
 
 
-# ------------------------------------------------------------
-# SR2: SR-on OAMP forward is still bit-exact (γ is backward-only)
-#      and the mask/SR generators are independent instances.
-# ------------------------------------------------------------
+# SR2: with SR on the forward is still bit-exact (the hooks are backward-only),
+#      and the mask and SR generators are independent instances.
 
 def check_sr2_sr_on_parity():
     print("\n[SR2] SR-on OAMP forward parity + generator isolation")
@@ -425,7 +413,7 @@ def check_sr2_sr_on_parity():
     with ctx:
         loss_on = m(input_ids=ids, labels=ids).loss
     d = abs(float(loss_off.item()) - float(loss_on.item()))
-    print(f"  Δloss = {d:.2e}   (γ is backward-only; forward must be bit-exact)")
+    print(f"  Δloss = {d:.2e}   (the hooks are backward-only; forward must be bit-exact)")
     assert d == 0.0, f"SR2 FAIL: forward not bit-exact with SR on (Δ={d:.2e})"
 
     # Force both generators to materialize, then verify isolation.
@@ -439,9 +427,7 @@ def check_sr2_sr_on_parity():
     print("  SR2 PASS")
 
 
-# ------------------------------------------------------------
 # D4-1/2/3: pack_4d_mode dispatches correctly
-# ------------------------------------------------------------
 
 def check_d4_pack_4d_mode():
     print("\n[D4] pack_4d_mode dispatches correctly + parity bit-exact")
@@ -493,7 +479,7 @@ def check_d4_pack_4d_mode():
                 "D4-2 FAIL: override_fp8_4d incremented outside fp8 mode"
 
     # (D4-3) parity: forward loss identical to gamma_full (fp4) whether
-    # pack_4d_mode is 'fp8' or 'skip' (γ is backward-only).
+    # pack_4d_mode is 'fp8' or 'skip' (the hooks are backward-only).
     m, _ = build_model()
     vocab = m.config.vocab_size
     ptrs = collect_param_ptrs(m)
@@ -515,7 +501,7 @@ def check_d4_pack_4d_mode():
               f"'skip_by_dim':{ctx.pack_stats['skip_by_dim']}}}")
         assert d == 0.0, f"D4-3 FAIL: forward parity broken under pack_4d_mode={mode}"
 
-    # (D4-4) pack_4d_mode governs 4-D across ALL methods (not just OAMP).
+    # (D4-4) pack_4d_mode governs 4-D tensors under every method, not just oamp.
     # naive_fp4 (fp8_ratio=0.0) + pack_4d_mode='fp8' MUST route 4-D to FP8.
     # uniform_fp8 (fp8_ratio=1.0) + pack_4d_mode='fp4' MUST route 4-D to FP4.
     # This is the cross-method implementation principle (2026-08-16).
@@ -546,7 +532,7 @@ def check_d4_pack_4d_mode():
 
 if __name__ == '__main__':
     print("=" * 70)
-    print("PackHooks verification (spec v1 §10)")
+    print("PackHooks verification")
     print("=" * 70)
     check_input_validation()
     check_v5()

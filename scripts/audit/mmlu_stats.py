@@ -34,7 +34,7 @@ Arms B, C, D (run when their JSONs are present, otherwise reported pending):
 Writes results/audit/mmlu_stats_<date>.json. Needs numpy (through
 _check_levels); scipy only for the t quantile, with the df-6 value as fallback.
 
-    docker exec -w /app/HMA_Project hma-container python3 scripts/audit/mmlu_stats.py
+    python3 scripts/audit/mmlu_stats.py
 """
 import argparse
 import glob
@@ -201,7 +201,7 @@ def main():
                              ("file", "arm", "seed", "ppl", "n", "n_correct", "acc")}
     base = cells.get("base")
 
-    # ---------------------------------------------------------------- arm A
+    # arm A
     A = sorted([c for c in cells.values() if c["arm"] == "A"], key=lambda c: c["ppl"])
     if len(A) != 8:
         print(f"arm A: {len(A)}/8 cells present, arm-A statistics skipped")
@@ -310,7 +310,7 @@ def main():
             "levels_run_column": {"mantel_rho": r4(rho_m), "p_two_sided": r4(h_m / t_m), "hits": h_m, "relabellings": t_m},
         }
 
-    # ------------------------------------------------------------ arm level
+    # arm level
     B = sorted([c for c in cells.values() if c["arm"] == "B"], key=lambda c: c["ppl"])
     print()
     if len(A) == 8 and len(B) == 8:

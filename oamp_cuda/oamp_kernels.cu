@@ -1,5 +1,11 @@
-// Copyright (c) 2025 OAMP Research Team. All rights reserved.
-// Licensed under the Apache License, Version 2.0.
+// Copyright 2026 OAMP Authors. Licensed under the Apache License, Version 2.0.
+//
+// The earlier three-level packing kernel, kept for reference. It works on
+// groups of 16 elements: a group whose value range reaches the threshold, or
+// whose max-abs exceeds 448, is stored at one byte per element, and every other
+// group at two elements per byte; the group sizes are prefix-summed so the
+// packed buffer is contiguous. oamp_ops.cpp exposes it as `pack` and `unpack`.
+// Nothing in the training path uses it; oamp_bilevel_kernels.cu replaced it.
 
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -14,7 +20,7 @@
 __device__ __forceinline__ float bfloat16_to_float(nv_bfloat16 val) { return __bfloat162float(val); }
 __device__ __forceinline__ nv_bfloat16 float_to_bfloat16(float val) { return __float2bfloat16(val); }
 
-// [Kernel 1] Analyze
+// analyze: classify each group and compute its scale
 __global__ void analyze_block_kernel(
     const float4* __restrict__ inputs,
     uint8_t* __restrict__ meta_out,
@@ -59,12 +65,12 @@ __global__ void analyze_block_kernel(
 
     float scale;
     if (is_outlier || is_active) {
-        // Active/Outlier mode: quantize to INT8 range [-127, 127]
+        // one byte per element, codes in [-127, 127]
         meta_out[gid] = is_outlier ? 2 : 1;
         sizes_out[gid] = 16;  // 16 bytes (1 byte per element)
         scale = abs_max / 127.0f + 1e-6f; 
     } else {
-        // Sleepy mode: quantize to 4-bit range [-7, 7]
+        // half a byte per element, codes in [-7, 7]
         meta_out[gid] = 0;
         sizes_out[gid] = 8;   // 8 bytes (0.5 byte per element)
         scale = abs_max / 7.0f + 1e-6f; 
@@ -73,7 +79,7 @@ __global__ void analyze_block_kernel(
     scales_out[gid] = float_to_bfloat16(scale);
 }
 
-// [Kernel 2] Pack
+// pack: write each group at its offset in the packed buffer
 __global__ void hybrid_pack_kernel(
     const float4* __restrict__ inputs,
     uint8_t* __restrict__ packed_buffer,
@@ -126,7 +132,7 @@ __global__ void hybrid_pack_kernel(
     }
 }
 
-// [Kernel 3] Unpack
+// unpack
 __global__ void hybrid_unpack_kernel(
     const uint8_t* __restrict__ packed_buffer,
     const uint8_t* __restrict__ meta_in,
@@ -147,7 +153,7 @@ __global__ void hybrid_unpack_kernel(
     nv_bfloat16* out1 = (nv_bfloat16*)&v1;
 
     if (meta_type > 0) { 
-        // FP8 Unpacking: int8 → float → BF16
+        // one-byte groups: int8 to float to BF16
         for (int i = 0; i < 8; ++i) {
             int8_t q = (int8_t)packed_buffer[my_offset + i];
             out0[i] = float_to_bfloat16((float)q * scale);
@@ -175,7 +181,7 @@ __global__ void hybrid_unpack_kernel(
     output[gid * 2 + 1] = v1;
 }
 
-// Launcher: orchestrates Analyze → Scan → Pack pipeline
+// Launcher: analyze, prefix-sum the sizes, then pack
 void launch_hybrid_compress(
     const nv_bfloat16* inputs,
     uint8_t* packed_buffer,

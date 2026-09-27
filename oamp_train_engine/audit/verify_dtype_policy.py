@@ -1,9 +1,9 @@
-"""Verify oamp.dtype_policy against spec v1 §3.
+"""Verify oamp.dtype_policy.
 
 Gates:
-  D1  RMSNorm swap count == 57 on Llama-3.2-3B (28 layers × 2 norms + final).
-  D2  dtype_report after Arm 4: norms / embed / lm_head / lora all bf16-only.
-  D3  BF16 base path also applies the swap (§3.4).
+  D1  RMSNorm swap count == 57 on Llama-3.2-3B (28 layers x 2 norms + final).
+  D2  dtype_report after the policy: norms / embed / lm_head / lora all bf16-only.
+  D3  BF16 base path also applies the swap.
   D4  param_ptrs collected AFTER cast, so pack filters won't miss on LoRA.
 """
 
@@ -85,13 +85,13 @@ def run(weight_quant: str):
     assert bf16_after == 57 and other_after == 0, \
         f"D1 FAIL ({weight_quant}): counts after swap wrong (bf16={bf16_after}, other={other_after})"
 
-    # D2: dtype report — every category bf16-only
+    # D2: dtype report, every category bf16 only
     for cat in ('norms', 'embed', 'lm_head', 'lora'):
         dtypes = report[cat]
         assert dtypes == ['torch.bfloat16'], \
             f"D2 FAIL ({weight_quant}): {cat} = {dtypes}, expected ['torch.bfloat16']"
 
-    # D4: param_ptrs collected AFTER cast — LoRA storage pointers reflect bf16 params
+    # D4: param_ptrs collected after the cast, so the LoRA storage pointers are those of the bf16 params
     for name, p in m.named_parameters():
         if 'lora_' in name.lower() and p.requires_grad:
             try:
@@ -107,7 +107,7 @@ def run(weight_quant: str):
 
 
 if __name__ == '__main__':
-    print("dtype_policy verification (spec v1 §3)")
+    print("dtype_policy verification")
 
     # D3: cover both weight_quant paths; both must run the swap.
     run('bf16')

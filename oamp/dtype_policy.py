@@ -1,37 +1,30 @@
-"""Arm 4 dtype policy: bf16 norms / embed / lm_head / LoRA + BF16RMSNorm swap.
+"""The bf16 policy applied to a PEFT model before training.
 
-Spec v1 §3. Applied *after* ``get_peft_model`` and *before* param_ptrs
-collection (INVARIANT-7).
+prepare_model_for_kbit_training upcasts every non-quantized tensor (norms,
+embeddings, lm_head) to fp32, and PEFT initialises the LoRA A and B matrices
+in fp32 as well. LlamaRMSNorm additionally casts its input to fp32 to
+compute the variance and keeps that fp32 copy for backward; on the 3B model
+that is (B, L, 3072) x 4 tensors per layer x 28 layers, about 5.6 GB at
+B=4, L=4096. apply_dtype_policy reverses all of this: it casts norms,
+embeddings, lm_head and the LoRA parameters to bf16 and swaps every *RMSNorm
+module for BF16RMSNorm, which skips the upcast.
 
-Rationale (from 2026-08 audit):
+The four-way check that fixed the policy (100 identical steps, 3B, NF4
+base, 2026-08-12):
 
-  - ``prepare_model_for_kbit_training`` upcasts every non-Params4bit tensor
-    (norms, embed, lm_head) to fp32. LoRA A/B are also initialized in fp32
-    inside PEFT even when the base is bf16/NF4.
-  - ``LlamaRMSNorm.forward`` casts ``hidden_states`` to fp32 to compute
-    variance and saves the fp32 intermediate for backward. On 3B this is
-    ``(B, L, 3072)`` * 4 tensors/layer * 28 layers ≈ 5.6 GB at B=4/L=4096
-    (verified against the Table 11 fp32/bf16 sweep, 2026-08-13).
+    fp32 everywhere              final loss 0.870496   peak 6.167 GB
+    bf16 norms, embed, lm_head   0.872880              5.854
+    plus bf16 LoRA               0.871820              5.406
+    plus BF16RMSNorm             0.871803              5.283
 
-Verified in the 4-way GSM8K experiment (2026-08-12):
+No NaN or Inf in any arm; the last two differ by 1.6e-5.
 
-    Arm1 fp32              final_loss 0.870496   peak 6.167 GB
-    Arm2 bf16 norms        0.872880              5.854
-    Arm3 + LoRA bf16       0.871820              5.406
-    Arm4 + BF16RMSNorm     0.871803              5.283   ← canonical
-    NaN/Inf = 0 in every arm; Arm3->Arm4 final Δ = 1.6e-5.
-
-INVARIANT-7 (spec §3.3): the order below cannot be re-ordered.
-
-  1. base model load
-  2. (NF4 only) prepare_model_for_kbit_training(use_gradient_checkpointing=False)
-  3. get_peft_model                       — LoRA initialized here (fp32 by PEFT)
-  4. cast norms / embed / lm_head / LoRA → bf16   ← this file
-  5. RMSNorm swap                                 ← this file
-  6. collect param_ptrs                           ← this file
-
-Steps 4–6 are performed by :func:`apply_dtype_policy`. It returns
-``(model, param_ptrs, dtype_report)`` so callers cannot get the order wrong.
+The order matters and the function enforces it: load the base model, run
+prepare_model_for_kbit_training for NF4, call get_peft_model, then (4) cast,
+(5) swap the norms and (6) collect the parameter storage pointers. Steps 4
+to 6 are this file. The pointers are collected last because casting
+reallocates storage, and apply_dtype_policy returns them together with the
+model so a caller cannot get the order wrong.
 """
 
 from __future__ import annotations
@@ -45,7 +38,9 @@ from .pack_hooks import collect_param_ptrs
 
 
 class BF16RMSNorm(nn.Module):
-    """RMSNorm without the fp32 upcast (CompAct-style)."""
+    """RMSNorm that computes the variance in the input dtype instead of upcasting
+    to fp32, as CompAct does.
+    """
 
     def __init__(self, weight: nn.Parameter, eps: float):
         super().__init__()
@@ -61,10 +56,10 @@ class BF16RMSNorm(nn.Module):
 
 
 def _swap_rmsnorm_for_bf16(model) -> Tuple[int, set]:
-    """Replace every ``*RMSNorm`` child module with :class:`BF16RMSNorm`.
-
-    Uses substring match on the class name so Qwen / Mistral RMSNorm variants
-    are also caught. Raises if zero swaps happen (spec §3.2).
+    """Replace every child module whose class name contains 'RMSNorm' with a
+    BF16RMSNorm that reuses its weight. The substring match also catches the
+    Qwen and Mistral variants. Raises if nothing was swapped, since that means
+    the model's norm class was not recognised.
     """
     swapped = 0
     seen_classes = set()
@@ -87,19 +82,16 @@ def _swap_rmsnorm_for_bf16(model) -> Tuple[int, set]:
 
 
 def _cast_to_bf16(model, *, modules: bool = True, lora: bool = True) -> None:
-    """Cast norms / embed / lm_head / LoRA parameters to bf16 in place.
+    """Cast norms, embeddings, lm_head and the LoRA parameters to bf16 in place.
 
-    ``prepare_model_for_kbit_training`` upcasts these to fp32; PEFT
-    initializes LoRA A/B in fp32. This reverses both.
-
-    The two halves are gated separately because they are separate effects and
-    the dtype decomposition needs to attribute memory to one or the other.
-    ``modules`` covers norms / embeddings / lm_head, i.e. the
-    ``prepare_model_for_kbit_training`` upcast; ``lora`` covers PEFT's
-    ``autocast_adapter_dtype`` initialisation of A/B. Turning ``lora`` off
-    alone reproduces the BF16-base configuration, where
-    ``prepare_model_for_kbit_training`` never ran and only the adapters were
-    left in fp32.
+    prepare_model_for_kbit_training upcasts the first group to fp32 and PEFT
+    initialises the LoRA A and B matrices in fp32; this reverses both. The two
+    halves are gated separately because they are separate effects and the dtype
+    decomposition attributes memory to one or the other: `modules` covers
+    norms, embeddings and lm_head, `lora` covers PEFT's autocast_adapter_dtype
+    initialisation. Turning `lora` off alone reproduces the BF16-base
+    configuration, where prepare_model_for_kbit_training never ran and only the
+    adapters were left in fp32.
     """
     target = torch.bfloat16
 
@@ -126,12 +118,12 @@ def _cast_to_bf16(model, *, modules: bool = True, lora: bool = True) -> None:
 
 
 def _collect_dtype_report(model) -> dict:
-    """Report the dtype of each policy-managed parameter category.
+    """Report the dtype of each parameter category the policy manages.
 
-    Uses ``named_modules`` for embed / lm_head so tied-embedding models (e.g.
-    Llama-3.2) where ``lm_head.weight`` is not a distinct parameter still get
-    an entry. Returns lists so multi-dtype anomalies surface in the JSON.
-    Expected after Arm 4: every list is ``['torch.bfloat16']``.
+    Uses named_modules for embed and lm_head so that tied-embedding models such
+    as Llama-3.2, where lm_head.weight is not a separate parameter, still get an
+    entry. Returns lists so a mixed-dtype category shows up in the JSON. After
+    the policy every list should read ['torch.bfloat16'].
     """
     categories = {'norms': set(), 'embed': set(), 'lm_head': set(), 'lora': set()}
     # Params (LoRA + norms picked up via .weight below anyway)
@@ -139,7 +131,7 @@ def _collect_dtype_report(model) -> dict:
         n = name.lower()
         if 'lora_' in n:
             categories['lora'].add(str(param.dtype))
-    # Modules — cover tied lm_head where its weight is shared with embed.
+    # Modules: cover the tied lm_head, whose weight is shared with embed.
     for name, module in model.named_modules():
         cls = type(module).__name__
         w = getattr(module, 'weight', None)
@@ -156,7 +148,9 @@ def _collect_dtype_report(model) -> dict:
 
 
 def _is_lm_head_tied(model) -> bool:
-    """Detect tied embed<->lm_head weight (Llama-3.2 default)."""
+    """Return True when lm_head shares its weight with the input embedding, as
+    Llama-3.2 does by default.
+    """
     embed_w = lm_head_w = None
     for name, module in model.named_modules():
         if isinstance(module, nn.Embedding) and 'embed_tokens' in name:
@@ -173,46 +167,29 @@ def apply_dtype_policy(model, *,
                        bf16_rmsnorm: bool = True,
                        bf16_params: bool = True,
                        bf16_lora: bool = True) -> Tuple[nn.Module, set, dict]:
-    """Apply Arm 4 dtype policy in place and return (model, param_ptrs, dtype_report).
+    """Apply the policy in place and return (model, param_ptrs, dtype_report).
 
-    Parameters
-    ----------
-    model : nn.Module
-        A PEFT-wrapped model *after* ``get_peft_model`` (step 3 in INVARIANT-7).
-        For NF4 runs, ``prepare_model_for_kbit_training`` must already have
-        been called on the base before ``get_peft_model``.
-    weight_quant : {'bf16', 'nf4'}
-        Recorded on ``dtype_report['weight_quant']``. Does not gate the cast:
-        BF16-base runs need the RMSNorm swap too (§3.4).
-    bf16_rmsnorm : bool, default True
-        Whether to swap ``*RMSNorm`` for :class:`BF16RMSNorm`. Off only for
-        ablation of the RMSNorm fp32 upcast.
-    bf16_params : bool, default True
-        Whether to cast norms / embeddings / lm_head to bf16, reversing the
-        ``prepare_model_for_kbit_training`` upcast. Off only for ablation.
-    bf16_lora : bool, default True
-        Whether to cast PEFT LoRA A/B to bf16, reversing ``autocast_adapter_dtype``.
-        Off only for ablation. Leaving it off makes every adapter site save an
-        fp32 copy of its input activation, which is the effect the dtype
-        decomposition isolates.
+    `model` is a PEFT-wrapped model after get_peft_model; for NF4 runs,
+    prepare_model_for_kbit_training must already have run on the base.
+    `weight_quant` ('bf16' or 'nf4') is only recorded in the report; the
+    RMSNorm swap applies to BF16-base runs as well. The three flags exist for
+    ablation: `bf16_rmsnorm` swaps the norms, `bf16_params` casts norms,
+    embeddings and lm_head, and `bf16_lora` casts the LoRA A and B matrices.
+    Leaving `bf16_lora` off makes every adapter site keep an fp32 copy of its
+    input activation, which is the effect the dtype decomposition in the paper
+    isolates.
 
-    Returns
-    -------
-    model : nn.Module
-        The same object, mutated in place.
-    param_ptrs : set[int]
-        Storage pointers for every parameter, collected *after* all casts
-        (INVARIANT-7). Feed this to :class:`oamp.pack_hooks.PackHooks`.
-    dtype_report : dict
-        Contains ``weight_quant``, ``bf16_rmsnorm``, per-category dtype lists,
-        and RMSNorm swap counts. Persist to the result JSON.
+    `param_ptrs` is the set of storage pointers of every parameter, collected
+    after the casts; pass it to PackHooks so parameters are never packed.
+    `dtype_report` records weight_quant, the flags, the dtype of each parameter
+    category and the swap counts, and belongs in the result JSON.
     """
     if weight_quant not in ('bf16', 'nf4'):
         raise ValueError(f"weight_quant must be 'bf16' or 'nf4', got {weight_quant!r}")
 
     tied_before = _is_lm_head_tied(model)
 
-    # (4) cast
+    # 4. cast
     _cast_to_bf16(model, modules=bf16_params, lora=bf16_lora)
 
     # If embed<->lm_head was tied and cast happened to break it (order-dependent
@@ -223,13 +200,13 @@ def apply_dtype_policy(model, *,
         elif hasattr(model, 'base_model') and hasattr(model.base_model, 'tie_weights'):
             model.base_model.tie_weights()
 
-    # (5) RMSNorm swap — applied for both bf16 and nf4 (§3.4)
+    # 5. RMSNorm swap, for bf16 and nf4 bases alike
     if bf16_rmsnorm:
         n_swapped, seen = _swap_rmsnorm_for_bf16(model)
     else:
         n_swapped, seen = 0, set()
 
-    # (6) param_ptrs — after (4)+(5) so cast-induced new storage is picked up
+    # 6. parameter pointers, after the casts so the new storage is what gets recorded
     param_ptrs = collect_param_ptrs(model)
 
     dtype_report = {

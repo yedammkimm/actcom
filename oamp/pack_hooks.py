@@ -1,54 +1,54 @@
-"""PackHooks — single ``saved_tensors_hooks`` implementation for all methods.
+"""PackHooks: the saved_tensors_hooks context that compresses what autograd keeps for backward.
 
-Spec v1 §2. Replaces legacy ``NativeOAMPHooks`` and ``NaiveFP4AllHooks``.
+The forward pass is untouched. When autograd saves a tensor, pack() decides
+whether and how to compress it, and unpack() dequantizes it when backward
+needs it. run_experiment.py checks before every run that the loss with the
+hooks on equals the loss with them off.
 
-Four methods are expressed by ``(fp8_ratio, routing)``:
+Which tensors are compressed is decided by a fixed chain of filters. The
+order matters:
 
-    ==============  ==========  =========
-    method          fp8_ratio   routing
-    ==============  ==========  =========
-    naive_fp4       0.0         'none'
-    uniform_fp8     1.0         'none'
-    random_mixed    e.g. 0.2    'random'      (mask_seed required)
-    oamp            e.g. 0.2    'maxabs'
-    ==============  ==========  =========
+    1.  parameters (storage pointer in param_ptrs)         stored as is
+    2.  tensors with fewer than min_numel elements          stored as is
+    3.  non-floating-point tensors                          stored as is
+    4.  tensors whose last dim is in skip_last_dims         stored as is
+        (the logits, (B*L, vocab); packing them corrupts the gradient,
+        which is why this test precedes the rank and alignment tests)
+    5.  last dim not a multiple of group_size               stored as is
+    5b. 4-D tensors, when pack_4d_mode is 'skip'            stored as is
+    6.  4-D tensors, the attention head views and the rotary tables:
+        pack_4d_mode 'fp8' stores them as blockwise FP8, 'chan_int4' as
+        per-channel INT4, 'fp4' on the 4-bit body grid
+    7.  everything else, by method: fp8_ratio <= 0 is uniform 4-bit,
+        fp8_ratio >= 1 is uniform FP8, anything between is the anchor mix
 
-Boundary handling (§2.3): ``fp8_ratio<=0.0`` and ``fp8_ratio>=1.0`` route to a
-uniform packer so ``naive_fp4`` and ``uniform_fp8`` are *not* clipped by the
-``max(1, ...)`` guard that legacy bilevel used.
+Step 6 precedes step 7 so that pack_4d_mode governs the head views whatever
+the method is. The paper's main finding is about step 6: compressing the
+Q/K head views on a blockwise 4-bit grid drives the gradient cosine to
+about 0.4, and FP8 restores it to 0.99.
 
-Filter order (§2.2, INVARIANT-3, INVARIANT-4):
+The method names of run_experiment.py map onto (fp8_ratio, routing):
 
-    1.  skip (param)         storage_ptr in param_ptrs
-    2.  skip (small)         numel < min_numel
-    3.  skip (non-float)     not is_floating_point()
-    4.  skip (head/vocab)    shape[-1] in skip_last_dims
-    5.  skip (misaligned)    shape[-1] % group_size != 0
-    5b. skip (4-D pass-through)   dim == 4 AND pack_4d_mode == 'skip'
-    ----- kept++ ; dedupe cache lookup -----
-    6.  4-D dispatch          dim == 4:
-           - pack_4d_mode == 'fp8' -> uniform FP8 (bits=8)
-           - pack_4d_mode == 'fp4' -> uniform FP4 (bits=4)
-    7.  method dispatch       fp8_ratio<=0 uniform FP4 / fp8_ratio>=1 uniform FP8
-                              / else bilevel (dim<=3).
+    naive_fp4      0.0       'none'      the paper's configuration
+    uniform_fp8    1.0       'none'
+    oamp           e.g. 0.2  'maxabs'    max-abs anchor variant, Section 5.2
+    random_mixed   e.g. 0.2  'random'    needs mask_seed
 
-Filter step 4 must precede step 5+ or logits ``(B*L, vocab)`` get packed and
-their backward gradient is corrupted. Step 6 must precede step 7 so
-``pack_4d_mode`` governs 4-D head-view precision independently of the method.
+fp8_ratio <= 0 and >= 1 go straight to the uniform packers, so naive_fp4
+and uniform_fp8 are never clipped by the max(1, ...) guard of the anchor
+code.
 
-pack_4d_mode (§2.6, 2026-08-16):
-    Attention head-view tensors ``(B, num_heads, L, head_dim)`` compressed at
-    FP4 corrupt backward gradients (cos ~0.4, norm ratio ~3, spike-prone).
-    Rotary ``(1,1,L,head_dim)`` is harmless (constant multiplicative path);
-    Q/K/V head views are on the Q·Kᵀ→softmax amplification path.  Setting
-    ``pack_4d_mode='fp8'`` promotes head-view precision to 8-bit and restores
-    gradient cos to >=0.99 (α-level) across all methods (D4-4 gate).
+body_encoding chooses the 4-bit grid: 'int4' (symmetric integers -7..7),
+'e2m1' (the FP4 grid 0, 0.5, 1, 1.5, 2, 3, 4, 6 with a sign bit) or
+'gact_affine' (the 4-bit affine quantizer of GACT, for comparison;
+'gact_affine_det' is its deterministic-rounding variant).
 
-INVARIANT-12 (single-forward parity) LIMITATION:
-    Parity check is a single forward comparison; it cannot detect cross-step
-    storage-pointer recycling.  ``dedupe=True`` with saved-tensor hooks can
-    return stale packed payloads on step 7+ and produce NaN gradients.  Keep
-    ``dedupe=False`` in production.
+dedupe caches packed tensors by (storage pointer, shape, stride, offset) so
+that aliased saves are packed once. It is off by default and should stay
+off in training: the CUDA allocator can hand the same storage pointer to an
+unrelated tensor in a later step, and a cache hit then returns stale data
+(NaN at step 7, 2026-08-14). The single-forward parity check cannot catch
+this.
 """
 
 from __future__ import annotations
@@ -83,57 +83,31 @@ _BODY_ENCODINGS = ('int4', 'e2m1', 'gact_affine', 'gact_affine_det')
 
 
 class PackHooks:
-    """Single ``saved_tensors_hooks`` context.
+    """The hooks context. Build it, run forward and backward inside `with hooks:`,
+    and read hooks.pack_stats for what happened.
 
-    Parameters
-    ----------
-    fp8_ratio : float
-        Fraction of groups routed to FP8. ``0.0`` -> pure FP4, ``1.0`` -> pure FP8.
-    routing : {'maxabs', 'random', 'none'}
-        How anchor groups are picked when ``0 < fp8_ratio < 1``. ``'none'`` is
-        only valid at the boundaries (uniform).
-    group_size : int
-        Channel group size (last-dim divisor).
-    min_numel : int
-        Tensors smaller than this are stored uncompressed.
-    skip_last_dims : Iterable[int]
-        Last-dim values to skip (typically ``{vocab_size}``). Keyword-required.
-    param_ptrs : Iterable[int]
-        Storage-pointer set of trainable parameters (never pack). Keyword-required.
-    mask_seed : Optional[int]
-        Required when ``routing='random'``. Seeds a *dedicated* CUDA Generator
-        so the mask stream is isolated from the global RNG (INVARIANT-6).
-    dedupe : bool, default False
-        **Experimental — off by default.**
+    All arguments are keyword-only. fp8_ratio and routing select the method as
+    described in the module docstring; group_size is the block size along the
+    last axis and min_numel the size below which a tensor is stored as is.
+    skip_last_dims and param_ptrs have no default on purpose: pass
+    {config.vocab_size} and the pointer set from apply_dtype_policy, or an
+    empty set to opt out explicitly. pack_4d_mode ('fp4', 'fp8', 'chan_int4' or
+    'skip') sets the treatment of 4-D saved tensors and body_encoding ('int4',
+    'e2m1', 'gact_affine' or 'gact_affine_det') the 4-bit grid. mask_seed is
+    required for routing='random' and sr_seed for stochastic_rounding=True;
+    each seeds its own CUDA generator so the global RNG stream, which drives
+    dropout, is untouched.
 
-        Cache packed tensors by ``(storage_ptr, shape, stride, storage_offset)``
-        to skip pack computation on aliased backward saves (Q/K/V from the same
-        input). This can save wall time when the audit shows bilevel raw/unique
-        ratios of ~×2.69 on 3B.
+    stochastic_rounding replaces round() in the 4-bit quantizers with
+    per-element Bernoulli rounding, so the quantizer is unbiased in expectation
+    (E[q(x)] = x). GACT argues this is needed for compressed training to remain
+    a valid SGD algorithm, since deterministic rounding can accumulate error in
+    the same direction step after step. It applies to the 4-bit body only; FP8
+    keeps deterministic rounding, because the e4m3 mantissa is fine enough that
+    the bias is negligible.
 
-        Known unsafe cases (2026-08-14 NaN at step 7):
-        - **Cross-step pointer recycling.** ``saved_tensors_hooks`` releases the
-          original tensor after pack; the CUDA allocator can reassign the same
-          storage_ptr to an unrelated tensor in a later forward. If the reused
-          tensor happens to share shape/stride/offset, the cache returns stale
-          packed data and backward corrupts gradients.
-        - INVARIANT-12 parity check (single-forward) does NOT catch this. The
-          cache-clear on ``__enter__`` only helps within one forward pass.
-
-        Do not enable in training runs until content fingerprinting is added
-        (GACT §5.3 footprint: pointer + sampled elements + tensor sum).
-    stochastic_rounding : bool, default False
-        Replace deterministic ``round()`` in FP4 quantization with per-element
-        Bernoulli(prob) rounding so the quantizer is unbiased in expectation
-        (E[q(x)] == x). GACT (Liu et al. 2022) argues this is required for
-        activation compression to remain a valid SGD algorithm; deterministic
-        absmax rounding is biased and can accumulate the same-direction error
-        step after step. Applies to FP4 body groups (bilevel) and uniform_fp4.
-        FP8 (uniform_fp8, anchors) keeps deterministic rounding because e4m3's
-        mantissa is fine enough that stochastic effects would swamp the bias.
-    sr_seed : Optional[int]
-        Required when ``stochastic_rounding=True``. Seeds a *dedicated* CUDA
-        Generator so the SR stream is isolated from the global RNG.
+    dedupe is the experimental cache described in the module docstring. Off by
+    default; leave it off in training.
     """
 
     def __init__(self, *,
@@ -149,7 +123,7 @@ class PackHooks:
                  sr_seed: Optional[int] = None,
                  pack_4d_mode: str = 'fp4',
                  body_encoding: str = 'e2m1'):
-        # INVARIANT-1: sentinel forces callers to pass filter sets explicitly.
+        # The sentinel forces callers to pass the filter sets explicitly.
         if skip_last_dims is _SENTINEL:
             raise TypeError(
                 "PackHooks: skip_last_dims is required. "
@@ -163,16 +137,16 @@ class PackHooks:
         if routing not in _ROUTING_CHOICES:
             raise ValueError(
                 f"PackHooks: routing must be one of {_ROUTING_CHOICES}, got {routing!r}.")
-        # INVARIANT-2: random routing needs a dedicated seed.
+        # Random routing needs its own seed.
         if routing == 'random' and mask_seed is None:
             raise ValueError(
                 "PackHooks: routing='random' requires mask_seed (dedicated RNG stream).")
         if stochastic_rounding and sr_seed is None:
             raise ValueError(
                 "PackHooks: stochastic_rounding=True requires sr_seed (dedicated RNG stream).")
-        # gact_affine uses its own internal SR (independent of body-level SR
-        # for INT4). Falls back to a deterministic default seed if the caller
-        # didn't set one — this keeps the constructor callable from probes.
+        # gact_affine has its own stochastic rounding, separate from the INT4 body's.
+        # Fall back to a fixed seed when the caller set none, so probes can
+        # construct the hooks without one.
         if body_encoding == 'gact_affine' and sr_seed is None:
             sr_seed = 42
         if pack_4d_mode not in _PACK_4D_MODES:
@@ -201,7 +175,7 @@ class PackHooks:
         self._sr_gen: Optional[torch.Generator] = None      # created lazily
         self.pack_4d_mode = pack_4d_mode
         self.body_encoding = body_encoding
-        # E2M1 constants materialised once on __enter__ to avoid per-tensor host->device copies.
+        # E2M1 constants are materialised once on __enter__ to avoid a host-to-device copy per tensor.
         self._e2m1_levels_gpu: Optional[torch.Tensor] = None
         self._e2m1_bounds_gpu: Optional[torch.Tensor] = None
 
@@ -245,12 +219,10 @@ class PackHooks:
             'dedupe_miss': 0,
         }
 
-    # ------------------------------------------------------------
     # Hook entry points
-    # ------------------------------------------------------------
 
     def pack(self, tensor: torch.Tensor):
-        # 1. param (INVARIANT-5: storage_ptr from untyped_storage)
+        # 1. parameters (storage pointer from untyped_storage)
         if self._is_param(tensor):
             self.pack_stats['skip_param'] += 1
             return tensor
@@ -262,11 +234,11 @@ class PackHooks:
         if not tensor.is_floating_point():
             self.pack_stats['skip_non_float'] += 1
             return tensor
-        # 4. head / vocab   ← must precede dim + misaligned checks (INVARIANT-3)
+        # 4. head / vocab; must precede the rank and alignment checks
         if tensor.dim() > 0 and tensor.shape[-1] in self.skip_last_dims:
             self.pack_stats['skip_head'] += 1
             return tensor
-        # 5. misaligned (INVARIANT-4)
+        # 5. misaligned
         if tensor.dim() > 0 and tensor.shape[-1] % self.group_size != 0:
             self.pack_stats['skip_misaligned'] += 1
             return tensor
@@ -281,7 +253,7 @@ class PackHooks:
         self.pack_stats['kept'] += 1
         self.pack_stats['numel_kept'] += tensor.numel()
 
-        # Dedupe cache lookup — aliased saves (e.g. Q/K/V input) hit here.
+        # Dedupe cache lookup; aliased saves (the shared Q/K/V input) hit here.
         # Key: (storage_ptr, shape, stride, storage_offset) so different views
         # of the same storage are treated as distinct tensors.
         cache_key = None
@@ -299,12 +271,10 @@ class PackHooks:
             self.pack_stats['dedupe_miss'] += 1
 
         # 6-7. dispatch
-        # 4-D branch fires FIRST so pack_4d_mode governs head-view precision
-        # regardless of which method (naive_fp4 / uniform_fp8 / oamp /
-        # random_mixed) the caller is running. Rationale: 4-D head-view
-        # compression to FP4 corrupts backward gradients across all γ variants
-        # (gradient probe 2026-08-16); FP8 recovery is a cross-method
-        # implementation principle, not an OAMP-specific hyperparameter.
+        # The 4-D branch comes first so pack_4d_mode governs the head views whatever
+        # method the caller is running: compressing the head views to four bits
+        # corrupts the backward pass under every method (gradient probe, 2026-08-16),
+        # so the FP8 route is a property of the tensor, not of the method.
         if tensor.dim() == 4:
             self.pack_stats['uniform'] += 1
             if self.pack_4d_mode == 'fp8':
@@ -365,9 +335,7 @@ class PackHooks:
             return self._unpack_chan_int4_4d(packed)
         return packed
 
-    # ------------------------------------------------------------
     # Context manager
-    # ------------------------------------------------------------
 
     def __enter__(self):
         # Clear the dedupe cache per forward pass so a storage_ptr reused later
@@ -380,21 +348,15 @@ class PackHooks:
     def __exit__(self, *args):
         self._ctx.__exit__(*args)
 
-    # ------------------------------------------------------------
     # Effective bits accounting
-    # ------------------------------------------------------------
 
     def effective_bits(self) -> dict:
-        """Element-weighted effective bits/element for all packed activations.
+        """Element-weighted bits per element over everything that was packed.
 
-        Nominal bits by branch:
-            uniform_fp4_{3d,4d}: 4
-            uniform_fp8_{3d,4d}: 8
-            bilevel:             4 + 4 * fp8_ratio  (γ-interpolation of body/anchor)
-
-        ``element_bits`` is the raw payload cost. ``byte_bits`` adds one FP16
-        scale (16 bits) per ``group_size`` elements — the storage overhead
-        seen in checkpoint bytes.
+        Nominal bits by branch: 4 for uniform_fp4_{3d,4d}, 8 for uniform_fp8_{3d,4d},
+        and 4 + 4 * fp8_ratio for the anchor mix. `element_bits` is the payload
+        alone; `byte_bits` adds one fp16 scale (16 bits) per group_size elements,
+        the overhead that shows up in checkpoint bytes.
         """
         s = self.pack_stats
         n_fp4  = s['numel_uniform_fp4_3d'] + s['numel_uniform_fp4_4d']
@@ -435,9 +397,7 @@ class PackHooks:
         payload['body_encoding'] = self.body_encoding
         return payload
 
-    # ------------------------------------------------------------
     # Filters
-    # ------------------------------------------------------------
 
     def _is_param(self, tensor: torch.Tensor) -> bool:
         if not self.param_ptrs:
@@ -455,32 +415,29 @@ class PackHooks:
             sp = tensor.data_ptr() if tensor.numel() > 0 else 0
         return (sp, tuple(tensor.shape), tuple(tensor.stride()), int(tensor.storage_offset()))
 
-    # ------------------------------------------------------------
-    # Uniform packers (§2.3 boundary cases)
-    # ------------------------------------------------------------
+    # Uniform packers (the fp8_ratio boundaries)
 
     def _n_block_scales(self, tensor: torch.Tensor) -> int:
-        """Scale count for a blockwise branch: one per `group_size` elements,
-        with the tail group counted (the quantisers zero-pad up to a full
-        group)."""
+        """Number of scales of a blockwise branch: one per group_size elements, with
+        the tail group counted, since the quantizers zero-pad up to a full group.
+        """
         gs = self.group_size
         return (tensor.numel() + gs - 1) // gs
 
     def _pack_chan_int4_4d(self, tensor: torch.Tensor):
-        """Per-channel symmetric INT4 for 4-D head views ``(B, H, L, head_dim)``.
+        """Per-channel symmetric INT4 for 4-D head views (B, H, L, head_dim).
 
-        The tensor is viewed as ``(B*L, H*head_dim)`` so that channels are the
-        last axis and tokens lead; absmax reduces over the token axis, giving
-        one scale per channel. Unlike the audit probe's version, which keeps
-        int8 codes and fp32 scales because it only measures gradient error,
-        this stores nibble-packed codes and fp16 scales so the mode actually
-        costs four bits per element.
+        The tensor is viewed as (B*L, H*head_dim), channels last and tokens
+        leading, and absmax reduces over the token axis, giving one scale per
+        channel. The audit probe's version keeps int8 codes and fp32 scales because
+        it only measures gradient error; this one stores nibble-packed codes and
+        fp16 scales so that the mode really costs four bits per element.
 
-        Scale overhead is ``16 * D / (B*L*D) = 16/(B*L)`` bits per element,
-        against ``16/group_size`` for the blockwise branches. With this
-        project's GSM8K sequences (harmonic-mean length 152 at batch size 1)
-        that is 0.105 against 0.125, so the two are near-identical in memory —
-        this mode is about whether four bits can be made *safe*, not cheap.
+        The scale overhead is 16 * D / (B*L*D) = 16/(B*L) bits per element, against
+        16/group_size for the blockwise branches. With this project's GSM8K
+        sequences (harmonic-mean length 152 at batch size 1) that is 0.105 against
+        0.125, so the two are nearly identical in memory. The mode exists to test
+        whether four bits can be made safe, not cheap.
         """
         assert tensor.dim() == 4, "_pack_chan_int4_4d expects (B, H, L, head_dim)"
         B, H, L, dh = tensor.shape
@@ -519,9 +476,7 @@ class PackHooks:
         x = (data.to(torch.bfloat16).float() * scale.float()).to(dtype)
         return x.reshape(-1)[:n].reshape(shape)
 
-    # ------------------------------------------------------------
-    # Bilevel packer (§2.4 routing)
-    # ------------------------------------------------------------
+    # Anchor packer (0 < fp8_ratio < 1)
 
     def _pack_bilevel(self, tensor: torch.Tensor):
         orig_shape = tensor.shape
@@ -550,7 +505,7 @@ class PackHooks:
         with torch.no_grad():
             fp8_mask = self._select_anchor_mask(x, num_groups, K)
 
-        # FP8 anchor groups (§2.5: amax in source dtype)
+        # FP8 anchor groups (absmax taken in the source dtype)
         anchor_groups = x[fp8_mask]
         anchor_absmax = anchor_groups.abs().amax(dim=-1, keepdim=True).clamp(min=1e-8).float()
         anchor_scale = anchor_absmax / _FP8_MAX
@@ -583,12 +538,12 @@ class PackHooks:
 
     def _select_anchor_mask(self, x: torch.Tensor, num_groups: int, K: int) -> torch.Tensor:
         if self.routing == 'maxabs':
-            # §2.5: amax on source dtype, only reduced result upcast.
+            # absmax in the source dtype; only the reduced result is upcast.
             importance = x.abs().amax(dim=-1).float()
         elif self.routing == 'random':
             gen = self._get_mask_generator(x.device)
             importance = torch.rand(num_groups, device=x.device, generator=gen)
-        else:  # 'none' — shouldn't reach here (uniform boundary handled earlier)
+        else:  # 'none' should not reach here; the uniform boundary is handled earlier
             importance = x.abs().amax(dim=-1).float()
         _, top_idx = importance.topk(K)
         mask = torch.zeros(num_groups, dtype=torch.bool, device=x.device)
@@ -601,14 +556,13 @@ class PackHooks:
             self._mask_gen = torch.Generator(device=device).manual_seed(int(self.mask_seed))
         return self._mask_gen
 
-    # ------------------------------------------------------------
-    # FP4 / FP8 group quantizers
-    # ------------------------------------------------------------
+    # 4-bit / FP8 group quantizers
 
     def _quantize_fp4(self, tensor: torch.Tensor):
-        """Body-encoding dispatcher. ``self.body_encoding`` selects INT4 (uniform
-        signed 4-bit, backward-compat) or E2M1 (non-uniform FP4 grid). Returns
-        (packed_uint8, scale, pre_pad_numel)."""
+        """Dispatch on self.body_encoding: INT4 (symmetric integers), E2M1 (the FP4
+        grid) or the GACT affine quantizer. Returns (packed_uint8, scale,
+        pre_pad_numel).
+        """
         gs = self.group_size
         x = tensor.reshape(-1)
         n = x.numel()
@@ -626,7 +580,7 @@ class PackHooks:
         return packed, scale, n
 
     def _quantize_fp4_groups(self, x_groups: torch.Tensor):
-        """Dispatcher used by bilevel body. See _quantize_fp4."""
+        """Dispatcher used by the anchor packer's body groups; see _quantize_fp4."""
         if self.body_encoding == 'e2m1':
             return self._quantize_e2m1_groups(x_groups)
         if self.body_encoding == 'gact_affine':
@@ -636,16 +590,18 @@ class PackHooks:
         return self._quantize_int4_groups(x_groups)
 
     def _quantize_int4_groups(self, x_groups: torch.Tensor):
-        """Symmetric INT4 with per-group absmax scale (legacy 'FP4' body).
+        """Symmetric INT4 with a per-group absmax scale, the grid the earlier code
+        called FP4.
 
-        No numel is returned because it's ambiguous across callers: uniform_fp4
-        wants the pre-pad count, bilevel body wants ``G*gs``. Compute at the call site.
+        No element count is returned because callers want different ones:
+        uniform_fp4 wants the pre-padding count and the anchor body wants G * gs.
+        Each computes its own.
         """
         absmax = x_groups.abs().amax(dim=-1, keepdim=True).clamp(min=1e-8)
         scale = absmax / _FP4_MAX
         # Clamp BEFORE SR: fp roundoff can push abs-max elements to y=±7.0000...1,
         # and a post-round clamp reintroduces bias exactly at the boundary,
-        # defeating E[q(x)] = x. Clamped y ∈ [-7,7] ⇒ floor∈[-7,6] ⇒ q∈[-7,7].
+        # defeating E[q(x)] = x. With y clamped to [-7, 7], floor lands in [-7, 6] and q in [-7, 7].
         y = (x_groups / scale).clamp(-_FP4_MAX, _FP4_MAX)
         if self.stochastic_rounding:
             floor_y = torch.floor(y)
@@ -660,11 +616,11 @@ class PackHooks:
         return packed, scale.squeeze(-1).to(torch.float16)
 
     def _quantize_e2m1_groups(self, x_groups: torch.Tensor):
-        """E2M1 FP4 with per-group absmax scale.
+        """E2M1 FP4 with a per-group absmax scale.
 
-        Code layout (per nibble): [sign_bit(1) | magnitude_index(3)].
-        Magnitudes come from _E2M1_LEVELS_POS. sign_bit=0 means positive, 1 negative.
-        (-0, +0) both map to level 0 and dequantise to 0 (harmless duplicate encoding).
+        Each nibble is [sign bit | 3-bit magnitude index]; the magnitudes come from
+        _E2M1_LEVELS_POS, and sign bit 0 is positive. Both signed zeros map to
+        level 0 and dequantize to 0, a harmless duplicate encoding.
         """
         if self.stochastic_rounding:
             raise NotImplementedError(
@@ -687,13 +643,13 @@ class PackHooks:
         return packed, scale.squeeze(-1).to(torch.float16)
 
     def _quantize_gact_affine_groups(self, x_groups: torch.Tensor, *, stochastic: bool):
-        """GACT-style 4-bit affine quantization (Chen et al. 2021).
+        """The 4-bit affine quantizer of GACT (Chen et al. 2021).
 
-        Per-group (mn, mx) → 4-bit unsigned code in [0, 15]. Stochastic rounding
-        is the paper's default; the deterministic variant is exposed for
-        controlled ablation. Storage per group is 2 fp16 scalars (scale + mn),
-        packed into a single (G, 2) fp16 tensor to preserve the 2-tuple
-        signature shared by INT4 and E2M1.
+        Per group, (mn, mx) map to an unsigned code in 0..15. Stochastic rounding
+        is the paper's default; the deterministic variant is exposed for a
+        controlled comparison. Each group stores two fp16 scalars, scale and mn,
+        packed into one (G, 2) fp16 tensor so the two-tuple return signature of the
+        INT4 and E2M1 quantizers is preserved.
         """
         mn = x_groups.min(dim=-1, keepdim=True).values                      # (G, 1)
         mx = x_groups.max(dim=-1, keepdim=True).values                      # (G, 1)
@@ -709,7 +665,7 @@ class PackHooks:
             q = y.round()
         q = q.clamp(0, _GACT_MAX).to(torch.uint8)
         packed = pack_uint4(q)
-        # Stack scale, mn along last dim → (G, 2) fp16. Downstream sees an
+        # Stack scale and mn along the last dim into a (G, 2) fp16 tensor. Downstream sees an
         # opaque "scale" tensor of shape (G, 2); dequant reads (scale, mn) via
         # unbind(-1) so the 2-tuple call signature is preserved.
         scale_and_mn = torch.stack(
@@ -728,7 +684,7 @@ class PackHooks:
             return self._dequantize_e2m1(packed, scale, original_n, dtype)
         if self.body_encoding in ('gact_affine', 'gact_affine_det'):
             return self._dequantize_gact_affine(packed, scale, original_n, dtype)
-        # INT4 legacy path
+        # INT4 path
         x_u = unpack_uint4(packed).reshape(-1, gs)
         x_q = x_u.to(dtype) - _FP4_MAX
         x = x_q * scale.to(dtype).unsqueeze(-1)
@@ -749,8 +705,9 @@ class PackHooks:
         return x.reshape(-1)[:original_n]
 
     def _dequantize_gact_affine(self, packed, scale_and_mn, original_n: int, dtype):
-        """Paired with _quantize_gact_affine_groups. ``scale_and_mn`` is (G, 2)
-        fp16; split into scale and mn, then apply x = q * scale + mn."""
+        """Paired with _quantize_gact_affine_groups: split the (G, 2) fp16 tensor into
+        scale and mn, then x = q * scale + mn.
+        """
         gs = self.group_size
         q = unpack_uint4(packed).reshape(-1, gs)                  # uint8, 0..15
         scale, mn = scale_and_mn.unbind(-1)                       # each (G,)
@@ -772,9 +729,7 @@ class PackHooks:
         return x_scaled, scale.to(torch.float16), n
 
 
-# ----------------------------------------------------------------
 # Factory helpers
-# ----------------------------------------------------------------
 
 def make_pack_hooks(method: str, *,
                     fp8_ratio: float = 0.20,
@@ -788,15 +743,12 @@ def make_pack_hooks(method: str, *,
                     sr_seed: Optional[int] = None,
                     pack_4d_mode: str = 'fp4',
                     body_encoding: str = 'e2m1') -> PackHooks:
-    """Build a :class:`PackHooks` for one of the canonical method names.
+    """Build a PackHooks for one of the method names of run_experiment.py.
 
-    Method mapping (spec §2.1):
-
-    - ``'standard'`` -> caller should use ``contextlib.nullcontext()`` instead.
-    - ``'naive_fp4'`` -> fp8_ratio=0.0, routing='none'
-    - ``'uniform_fp8'`` -> fp8_ratio=1.0, routing='none'
-    - ``'oamp'`` -> ``fp8_ratio``, routing='maxabs'
-    - ``'random_mixed'`` -> ``fp8_ratio``, routing='random' (mask_seed required)
+    'naive_fp4' is fp8_ratio 0.0 with routing 'none', 'uniform_fp8' is 1.0 with
+    'none', 'oamp' is the given fp8_ratio with 'maxabs', and 'random_mixed' the
+    given fp8_ratio with 'random' (mask_seed required). For 'standard' the
+    caller uses contextlib.nullcontext() instead.
     """
     if method == 'standard':
         raise ValueError(
@@ -824,10 +776,10 @@ def make_pack_hooks(method: str, *,
 
 
 def collect_param_ptrs(model) -> set:
-    """Collect ``untyped_storage().data_ptr()`` for every model parameter.
+    """Collect untyped_storage().data_ptr() of every model parameter.
 
-    Call this *after* dtype casting (INVARIANT-7): casting reallocates storage
-    and invalidates pre-cast pointers.
+    Call this after the dtype casts: casting reallocates storage and makes
+    earlier pointers stale.
     """
     ptrs = set()
     for p in model.parameters():

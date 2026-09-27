@@ -1,24 +1,25 @@
-"""Gradient-error probe: which tensors' compression corrupts gradients most?
+"""Gradient-error probe: which tensors' compression corrupts the gradient most?
 
-Design:
-  - Two checkpoints:
-      A. step 0  = fresh Arm 4 model (LoRA B=0, γ shortcut baseline)
-      B. step ~300 = pilot_sr_lr adapter (SR-trained, closest available
-         to user-requested "step 500"; caveats logged)
-  - Fixed batch: seed=0 randint, B=1 L=512 (matches audit conditions)
-  - For each filter F ∈ {none, γ full, α_repro, MLP_only, attn_proj_only,
-                         attn_4D_only, drop_4D}:
-      * gate ctx.pack: compress tensor iff F(shape,dtype,role) is True
-      * forward + backward, collect p.grad
-      * report ||g||, ||g − g_true||, cos(g, g_true)
-  - g_true (no compression) is computed ONCE per checkpoint and reused.
-  - Additivity check: Σ_i (g_i − g_true) vs (g_γ_full − g_true).
+Two checkpoints are probed: step 0, a fresh model with the bf16 policy and
+LoRA B = 0, and optionally a trained adapter given through the
+GRAD_PROBE_ADAPTER environment variable (the pilot adapter at about step
+300 was the closest available to the step-500 state originally wanted, and
+its caveats are logged). The batch is fixed: seed 0, B=1, L=512.
 
-γ + `maxabs` routing has NO stochastic element, so a single measurement per
-filter is exact. If ever probing SR or random_mixed, the caller must pass
-``sr_seed`` / ``mask_seed`` and (optionally) average across seeds.
+For each filter F (none, everything, the earlier implementation's set, MLP
+only, attention projections only, attention 4-D only, everything but 4-D,
+and the later additions below) pack() is gated so that a tensor is
+compressed only when F(shape, dtype, role) is true; one forward and
+backward collects every parameter gradient, and ||g||, ||g - g_true|| and
+cos(g, g_true) are reported. g_true, the uncompressed gradient, is computed
+once per checkpoint. An additivity check compares the sum of the
+per-filter errors with the error of compressing everything.
 
-Output: printed table + JSON at results/gradient_error_probe_<ts>.json.
+Max-abs routing has no random element, so one measurement per filter is
+exact. Probing stochastic rounding or random routing would need sr_seed or
+mask_seed and, ideally, an average over seeds.
+
+Output: a printed table and results/gradient_error_probe_<timestamp>.json.
 """
 
 from __future__ import annotations
@@ -54,14 +55,12 @@ CACHE = "/app/hf_cache"
 DEV = torch.device("cuda:0")
 B, L = 1, 512
 
-# Trained adapter (non-SR γ, 300 steps, lr=2e-4, seed 42 — production match).
+# Trained adapter (deterministic rounding, 300 steps, lr=2e-4, seed 42, matching production).
 # Set to '' or nonexistent path to skip checkpoint B automatically.
 ADAPTER = os.environ.get('GRAD_PROBE_ADAPTER', '')
 
 
-# ----------------------------------------------------------------
-# Arm 4 model loader
-# ----------------------------------------------------------------
+# Model loader
 
 def load_arm4_fresh():
     tok = AutoTokenizer.from_pretrained(MODEL, cache_dir=CACHE, local_files_only=True)
@@ -85,7 +84,7 @@ def load_arm4_fresh():
 
 
 def load_arm4_trained(adapter_path: str):
-    """Fresh Arm 4 + swap in a saved LoRA adapter state_dict."""
+    """Fresh model under the bf16 policy, with a saved LoRA adapter state_dict swapped in."""
     m, tok, param_ptrs = load_arm4_fresh()
     if os.path.isdir(adapter_path):
         from peft.utils.save_and_load import set_peft_model_state_dict
@@ -109,9 +108,7 @@ def _read_adapter_state(path):
     raise FileNotFoundError(f"no adapter file in {path}")
 
 
-# ----------------------------------------------------------------
 # Module attribution (audit script style)
-# ----------------------------------------------------------------
 
 _MODULE_BUCKETS = [
     ('q_proj', 'q_proj'), ('k_proj', 'k_proj'), ('v_proj', 'v_proj'),
@@ -123,9 +120,9 @@ _MODULE_BUCKETS = [
 
 def _bucket_role(role: str) -> str:
     # residual is tagged at TWO points per decoder layer:
-    #   - LlamaDecoderLayer.forward_pre → 'layers.N.residual_pre_attn'
+    #   - LlamaDecoderLayer.forward_pre -> 'layers.N.residual_pre_attn'
     #     (== hidden_states entering the layer, before input_layernorm)
-    #   - post_attention_layernorm.forward_pre → 'layers.N.residual_pre_mlp'
+    #   - post_attention_layernorm.forward_pre -> 'layers.N.residual_pre_mlp'
     #     (== hidden_states after residual_1 + attn_out, before MLP)
     # These are DIFFERENT tensors with different distributions and get
     # separate roles so [4] can compare Δcos between them.
@@ -143,9 +140,10 @@ def _bucket_role(role: str) -> str:
 
 
 def register_attribution(model, ptr_map: dict) -> list:
-    """Linear.forward → tag input/output storage_ptrs.
-    LlamaDecoderLayer.forward_pre  → 'residual_pre_attn' (layer entry).
-    post_attention_layernorm.forward_pre → 'residual_pre_mlp' (MLP entry)."""
+    """Linear.forward tags the storage pointers of its input and output;
+    LlamaDecoderLayer.forward_pre tags 'residual_pre_attn' (layer entry) and
+    post_attention_layernorm.forward_pre tags 'residual_pre_mlp' (MLP entry).
+    """
     handles = []
     for name, mod in model.named_modules():
         if isinstance(mod, nn.Linear):
@@ -296,14 +294,11 @@ def _short(name: str) -> str:
     return name
 
 
-# ----------------------------------------------------------------
-# Q/K compression variants for experiment 2 (2026-08-20).
-#
-# 2 x 2 design: {blockwise, per-channel} x {FP4, INT4}. Only Q/K head-views
-# are re-routed through these; everything else stays on the γ ctx original
-# pack. Storage overhead for INT4 (int8 backing) is fine here since the
-# probe only measures gradient corruption, not memory.
-# ----------------------------------------------------------------
+# Q/K compression variants for experiment 2 (2026-08-20): a 2 x 2 design,
+# {blockwise, per-channel} x {FP4, INT4}. Only the Q/K head views are re-routed
+# through these; everything else stays on the context's own pack. INT4 is
+# backed by int8 here, which is fine because the probe measures gradient
+# corruption, not memory.
 
 _INT4_MAX = 7   # signed 4-bit range [-8, 7]; asymmetric absmax scale uses 7
 # Block size for every per-block scale in this file. It was a fixed constant
@@ -463,18 +458,13 @@ def _pack_identity_chan_4d(tensor: torch.Tensor):
     return ('identity_chan', x_ch, (B, H, L, dh), orig_dtype)
 
 
-# ----------------------------------------------------------------
-# GACT-style quantizer (Experiment 1, 2026-08-25).
-#
-# Reproduces the essentials of GACT (Chen et al. 2021):
-#   * FLAT reshape: input.reshape(-1, group_size), crosses head boundaries.
-#   * Group size = 256 (GACT default; ours is 128).
-#   * Per-group AFFINE scale: (min, max) with zero-point, not symmetric absmax.
-#   * Stochastic rounding by default (GACT's unbiasedness assumption).
-#
-# Purpose: show whether §5.1's Q/K collapse is specific to our E2M1 grid or a
-# general property of blockwise 4-bit quantization on head-view tensors.
-# ----------------------------------------------------------------
+# GACT-style quantizer (experiment 1, 2026-08-25), reproducing the essentials
+# of GACT (Chen et al. 2021): a flat reshape to (-1, group_size) that crosses
+# head boundaries, group size 256 (GACT's default; ours is 128), a per-group
+# affine scale with a zero point instead of symmetric absmax, and stochastic
+# rounding by default. The question is whether the Q/K collapse is specific to
+# our E2M1 grid or a general property of blockwise 4-bit quantization on
+# head-view tensors.
 
 _GACT_GROUP_SIZE = 256
 _GACT_LEVELS = 15.0   # 4-bit unsigned range [0, 15]
@@ -525,19 +515,13 @@ def _unpack_identity_chan_4d(packed):
     return x.to(orig_dtype)
 
 
-# ----------------------------------------------------------------
-# Distribution stats (Experiment 4, 2026-08-26)
-#
-# Per-tensor summary numbers matching the ratios that INT4 and E2M1 zero out:
-#   * INT4 has scale = absmax/7 with step 1; anything |x| < absmax/14 rounds
-#     to 0. So ``frac_below_absmax_over_14`` is the fraction of elements INT4
-#     silently discards.
-#   * E2M1 has scale = absmax/6 and its smallest nonzero level is 0.5;
-#     anything |x| < absmax/24 rounds to 0. So ``frac_below_absmax_over_24``
-#     is the smaller fraction E2M1 silently discards.
-# The delta between the two is exactly the near-zero mass E2M1 preserves
-# that INT4 loses.
-# ----------------------------------------------------------------
+# Distribution stats (experiment 4, 2026-08-26): per-tensor numbers matching
+# the fractions that INT4 and E2M1 round to zero. INT4 has scale absmax/7 with
+# step 1, so anything below absmax/14 becomes 0, and frac_below_absmax_over_14
+# is the fraction INT4 discards. E2M1 has scale absmax/6 and a smallest nonzero
+# level of 0.5, so anything below absmax/24 becomes 0, and
+# frac_below_absmax_over_24 is the smaller fraction E2M1 discards. The
+# difference is the near-zero mass that E2M1 keeps and INT4 loses.
 
 @torch.no_grad()
 def _measure_role_stats(tensor: torch.Tensor) -> dict:
@@ -556,10 +540,10 @@ def _measure_role_stats(tensor: torch.Tensor) -> dict:
     absmax = float(x_abs.amax())
     if absmax == 0.0:
         return {'n': n, 'absmax': 0.0, 'all_zero': True}
-    # Theoretical thresholds — global absmax reference.
+    # Theoretical thresholds: global absmax reference.
     below14 = float((x_abs < (absmax / 14.0)).float().mean())
     below24 = float((x_abs < (absmax / 24.0)).float().mean())
-    # Empirical quant-zero ratios — actual per-group scale.
+    # Empirical quant-zero ratios: actual per-group scale.
     _, q_int4, _, _, orig_numel_i, _ = _pack_int4_block(tensor.detach())
     _, q_e2m1_bf16, _, _, orig_numel_e, _ = _pack_e2m1_block(tensor.detach())
     # Strip group_size padding so we measure only real elements.
@@ -622,10 +606,8 @@ def _aggregate_role_stats(entries: list) -> dict:
     }
 
 
-# ----------------------------------------------------------------
-# Filter specs — closures (probe-only; production filter goes through
-# `pack_skip_dims` / `pack_only_last_dims` per INVARIANT-8 spec).
-# ----------------------------------------------------------------
+# Filter specs, as closures. Probe-only; the production filter is the chain in
+# PackHooks.pack.
 
 def _alpha_paper(shape, dtype, role):
     # Paper §3.4: quantize gate_proj OUTPUT and up_proj OUTPUT plus residual.
@@ -644,7 +626,7 @@ FILTERS = [
                                  'v_proj.in', 'o_proj.in')),
     ('attn_4d',            lambda s, d, r: len(s) == 4),
     ('drop_4d',            lambda s, d, r: len(s) <= 3),
-    # ---- 4D fine breakdown (rotary vs QKV heads vs misc) ----
+    # 4D fine breakdown (rotary vs QKV heads vs misc)
     # rotary cos/sin lives at (1, 1, L, head_dim). It's aliased across every
     # attention layer so uniq=0.07 MB but *count=112* pack calls hit it.
     # Compressing angular functions to 4 bits destroys position encoding.
@@ -661,14 +643,14 @@ FILTERS = [
     ('drop_pos_and_scale', lambda s, d, r:
                            not ((len(s) == 4 and s[1] == 1) or
                                 (len(s) == 3 and bool(s) and s[1] == 24 and s[-1] != 128))),
-    # Custom: keep γ bilevel for everything <=3D, but re-route Q/K/V head
+    # Custom: keep the anchor packer for everything up to 3-D, but re-route Q/K/V head
     # views to uniform FP8 (bits=8 instead of the FP4 body mix). Coverage
     # stays 100%; memory hit is bounded by the FP8/FP4 ratio (~2x on 60 MB).
     ('qkv_heads_fp8',      ('CUSTOM_FP8_QKV',)),
-    # ---- Role-based (2026-08-20 predicate check) ----
+    # Role-based (2026-08-20 predicate check)
     # q_proj.out / k_proj.out live on the softmax input path (Q·Kᵀ amplifies).
     # v_proj.out is 4-D head-view of same shape but only multiplied by the
-    # softmax result — no amplification. o_proj.out is downstream of softmax.
+    # softmax result, so no amplification. o_proj.out is downstream of softmax.
     # Splitting rank-4 into these roles tests whether the predicate is
     # "rank == 4" (bad = all 4-D heads) or "on the softmax bilinear input path"
     # (bad = q/k only, v/o fine).
@@ -682,7 +664,7 @@ FILTERS = [
     # line each. If the two differ, the rank-4 rule can be applied to one of
     # them and the bit cost of the rule halves.
     ('q_only',             lambda s, d, r: r == 'q_proj.out'),
-    # ---- 2026-09-08: depth threshold. `protect_layers < k` leaves layers
+    # 2026-09-08: depth threshold. `protect_layers < k` leaves layers
     # below k uncompressed and compresses the Q/K head views from k upward.
     # k=0 compresses everything and must reproduce qk_only exactly; k=1 is the
     # "protect layer 0 only" configuration at 1/28 of the bit cost. A tensor
@@ -705,20 +687,20 @@ FILTERS = [
     ('qkv_all',            lambda s, d, r: r in ('q_proj.out',
                                                  'k_proj.out',
                                                  'v_proj.out')),
-    # ---- Experiment 2 (2026-08-20): 2x2 grid over (granularity, format).
+    # Experiment 2 (2026-08-20): 2x2 grid over (granularity, format).
     # All four apply ONLY to Q/K head-views. Everything else stays uncompressed
     # (identity pass-through), so cos is directly attributable to the Q/K arm.
     ('qk_fp4_block',       ('CUSTOM_QK', 'fp4', 'block')),   # current (sanity)
     ('qk_fp4_chan',        ('CUSTOM_QK', 'fp4', 'chan')),
     ('qk_int4_block',      ('CUSTOM_QK', 'int4', 'block')),
     ('qk_int4_chan',       ('CUSTOM_QK', 'int4', 'chan')),   # HyC-LoRA condition
-    # ---- Experiment 3 (2026-08-20): true E2M1 FP4 (non-uniform grid).
+    # Experiment 3 (2026-08-20): true E2M1 FP4 (non-uniform grid).
     # Compare uniform INT4 [-7,7] vs non-uniform E2M1 {0, +/-0.5, +/-1, +/-1.5,
     # +/-2, +/-3, +/-4, +/-6}; both at 4-bit. V arm tests whether the "safe"
     # role stays safe under FP4 encoding.
     ('qk_e2m1_block',      ('CUSTOM_QK', 'e2m1', 'block')),
     ('qk_e2m1_chan',       ('CUSTOM_QK', 'e2m1', 'chan')),
-    # ---- 2026-09-04: the right-hand end of the dose-response curve.
+    # 2026-09-04: the right-hand end of the dose-response curve.
     # Q/K at FP8 is what pack_4d_mode='fp8' actually stores, and it is the
     # condition shared by the two safe arms (E2M1 body and INT4 body), so this
     # is the x-coordinate at which they coincide. The older `qkv_heads_fp8`
@@ -729,12 +711,12 @@ FILTERS = [
     # Production per-channel INT4 (oamp.pack_hooks._pack_chan_int4_4d): nibble
     # packing and an fp16 scale, unlike `qk_int4_chan` above which keeps int8
     # codes and an fp32 scale because it only ever measured gradient error.
-    # The fp16 scale rounds, so the two need not agree — this filter is the one
+    # The fp16 scale rounds, so the two need not agree; this filter is the one
     # whose cosine describes what pack_4d_mode='chan_int4' actually does.
     ('qk_chan_int4_prod',  ('CUSTOM_QK', 'chan_int4', 'prod')),
     ('v_e2m1_block',       ('CUSTOM_V',  'e2m1', 'block')),
     ('v_int4_block',       ('CUSTOM_V',  'int4', 'block')),
-    # ---- Experiment 4 (2026-08-26): mechanism of E2M1 gain over INT4.
+    # Experiment 4 (2026-08-26): mechanism of E2M1 gain over INT4.
     # Extends the qk/v comparison to residual (dim<=3, role=='residual') and
     # MLP intermediate (dim<=3, role in {gate_proj.out, up_proj.out,
     # down_proj.in}). Same fresh-model probe, single session.
@@ -752,50 +734,47 @@ FILTERS = [
     ('residual_pre_mlp_e2m1',    ('CUSTOM_RESIDUAL_PRE_MLP',  'e2m1', 'block')),
     ('mlp_int4',                 ('CUSTOM_MLP',      'int4', 'block')),
     ('mlp_e2m1',                 ('CUSTOM_MLP',      'e2m1', 'block')),
-    # attention output (o_proj.in) — 3-D (B, L, D), post-attn, pre-o_proj.
+    # attention output (o_proj.in): 3-D (B, L, D), after attention, before o_proj.
     ('o_int4',                   ('CUSTOM_O',        'int4', 'block')),
     ('o_e2m1',                   ('CUSTOM_O',        'e2m1', 'block')),
     # Distribution-only pass: measures per-role absmax / median / dyn range /
     # frac-below-{absmax/14, absmax/24} / kurtosis. Zero compression, one
     # forward. Used to correlate distribution shape with E2M1 gain per role.
     ('dist_stats',               ('DIST_STATS',)),
-    # ---- Experiment 1 (2026-08-25): GACT-style flat-reshape 4-bit affine.
+    # Experiment 1 (2026-08-25): GACT-style flat-reshape 4-bit affine.
     # Tests whether §5.1's Q/K collapse is a general property of blockwise 4-bit
     # quantization on head-view tensors, or specific to our E2M1 grid.
     ('qk_gact_block',      ('CUSTOM_QK', 'gact_affine', 'block')),
     ('v_gact_block',       ('CUSTOM_V',  'gact_affine', 'block')),
-    # Deterministic (SR off) — isolates flat-reshape/granularity from SR variance.
+    # Deterministic (SR off); isolates flat reshape and granularity from SR variance.
     ('qk_gact_block_det',  ('CUSTOM_QK', 'gact_affine_det', 'block')),
     ('v_gact_block_det',   ('CUSTOM_V',  'gact_affine_det', 'block')),
-    # ---- Sanity: identity pack with the same transpose+reshape chain as
+    # Sanity: identity pack with the same transpose+reshape chain as
     # per-channel quantisers. If this returns cos=1.0000, the plumbing is
     # correct and any per-channel anomaly is quantiser-local.
     ('qk_identity_chan',   ('CUSTOM_QK', 'identity', 'chan')),
 ]
 
 
-# ----------------------------------------------------------------
 # Gradient measurement
-# ----------------------------------------------------------------
 
 def make_gated_ctx(ctx: PackHooks, ptr_map: dict, filter_pred):
-    """Return the same ctx with pack() wrapped to only compress matching tensors.
+    """Return the same ctx with pack() wrapped so that only matching tensors are compressed.
 
-    ``filter_pred`` can be:
-      - a callable ``(shape, dtype, role) -> bool``: True = compress via γ,
-        False = pass-through.
-      - the sentinel ``('CUSTOM_FP8_QKV',)``: 4D head-views go through
-        ``_pack_uniform(bits=8)``; everything else uses γ bilevel.
-      - the sentinel ``('CUSTOM_QK', fmt, gran)`` where fmt ∈ {'fp4','int4','fp8'}
-        and gran ∈ {'block','chan'}: only Q/K head-view 4-D tensors go through
-        the custom pack; everything else passes through uncompressed. This is
-        the 2×2 experiment-2 arm.
+    `filter_pred` can be a callable (shape, dtype, role) -> bool, true meaning
+    compress with the context's own packer and false meaning pass through; the
+    sentinel ('CUSTOM_FP8_QKV',), which sends 4-D head views through
+    _pack_uniform(bits=8) and everything else through the anchor packer; or the
+    sentinel ('CUSTOM_QK', fmt, gran) with fmt in {'fp4', 'int4', 'fp8'} and
+    gran in {'block', 'chan'}, which sends only the Q/K head views through the
+    custom pack and passes everything else through uncompressed. That last form
+    is the 2 x 2 arm of experiment 2.
 
-    Also populates a coverage counter dict on the ctx object
-    (``ctx._probe_coverage``) so callers can inspect how often each role
-    was seen versus matched by the filter — useful for verifying that
-    module-attribution tags actually reached pack() (transpose preserves
-    storage_ptr but contiguous() breaks the chain).
+    The wrapper also fills a coverage counter on the ctx object
+    (ctx._probe_coverage) with how often each role was seen and how often the
+    filter matched it, which is how one checks that the module-attribution tags
+    actually reached pack(): transpose preserves the storage pointer, but
+    contiguous() breaks the chain.
     """
     original_pack = ctx.pack
     original_unpack = ctx.unpack
@@ -992,7 +971,7 @@ def collect_grads(model, ids, ctx: Optional[PackHooks] = None,
     for p in model.parameters():
         if p.grad is not None:
             p.grad.zero_()
-    # Clear stale storage_ptr → role mappings from any previous forward.
+    # Clear stale storage_ptr-to-role mappings from any previous forward.
     # The allocator reuses ptrs across calls; without this, a fresh tensor
     # can land on an old ptr and inherit a stale role tag.
     if ptr_map is not None:
@@ -1020,9 +999,7 @@ def collect_grads(model, ids, ctx: Optional[PackHooks] = None,
     return grads, float(out.loss.item())
 
 
-# ----------------------------------------------------------------
 # Comparison metrics
-# ----------------------------------------------------------------
 
 def compare_grads(g_true: Dict[str, torch.Tensor],
                   g_test: Dict[str, torch.Tensor]) -> dict:
@@ -1075,9 +1052,7 @@ def bucket_by_role_and_layer(per_param: dict) -> dict:
     return out
 
 
-# ----------------------------------------------------------------
 # Runner
-# ----------------------------------------------------------------
 
 def run_checkpoint(label: str, model, tok, param_ptrs, ptr_map,
                    ids, filter_names: Optional[list] = None,
@@ -1085,13 +1060,13 @@ def run_checkpoint(label: str, model, tok, param_ptrs, ptr_map,
     vocab = model.config.vocab_size
     print(f"\n{'='*70}\n[{label}] gradient error sweep\n{'='*70}", flush=True)
 
-    # γ ctx built once; we swap ctx.pack inside collect_grads.
+    # The context is built once; collect_grads swaps ctx.pack.
     ctx = make_pack_hooks('oamp', fp8_ratio=0.20, group_size=128, min_numel=1024,
                           skip_last_dims={vocab}, param_ptrs=param_ptrs,
                           body_encoding=body_encoding)
     handles = register_attribution(model, ptr_map)   # keep alive!
 
-    # (1) g_true — no compression
+    # (1) g_true: no compression
     print("  [g_true] uncompressed baseline ...", flush=True)
     g_true, loss_true = collect_grads(model, ids, ctx=None, ptr_map=ptr_map)
     print(f"    loss = {loss_true:.6f}", flush=True)
@@ -1138,7 +1113,7 @@ def run_checkpoint(label: str, model, tok, param_ptrs, ptr_map,
                 role: _aggregate_role_stats(entries)
                 for role, entries in raw.items()
             }
-            # numel share per role — required to interpret cross-role Δcos.
+            # numel share per role, needed to interpret the cross-role cosine differences.
             # A large Δcos on a role with 1% share means less than the same
             # Δcos on a role with 40% share, but a large Δcos on a small role
             # is the signature of a predicate (E2M1 wins where INT4 loses).
@@ -1172,7 +1147,7 @@ def run_checkpoint(label: str, model, tok, param_ptrs, ptr_map,
     # (they partition the compressible set by ndim). We check
     #   ||g_partition - g_full|| / ||g_full||
     # where g_partition = g_true + (g_drop4d - g_true) + (g_attn4d - g_true).
-    # If filters are correctly non-overlapping and cover everything γ compresses,
+    # If filters are correctly non-overlapping and cover everything the packer compresses,
     # this should be ~0 in exact arithmetic (up to fp32 accumulator noise).
     if 'drop_4d' in results['filters'] and 'attn_4d' in results['filters']:
         results['partition_check'] = {
@@ -1254,12 +1229,12 @@ def main():
             'timestamp': time.strftime('%Y%m%d_%H%M%S'),
             'filters_requested': filter_names,
             'note': 'Adapter is from pilot_sr_lr (SR+lr=5e-5, 300 steps). '
-                    'Not a pure γ-trained checkpoint; caveats apply for trained-state result.',
+                    'Not a checkpoint trained under the plain anchor configuration; caveats apply for the trained-state result.',
         },
         'checkpoints': {},
     }
 
-    # ---- Checkpoint A: step 0 (fresh Arm 4) ----
+    # Checkpoint A: step 0, fresh model
     if not args.skip_fresh:
         ptr_map: dict = {}
         m, tok, param_ptrs = load_arm4_fresh()
@@ -1270,7 +1245,7 @@ def main():
         del m
         torch.cuda.empty_cache()
 
-    # ---- Checkpoint B: trained γ adapter (opt-in via env var GRAD_PROBE_ADAPTER) ----
+    # Checkpoint B: trained adapter, opt-in through GRAD_PROBE_ADAPTER
     if ADAPTER and os.path.isdir(ADAPTER):
         ptr_map = {}
         mB, _, ptrs_B = load_arm4_trained(ADAPTER)

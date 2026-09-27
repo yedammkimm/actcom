@@ -1,4 +1,4 @@
-"""Figure 2 — damage as a function of Q/K gradient fidelity.
+"""Figure 2: damage as a function of Q/K gradient fidelity.
 
 One mark per training run. The x coordinate is the gradient cosine measured on
 a fresh model when only the Q/K head views are compressed the given way, all
@@ -20,7 +20,7 @@ from matplotlib.patches import Patch
 
 TAU, CSTD, BASE = 16.65, 16.0765, 16.1934
 
-# (x, short, long, values) — a list, not a dict: B and E share x = 0.9919.
+# (x, short, long, values): a list rather than a dict, because B and E share x = 0.9919.
 ARMS = [
     (0.3712, 0.0,    'D', 'INT4 body\nblockwise 4-bit',
      [17.2634, 17.6943, 33.7466]),

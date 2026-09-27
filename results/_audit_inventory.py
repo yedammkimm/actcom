@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Master inventory of results/*.json → CSV. Full-schema recursive scanner."""
+"""Inventory of every results/*.json as a CSV, by a recursive scan of each file's schema."""
 import csv, datetime, json, math, os
 from glob import glob
 
