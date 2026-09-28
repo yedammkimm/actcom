@@ -166,7 +166,8 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"; then
 }
 
 run_ops_probe() {
-    local mode="$1" name="ops_probe__${mode}"
+    local mode="$1"
+    local name="ops_probe__${mode}"
     if [[ -f "${OUT_HOST}/${name}.json" ]]; then log "  ${name} exists; skipping"; return 0; fi
     local envflags=()
     [[ ${mode} == deterministic ]] && envflags=(-e CUBLAS_WORKSPACE_CONFIG=:4096:8)
