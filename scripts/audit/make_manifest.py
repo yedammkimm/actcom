@@ -16,7 +16,9 @@ import time
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OUT = os.path.join(ROOT, 'paper_data', 'MANIFEST.md')
 
-# (title, where the numbers appear, scripts, file patterns)
+# (title, where the numbers appear, scripts, file patterns). A pattern that
+# starts with '!' excludes the files it matches from that group, so a directory
+# listed under a later group is not repeated under an earlier recursive pattern.
 GROUPS = [
     ('Held-out perplexity: WikiText-2, GSM8K test, NarrativeQA, GovReport',
      'tab:allruns, tab:dose_summary, tab:threecorpora, tab:2x2, tab:rerun, tab:recompute; '
@@ -41,7 +43,7 @@ GROUPS = [
       'results/axis4_rerun/*.json', 'results/pilot_e2m1/*.json', 'results/pilot_e2m1_seeds/*.json',
       'results/pilot_pack4d_fp8_matrix/*.json', 'results/naive4bit_int4/*.json', 'results/axis6_int4_fp8/*.json',
       'results/axis7_chan_int4/*.json', 'results/70b_accuracy/accuracy__*.json', 'results/70b_accuracy_e2m1/*.json',
-      'results/**/*.checkpoints.jsonl']),
+      'results/**/*.checkpoints.jsonl', '!results/determinism/*']),
     ('Multiple-choice per-item records (ARC-C, ARC-E, PIQA, WinoGrande, HellaSwag), 21 adapters and the base model',
      'tab:churn, tab:levels; section 5.6 (7.39 %, 6.59 %, 6,653 items, p = 0.001)',
      ['scripts/audit/_check_levels.py', 'scripts/audit/_pa_diag.py', 'scripts/analyze_mc.py'],
@@ -98,6 +100,14 @@ GROUPS = [
      ['scripts/make_fig1_vram.py', 'scripts/make_fig2_dose_response.py', 'scripts/make_fig3_per_role.py',
       'scripts/make_fig4_insensitivity.py', 'scripts/make_fig_method.py'],
      ['figures/*.pdf']),
+    ('Determinism probe: same-seed pairs under default and deterministic kernels, 20 optimizer steps',
+     'section 5.4 (the attribution of the same-seed divergence), section 6, Appendix F; '
+     'per-cell first differing micro-step, optimizer step, gradient hash and parameter hash, step-time overhead, '
+     'and the op-level record of which kernels repeat bit-for-bit',
+     ['scripts/run_determinism_probe.sh (chain, prediction in the header)', 'scripts/audit/determinism_compare.py',
+      'scripts/audit/determinism_ops_probe.py'],
+     ['results/determinism/*.json', 'results/determinism/*.checkpoints.jsonl', 'results/determinism/summary.md',
+      'results/determinism/nondeterministic_ops.txt']),
 ]
 
 
@@ -124,8 +134,12 @@ def main():
     total = 0
     untracked_matches = []
     for i, (title, where, scripts, patterns) in enumerate(GROUPS, 1):
-        matched = sorted({f for p in patterns for f in glob.glob(os.path.join(ROOT, p), recursive=True)
+        matched = sorted({f for p in patterns if not p.startswith('!')
+                          for f in glob.glob(os.path.join(ROOT, p), recursive=True)
                           if os.path.isfile(f) and 'adapter_config' not in f})
+        excluded = {f for p in patterns if p.startswith('!')
+                    for f in glob.glob(os.path.join(ROOT, p[1:]), recursive=True)}
+        matched = [f for f in matched if f not in excluded]
         # Only tracked files are listed, so the manifest is identical in a clone;
         # untracked matches are collected and reported at the end.
         files = [f for f in matched if os.path.relpath(f, ROOT) in tracked]
