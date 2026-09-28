@@ -316,6 +316,10 @@ def _build_optimizer(model, cfg: ExperimentConfig, n_effective_samples: int = No
     total_steps = total_train_steps(
         n_train=n_for_steps, batch_size=cfg.batch_size,
         grad_accum_steps=cfg.grad_accum_steps, epochs=cfg.epochs)
+    # max(1, ...) gives one warm-up step at warmup_ratio 0.0: lambda(0) = 0, so
+    # the first optimizer step runs at learning rate zero and the gradient of
+    # step 1 enters only the optimizer state. Every run of the paper has this;
+    # kept unchanged so runs stay comparable (determinism probe, 2026-09-28).
     warmup_steps = max(1, int(total_steps * cfg.warmup_ratio))
     if cfg.scheduler == 'cosine':
         sched = get_cosine_schedule_with_warmup(opt, warmup_steps, total_steps)

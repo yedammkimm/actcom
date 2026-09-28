@@ -172,7 +172,7 @@ Operations refused or failed:
 - records outside `results/determinism/` that carry `env.git_dirty`: 146, of which true: 143
 - records of this probe: 16, of which true: 0
 
-## 9. Outcome against the pre-registered reading rules
+## 9. Outcome against the pre-specified reading rules
 
 - deterministic-mode pairs compared: 4; all identical on every ladder: True
 - default-mode pairs compared: 4; pairs that separate: 4

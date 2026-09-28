@@ -335,7 +335,7 @@ def build_summary(runs, out_dir):
     P(f'- records of this probe: {probe_n}, of which true: {probe_dirty}')
     P('')
     # 9. outcome
-    P('## 9. Outcome against the pre-registered reading rules')
+    P('## 9. Outcome against the pre-specified reading rules')
     P('')
     det_pairs = [(k, c) for k, cs in pair_results.items() for c in cs if k[3] == 'deterministic']
     def_pairs = [(k, c) for k, cs in pair_results.items() for c in cs if k[3] == 'default']

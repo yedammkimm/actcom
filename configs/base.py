@@ -73,7 +73,9 @@ class ExperimentConfig:
 
     The fields without defaults, at the top, must be given by the caller so the
     intent of a run is explicit. Everything else defaults to the paper
-    condition: Llama-3.2-3B, GSM8K, two epochs, cosine schedule, no warmup.
+    condition: Llama-3.2-3B, GSM8K, two epochs, cosine schedule with
+    warmup_ratio 0.0, which the runner floors to one warm-up step, so the first
+    optimizer step of every run has learning rate zero.
     """
 
     # -------- required (no default) --------
@@ -145,7 +147,9 @@ class ExperimentConfig:
     grad_clip: float = 1.0
     scheduler: str = 'cosine'
     # The earlier training script used CosineAnnealingLR with no warmup; keep
-    # 0.0 so runs stay comparable with it.
+    # 0.0 so runs stay comparable with it. run_experiment floors the warm-up at
+    # one step, so every run's first optimizer step has learning rate zero
+    # (seen in the determinism probe, 2026-09-28; kept as is).
     warmup_ratio: float = 0.0
     optimizer: str = 'adamw'
 
@@ -369,7 +373,9 @@ def _add_config_args(p: argparse.ArgumentParser) -> None:
                    help='Chunk size when --data_packing is set.')
     p.add_argument('--grad_clip', type=float, default=1.0)
     p.add_argument('--scheduler', default='cosine')
-    # The earlier training script had no warmup; keep 0.0 to match it.
+    # The earlier training script had no warmup; keep 0.0 to match it. With
+    # the runner's floor of one warm-up step this still gives learning rate
+    # zero at the first optimizer step (see ExperimentConfig.warmup_ratio).
     p.add_argument('--warmup_ratio', type=float, default=0.0)
     p.add_argument('--optimizer', default='adamw')
 
