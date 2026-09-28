@@ -1,0 +1,21 @@
+# Deterministic-mode errors and warnings, collected from the cell logs by scripts/run_determinism_probe.sh
+# commit aea5ca6185589b820d75be21953913638b71d276  written 2026-09-28T01:40:39Z
+# pattern: 'does not have a deterministic implementation' | 'Deterministic behavior was enabled' | 'RuntimeError.*determin' | 'UserWarning.*determin' | 'warn_only'
+## A__deterministic__flash__rep1.log
+(no deterministic-mode error or warning in this log)
+## A__deterministic__flash__rep2.log
+(no deterministic-mode error or warning in this log)
+## A__deterministic__flash__seed4042__rep1.log
+(no deterministic-mode error or warning in this log)
+## A__deterministic__flash__seed4042__rep2.log
+(no deterministic-mode error or warning in this log)
+## B__deterministic__flash__rep1.log
+(no deterministic-mode error or warning in this log)
+## B__deterministic__flash__rep2.log
+(no deterministic-mode error or warning in this log)
+## C__deterministic__flash__rep1.log
+(no deterministic-mode error or warning in this log)
+## C__deterministic__flash__rep2.log
+(no deterministic-mode error or warning in this log)
+## ops_probe__deterministic.log
+20:/app/actcom/scripts/audit/determinism_ops_probe.py:92: UserWarning: cuDNN SDPA is not deterministic. (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/sdp_utils.cpp:730.)
