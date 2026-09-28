@@ -1,0 +1,155 @@
+{
+  "mode": "deterministic",
+  "repeats": 30,
+  "shapes": {
+    "B": 1,
+    "heads": 24,
+    "kv_heads": 8,
+    "L": 512,
+    "head_dim": 128,
+    "hidden": 3072,
+    "mlp": 8192,
+    "vocab": 128256,
+    "lora_r": 16
+  },
+  "env": {
+    "hostname": "93d447e43e92",
+    "torch_version": "2.12.0.dev20260407+cu128",
+    "cuda_version": "12.8",
+    "gpu_name": "NVIDIA GB10",
+    "deterministic_algorithms": true,
+    "cublas_workspace_config": ":4096:8",
+    "cudnn_deterministic": true
+  },
+  "elapsed_s": 2.7595460414886475,
+  "ops": [
+    {
+      "name": "sdpa default dispatch, causal GQA 24/8, fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "sdpa FLASH_ATTENTION fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "sdpa MATH fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "sdpa EFFICIENT_ATTENTION fwd+bwd",
+      "status": "raised",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": "RuntimeError: No available kernel. Aborting execution."
+    },
+    {
+      "name": "sdpa CUDNN_ATTENTION fwd+bwd",
+      "status": "raised",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": "RuntimeError: No available kernel. Aborting execution."
+    },
+    {
+      "name": "bf16 matmul (512x3072)@(3072x3072) fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "LoRA (x@A)@B, rank 16, fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "cross_entropy 512x128256 fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "rms_norm fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "silu(gate)*up fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "dropout p=0.05, fixed Philox seed, fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "bitsandbytes Linear4bit NF4 fwd+bwd",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "bitsandbytes PagedAdamW8bit, 3 steps",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "clip_grad_norm_ over 8 tensors",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "oamp pack/unpack: E2M1 body (3-D) and 4-D FP4",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    },
+    {
+      "name": "oamp pack/unpack: 4-D FP8",
+      "status": "ok",
+      "mismatching_repeats": 0,
+      "first_mismatch": null,
+      "max_abs_diff": 0.0,
+      "error": null
+    }
+  ]
+}
