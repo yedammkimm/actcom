@@ -13,7 +13,7 @@ Fine-tuning a 70B model on a single 128 GB device requires compressing the activ
 
 - Compressing every stored tensor to four bits, four of eight otherwise identical Llama-3.2-3B runs end with held-out perplexity 5 to 15% above the uncompressed baseline while the other four match it. The effect is in the dispersion, not the mean (variance ratio at exact permutation p = 0.03; difference in means at p = 0.10).
 - Which runs fail is a property of the run, not the seed: re-running a damaged configuration produced a safe model twice out of two.
-- Nine measurements fail to detect it, including task accuracy, training loss, in-distribution perplexity, gradient norms, and five multiple-choice benchmarks over 21 adapters, including MMLU.
+- Nine measurements fail to detect it, including task accuracy, training loss, in-distribution perplexity, gradient norms, four multiple-choice benchmarks over 21 adapters, and MMLU over the eight blockwise runs.
 - The damage follows gradient fidelity, not the bit budget. The sensitive tensors are the query and key head views only: gradient cosine falls to 0.36 there and stays above 0.99 everywhere else. A five-minute forward probe identifies them before any training run.
 - Storing those two tensors in FP8 removes the failure in eight of eight runs at 0.60 bits per element at 3B (0.44 at 70B). Scaling them along the channel axis instead costs no extra bits but leaves one run of eight above the threshold.
 

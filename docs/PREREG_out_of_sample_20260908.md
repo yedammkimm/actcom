@@ -232,3 +232,6 @@ number of usable slots falls from four to two, halving the programme's cost.
   v1–v3 above and every result up to arm A's MMLU cells were on the remote
   from that moment). The paper's footnote keeps its placeholder until the
   repository is public.
+- **2026-09-28.** The repository is public at `github.com/yedammkimm/actcom`
+  and the paper's footnote carries that link; the placeholder note above is
+  superseded.
