@@ -1,0 +1,820 @@
+{
+  "config": {
+    "mode": "accuracy",
+    "method": "naive_fp4",
+    "model_id": "meta-llama/Llama-3.2-3B-Instruct",
+    "weight_quant": "nf4",
+    "seed": 123,
+    "fp8_ratio": 0.0,
+    "group_size": 128,
+    "min_numel": 1024,
+    "mask_seed": null,
+    "dedupe": false,
+    "pack_stochastic_rounding": false,
+    "sr_seed": null,
+    "pack_4d_mode": "fp4",
+    "body_encoding": "e2m1",
+    "nonfinite_skip": true,
+    "bf16_rmsnorm": true,
+    "bf16_params": true,
+    "bf16_lora": true,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_targets": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "task": "gsm8k",
+    "n_train": 7473,
+    "epochs": 2,
+    "lr": 0.0002,
+    "batch_size": 1,
+    "grad_accum_steps": 4,
+    "max_seq_len": 512,
+    "padding": false,
+    "data_packing": false,
+    "packed_seq_len": 2048,
+    "grad_clip": 1.0,
+    "scheduler": "cosine",
+    "warmup_ratio": 0.0,
+    "optimizer": "paged_adamw8bit",
+    "eval_samples": 500,
+    "eval_fewshot": 8,
+    "eval_max_new_tokens": 256,
+    "mem_seq_len": 4096,
+    "mem_batch_size": 4,
+    "mem_steps": 100,
+    "mem_warmup": 10,
+    "mem_abort_gb": 100.0,
+    "gc_enabled": false,
+    "checkpoint_every": 1,
+    "output_dir": "results",
+    "output_path": "results/determinism/A__default__default__rep1.json",
+    "max_opt_steps": 20,
+    "skip_eval": true,
+    "deterministic": false,
+    "deterministic_warn_only": false,
+    "sdpa_backend": "default",
+    "param_hash_every": 1,
+    "record_micro_losses": true
+  },
+  "env": {
+    "hostname": "93d447e43e92",
+    "python_version": "3.10.12",
+    "gpu_name": "NVIDIA GB10",
+    "compute_capability": "12.1",
+    "driver_version": "580.173.02",
+    "cuda_version": "12.8",
+    "torch_version": "2.12.0.dev20260407+cu128",
+    "transformers_version": "5.1.0",
+    "peft_version": "0.18.1",
+    "bitsandbytes_version": "0.50.0",
+    "torchao_version": "0.17.0",
+    "git_commit": "d2fe6096582a1bd4f5c1b776ed9c0456c7edb235",
+    "git_dirty": false,
+    "timestamp_start": "2026-09-28T01:13:07.026373",
+    "timestamp_end": "2026-09-28T01:14:40.228296",
+    "deterministic_algorithms": false,
+    "deterministic_warn_only": false,
+    "cublas_workspace_config": null,
+    "cudnn_deterministic": true,
+    "sdpa_backend_requested": "default",
+    "sdpa_backend_probe": "FLASH",
+    "sdpa_default_dispatch": "FLASH"
+  },
+  "model": {
+    "n_params": 1812638720,
+    "n_trainable": 9175040,
+    "dtype_report": {
+      "weight_quant": "nf4",
+      "bf16_rmsnorm": true,
+      "bf16_params": true,
+      "bf16_lora": true,
+      "rmsnorm_swapped": 57,
+      "rmsnorm_classes_seen": [
+        "LlamaRMSNorm"
+      ],
+      "norms": [
+        "torch.bfloat16"
+      ],
+      "embed": [
+        "torch.bfloat16"
+      ],
+      "lm_head": [
+        "torch.bfloat16"
+      ],
+      "lora": [
+        "torch.bfloat16"
+      ],
+      "lm_head_tied": true
+    }
+  },
+  "pack": {
+    "pack_stats": {
+      "kept": 42588,
+      "skip_small": 13600,
+      "skip_head": 160,
+      "skip_non_float": 8720,
+      "skip_misaligned": 11172,
+      "skip_param": 22240,
+      "skip_by_dim": 0,
+      "bilevel": 0,
+      "uniform": 42588,
+      "override_fp8_4d": 0,
+      "uniform_fp4_3d": 24668,
+      "uniform_fp8_3d": 0,
+      "uniform_fp4_4d": 17920,
+      "uniform_fp8_4d": 0,
+      "chan_int4_4d": 0,
+      "numel_kept": 21111508992,
+      "numel_uniform_fp4_3d": 17935454208,
+      "numel_uniform_fp8_3d": 0,
+      "numel_uniform_fp4_4d": 3176054784,
+      "numel_uniform_fp8_4d": 0,
+      "numel_chan_int4_4d": 0,
+      "numel_bilevel": 0,
+      "n_scale_elems": 164933664,
+      "dedupe_hit": 0,
+      "dedupe_miss": 0
+    },
+    "coverage_bytes": {
+      "unique": null,
+      "raw": null
+    },
+    "effective_bits": {
+      "element_bits": 4.0,
+      "byte_bits": 4.125,
+      "scale_bits": 0.125,
+      "group_size": 128,
+      "fp8_ratio": 0.0,
+      "total_numel": 21111508992,
+      "numel_fp4": 21111508992,
+      "numel_fp8": 0,
+      "numel_chan_int4": 0,
+      "numel_bilevel": 0,
+      "n_scale_elems": 164933664,
+      "body_encoding": "e2m1"
+    }
+  },
+  "memory": {
+    "peak_allocated_gb": 4.796054528,
+    "peak_reserved_gb": 6.142558208,
+    "peak_measurement": "training_loop_max_post_reset",
+    "mem_after_load_gb": 2.268491776,
+    "mem_after_optimizer_init_gb": 3.746028544,
+    "mem_after_first_step_gb": 3.878619648
+  },
+  "sequence": {
+    "seq_len_mean": 162.9,
+    "seq_len_max": 310,
+    "seq_len_p95": 263,
+    "tokens_total": 13032
+  },
+  "throughput": {
+    "tokens_per_second": 274.9556831669243,
+    "seconds_per_step": 2.369836449623108,
+    "train_wall_s": 47.39672899246216,
+    "eval_wall_s": null,
+    "steps": 3736,
+    "steps_completed": 20
+  },
+  "results": {
+    "step_losses": [
+      1.2956404238939285,
+      1.6416974365711212,
+      1.4743720591068268,
+      1.4667798280715942,
+      1.4384673833847046,
+      1.1543239653110504,
+      1.2099606394767761,
+      1.2792574763298035,
+      1.4333632290363312,
+      1.342462956905365,
+      1.227648451924324,
+      1.1628235280513763,
+      1.0939598232507706,
+      1.1701454669237137,
+      1.1801692098379135,
+      1.0510292053222656,
+      0.9744745939970016,
+      0.8791241198778152,
+      1.1359001398086548,
+      0.8899773806333542
+    ],
+    "final_loss": 0.8899773806333542,
+    "gsm8k_accuracy": null,
+    "n_correct": null,
+    "n_eval_samples": null,
+    "per_sample": [],
+    "eval_diagnostics": null,
+    "adapter_path": "results/determinism/A__default__default__rep1_adapter",
+    "n_nonfinite_grad_steps": 0,
+    "grad_norm_trace": [
+      [
+        1,
+        1.3671875,
+        true
+      ],
+      [
+        2,
+        1.53125,
+        true
+      ],
+      [
+        3,
+        1.109375,
+        true
+      ],
+      [
+        4,
+        1.265625,
+        true
+      ],
+      [
+        5,
+        1.4140625,
+        true
+      ],
+      [
+        6,
+        1.03125,
+        true
+      ],
+      [
+        7,
+        1.3359375,
+        true
+      ],
+      [
+        8,
+        2.0,
+        true
+      ],
+      [
+        9,
+        3.90625,
+        true
+      ],
+      [
+        10,
+        1.3984375,
+        true
+      ],
+      [
+        11,
+        2.171875,
+        true
+      ],
+      [
+        12,
+        1.359375,
+        true
+      ],
+      [
+        13,
+        1.15625,
+        true
+      ],
+      [
+        14,
+        1.2421875,
+        true
+      ],
+      [
+        15,
+        2.265625,
+        true
+      ],
+      [
+        16,
+        1.4609375,
+        true
+      ],
+      [
+        17,
+        1.2265625,
+        true
+      ],
+      [
+        18,
+        1.234375,
+        true
+      ],
+      [
+        19,
+        1.6171875,
+        true
+      ],
+      [
+        20,
+        1.1484375,
+        true
+      ]
+    ],
+    "skipped_step_indices": [],
+    "stopped_at_opt_step": 20,
+    "micro_losses": [
+      "0.41318708658218384",
+      "0.22028829157352448",
+      "0.3419658839702606",
+      "0.3201991617679596",
+      "0.403557687997818",
+      "0.4820958971977234",
+      "0.4071001410484314",
+      "0.34894371032714844",
+      "0.3310694694519043",
+      "0.40064945816993713",
+      "0.4158170819282532",
+      "0.3268360495567322",
+      "0.4313666820526123",
+      "0.3194168210029602",
+      "0.30306100845336914",
+      "0.4129353165626526",
+      "0.44116100668907166",
+      "0.3014954626560211",
+      "0.37093526124954224",
+      "0.3248756527900696",
+      "0.36436188220977783",
+      "0.24555429816246033",
+      "0.23092088103294373",
+      "0.31348690390586853",
+      "0.2723254859447479",
+      "0.3119150400161743",
+      "0.2863827645778656",
+      "0.3393373489379883",
+      "0.314498633146286",
+      "0.4174882173538208",
+      "0.31291255354881287",
+      "0.2343580722808838",
+      "0.33566489815711975",
+      "0.3215858042240143",
+      "0.3984169661998749",
+      "0.37769556045532227",
+      "0.3542724549770355",
+      "0.325668066740036",
+      "0.2502143979072571",
+      "0.4123080372810364",
+      "0.3206363320350647",
+      "0.3416253626346588",
+      "0.3296985328197479",
+      "0.2356882244348526",
+      "0.3139408528804779",
+      "0.25255048274993896",
+      "0.25062376260757446",
+      "0.345708429813385",
+      "0.25017642974853516",
+      "0.3128543496131897",
+      "0.23718468844890594",
+      "0.29374435544013977",
+      "0.2426750808954239",
+      "0.2597287595272064",
+      "0.3696848154067993",
+      "0.29805681109428406",
+      "0.226227268576622",
+      "0.3027881979942322",
+      "0.24930644035339355",
+      "0.40184730291366577",
+      "0.1420069932937622",
+      "0.25188732147216797",
+      "0.313448041677475",
+      "0.3436868488788605",
+      "0.24435235559940338",
+      "0.1916896551847458",
+      "0.30991464853286743",
+      "0.22851793467998505",
+      "0.26687440276145935",
+      "0.1894620954990387",
+      "0.1977573037147522",
+      "0.225030317902565",
+      "0.2718682289123535",
+      "0.2534071207046509",
+      "0.39087915420532227",
+      "0.21974563598632812",
+      "0.2667289972305298",
+      "0.2019314169883728",
+      "0.1758900135755539",
+      "0.2454269528388977"
+    ],
+    "grad_hash_trace": [
+      [
+        1,
+        "3e29d328ebaf16b58661b957d817e2aa3b1167f6d3d1ba508bc68a09092cd9fb"
+      ],
+      [
+        2,
+        "0ef15fd1e4101399c13b6ec4dac9e15a5d80d60bdc412c0ac1a04e127a6c1a6b"
+      ],
+      [
+        3,
+        "dde0e4649a8e62b45cd56459c9497f38610ba2984fdc72c07f57bade6789b954"
+      ],
+      [
+        4,
+        "dc5b612c1899db17a8ee4d7f327d77b4a41a8225caab62688a2dc9cedd700d20"
+      ],
+      [
+        5,
+        "05fd7341c7fe7a17f1418090e0441a216906ebb0f3192455b6290e726e39aa02"
+      ],
+      [
+        6,
+        "d3f4ce053c44c73475cc15b76a9c76e1e5c10407628d8f764505b2be9d8bdc26"
+      ],
+      [
+        7,
+        "0a6d4281444c8c72179c7121865171de360ca82d269f47d87ad8d3dd7c3bd86f"
+      ],
+      [
+        8,
+        "78b778ea1a2c7d5480d5f1337f45e9ac3629af0b03e91c4b252388e6d7b2d34c"
+      ],
+      [
+        9,
+        "4c18117ccc5d93bd02f8020d659d8806e8c6c6902be0615e84e224c37f982716"
+      ],
+      [
+        10,
+        "0697c5e2b8f297de02d347316551a9aa2374e4fe81de562044108bee4d1e2586"
+      ],
+      [
+        11,
+        "5f06a71816eff8870f66c55dca776b6b5e619df504b0aa0f16c8e966ab476550"
+      ],
+      [
+        12,
+        "3fc1ad5a2411e3d20fd6767d21f243c986027f2b7b00118c48bbf4027ec6afbf"
+      ],
+      [
+        13,
+        "828d27fd0532eec4399684e81372109957dbeb46a943372f747a26ca6722e90d"
+      ],
+      [
+        14,
+        "b83cad5afa6af32dc36c219d8043094180782452a10f6ba781ca653187c1c4ff"
+      ],
+      [
+        15,
+        "01cad18a7124c9adc276bc7dd81f6bc562f65b0dfcbd1cb0735c408bbe642ecb"
+      ],
+      [
+        16,
+        "c67fcbe53ef9161fa81ab6142b6f3feb531311ee1367d2a2360c60cc2cbf1467"
+      ],
+      [
+        17,
+        "27fc10190ed2a02a53281e5c27843c0ad4bfee7f137151037d60b793936e5818"
+      ],
+      [
+        18,
+        "d22a7b977f2fa2b8fa89ffe94ed8c41b874c737554b38503f1e30153c76f0e91"
+      ],
+      [
+        19,
+        "dc1eadd421ff119514670dc124699e5f1a435bfe480d3f1b8a51e40744a55f53"
+      ],
+      [
+        20,
+        "162b9e00397353fec002df93c6e489bdfa3aac7ee447e165df9f605597675646"
+      ]
+    ],
+    "param_hash_trace": [
+      [
+        1,
+        "2a58fa3aff6683a9790f5cfe5c55b21db0c503132a471621f507fcf76e7252f6"
+      ],
+      [
+        2,
+        "9dcce9eb423d726aa0a7c8eb9a763e60b13737506e751996260818bff896a082"
+      ],
+      [
+        3,
+        "c326038e2009714062088a032df352b04421da1061b81449bd2c8b4a978052d6"
+      ],
+      [
+        4,
+        "d14d332e27378e221f8f9fcefb63bd40567bb656d4c798ddb833e578e0d86fd9"
+      ],
+      [
+        5,
+        "70a02346a1bde67dacd16de6c67923f8a00a22c78b9bc68372f93c184c4bba7f"
+      ],
+      [
+        6,
+        "d196e6960ea1ef43b060f4b68d75113a667b6223531ab6828b4dd1d1a8f8532f"
+      ],
+      [
+        7,
+        "c5f6886a0013bdfa0635f7009d2c4f9b58ab3431a34d17f9ddb7df7aebb9c25a"
+      ],
+      [
+        8,
+        "0a1885e7a6b447b30675b3e974eec31b198c843a66a2a98b809806d7aa537d52"
+      ],
+      [
+        9,
+        "8d58f8ced6c909f579bfed0557aeac00af72f0a82af81eb22f880373155fde84"
+      ],
+      [
+        10,
+        "94cecc21373b4e7be030e797997258cb04ba50a458ae60a93007cd73a671e2c4"
+      ],
+      [
+        11,
+        "f1bf6cf5ea470e22c1fb8851f466da399d1dc1fe23865ef0df5a93a62726f848"
+      ],
+      [
+        12,
+        "00a8cbb049be6b9a09b6c40b225bc6dfe76c97eeb48be05c72bacec85e6e43d3"
+      ],
+      [
+        13,
+        "f542895c1b5e1f9104e76d49ea0666d7351818af36b1da6f56e55953a38437f1"
+      ],
+      [
+        14,
+        "90c984353b990da92ade2bc9e0cd57239875ca265728a596ddf19623ce6bc604"
+      ],
+      [
+        15,
+        "80d7bf5cc3f86bd4a352a98eb1c30fb38bb801af787b3887b87b590ef0531951"
+      ],
+      [
+        16,
+        "04c514f8c4f547a47fb8f5bfb70161409b1fe9fc39c2b13d1569b0fcac493093"
+      ],
+      [
+        17,
+        "e0a5ae92cf33d9a04fa9223b89e2655fa570456302e988316e7632a1ef9fb29d"
+      ],
+      [
+        18,
+        "c876c0df3939dcf88f10d8098b3c44216c870380c9d16bc99207f192fc812089"
+      ],
+      [
+        19,
+        "9708e2287df429f0b65fb9173cda7d5b72cbdec332d2342e52089a788d23cb09"
+      ],
+      [
+        20,
+        "9edbb94db14916acb807215f5a63687a86cba7c2d269d08585739069b85d90e2"
+      ]
+    ],
+    "step_wall_s": [
+      2.937766205985099,
+      2.515827152878046,
+      2.372758634854108,
+      2.274154771119356,
+      1.9260861203074455,
+      2.2627580207772553,
+      1.9272048179991543,
+      2.41444966616109,
+      1.8825583411380649,
+      2.3580482751131058,
+      2.446425139904022,
+      2.3677623393014073,
+      2.597957110963762,
+      2.591785430908203,
+      2.3506920249201357,
+      2.822142024990171,
+      2.7114005140028894,
+      2.0981987486593425,
+      1.8773259837180376,
+      2.443450056016445
+    ],
+    "param_hash_by_name": {
+      "base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight": "bdf43bdc2cc00241dafb0f7c33f84a1f7127712745fa5a5cdf1f4655badfb6dd",
+      "base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight": "bdfcf1ac0379574a9ce1237d52ab477b290a125bb759cf2834acc786653ff051",
+      "base_model.model.model.layers.0.self_attn.k_proj.lora_A.default.weight": "fae8ffae8b8e4ef3febaca010f71640f62bd6a55893cc7171f63406e89db55fc",
+      "base_model.model.model.layers.0.self_attn.k_proj.lora_B.default.weight": "daa7f4faa2eba0048f3188908463a42f15f5a3deec32870e4497ab6381daecef",
+      "base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight": "afb5832f337cb4bf3f736b40ecd89157691d36015391f3035d636593f6f159f2",
+      "base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight": "4f5f5f7dbe0d970213eb29847bb30a45c750608cf976645c66d478e99e5227d1",
+      "base_model.model.model.layers.0.self_attn.o_proj.lora_A.default.weight": "0e4a8f5c13b43ebbd439721ab7b40c699a4a07fde0f2400b6195ffe79f19430f",
+      "base_model.model.model.layers.0.self_attn.o_proj.lora_B.default.weight": "b23f6718c3f1c3bcbe4a2d9b286b7e74d0be85e562bbaf4868d12877424391c1",
+      "base_model.model.model.layers.1.self_attn.q_proj.lora_A.default.weight": "99a265ff15f4a49bf12f7a7136442ac2d082da3976bd1b70ea54c3791535eedc",
+      "base_model.model.model.layers.1.self_attn.q_proj.lora_B.default.weight": "01bbf42503ea7d3b4eba3c0473b80cf64d9746903d47f0e8fbfc095413dc4714",
+      "base_model.model.model.layers.1.self_attn.k_proj.lora_A.default.weight": "5269c4f2234e2c5d029b56579d2dda19889ec48a473db1b741cab5e8feb86992",
+      "base_model.model.model.layers.1.self_attn.k_proj.lora_B.default.weight": "bd71cc2c97e93620ee100fa1c81d5034603aee74860836ad4b027ea942b3d137",
+      "base_model.model.model.layers.1.self_attn.v_proj.lora_A.default.weight": "c7a5d263c3a2e2d9d3f958927679ae3522fad4dad92179fcf7de2812312c0fe8",
+      "base_model.model.model.layers.1.self_attn.v_proj.lora_B.default.weight": "32bdcb9071a97810f46a74c787fb473ccb5d5142f5df90f1900e1b56ffaef0cc",
+      "base_model.model.model.layers.1.self_attn.o_proj.lora_A.default.weight": "bb52ed937685b586c350039e018e6c44e9dceecea70bf425e44bc2fa61e642f9",
+      "base_model.model.model.layers.1.self_attn.o_proj.lora_B.default.weight": "9b27164e93565f272639a47f910c0b13b44525259ecad94cc1c5b3aea67b4dc8",
+      "base_model.model.model.layers.2.self_attn.q_proj.lora_A.default.weight": "efcf003e27ab66f9e90ecd29a72465b93042804a720ad4558715274626d838b3",
+      "base_model.model.model.layers.2.self_attn.q_proj.lora_B.default.weight": "9e2531db542f5e1cb0362fc9baea04b33eca493a20ec3f31a58758fdc75f0de0",
+      "base_model.model.model.layers.2.self_attn.k_proj.lora_A.default.weight": "4d371712a01c997c11f1eccbdfdfdebf630b544be7978a34613fe5309dac2291",
+      "base_model.model.model.layers.2.self_attn.k_proj.lora_B.default.weight": "5cea9316623d6dd904e1421fe7b2e26e4412efef78b9060207a5cb29852a3f35",
+      "base_model.model.model.layers.2.self_attn.v_proj.lora_A.default.weight": "fbb971098210a50f730c7c4235526a8c1f7c12872388a60c420ad93ad69e2e56",
+      "base_model.model.model.layers.2.self_attn.v_proj.lora_B.default.weight": "c3420ccc3f011b84d7d17a8ba0fc2f57074ea220c662347b10b284cb6bf27477",
+      "base_model.model.model.layers.2.self_attn.o_proj.lora_A.default.weight": "8e06150c0e42d7d8590999de7823b60a4dbc662fa7520ec7b4ecf31256c5c816",
+      "base_model.model.model.layers.2.self_attn.o_proj.lora_B.default.weight": "471b2efc147117c36dddf7e4485baaeb235b7c9f2ea2326d5609189c53b7e1ab",
+      "base_model.model.model.layers.3.self_attn.q_proj.lora_A.default.weight": "3bbab6319648b6cac24e96008724a0f3900d397a7286f38b1d9af2fb5d013896",
+      "base_model.model.model.layers.3.self_attn.q_proj.lora_B.default.weight": "c519773d59e22e5314fc91e346f2a360bb7ca5928ade56f8a323e2cf7f18c543",
+      "base_model.model.model.layers.3.self_attn.k_proj.lora_A.default.weight": "36ff7ae43b9e6bc3153e8c8548baf670e95ec8ec3d6b1969f2b315a62707280d",
+      "base_model.model.model.layers.3.self_attn.k_proj.lora_B.default.weight": "8c363c029c71c25fc9b44e2e6627b5d68a373736f26cd2ba27ae3070b7085ef1",
+      "base_model.model.model.layers.3.self_attn.v_proj.lora_A.default.weight": "ab0f2fbca5871106d65bf28d604c2993e5709aafc8174fd44204d3b0724b8ba2",
+      "base_model.model.model.layers.3.self_attn.v_proj.lora_B.default.weight": "df42822eb6c4eae6ceb29d38cb51d6f9b0235765a7733f619378af7c48897515",
+      "base_model.model.model.layers.3.self_attn.o_proj.lora_A.default.weight": "b3ff73bff92e3791a9507a5db94c29d972053375340797a69e9ba712e4746b9a",
+      "base_model.model.model.layers.3.self_attn.o_proj.lora_B.default.weight": "5317cfcd792a9197a9f1889b317f793031b21d10b06eff8c6bdd97559dec90fe",
+      "base_model.model.model.layers.4.self_attn.q_proj.lora_A.default.weight": "9eaad32a688130c5a71bf49022e79daadf98edf68e45f2481e2ee73653253f7e",
+      "base_model.model.model.layers.4.self_attn.q_proj.lora_B.default.weight": "367b907a9d117298be0ab8d65135abdbe0fd68ab19427dfdd59f5996213ac95e",
+      "base_model.model.model.layers.4.self_attn.k_proj.lora_A.default.weight": "9257c8b1a90f2ee3e9fc7561331eb2d7762a597cd3488a3b7e67033d7c1117b4",
+      "base_model.model.model.layers.4.self_attn.k_proj.lora_B.default.weight": "104b617548e4393dc0526a9ecba9d8a36244be35aaeffe225be4fdc7d9a9612e",
+      "base_model.model.model.layers.4.self_attn.v_proj.lora_A.default.weight": "08dcdd54fd93c08a16c5b7f09e613eedbf2b5938486fb07b0fa59c40f0d2fe97",
+      "base_model.model.model.layers.4.self_attn.v_proj.lora_B.default.weight": "813096030b5d19c5858b85dfed4fe12135db1865305f70acafad25510a853442",
+      "base_model.model.model.layers.4.self_attn.o_proj.lora_A.default.weight": "bd2dfd1e0dd44931eb12fbdd38fa2ad7a268008d6c3a3096b76ffdb8e80e8a6a",
+      "base_model.model.model.layers.4.self_attn.o_proj.lora_B.default.weight": "e2ba60cd4fb7d90f87180b8c7e5c1596699c9e1d4cd4940357276a47f3f91dd9",
+      "base_model.model.model.layers.5.self_attn.q_proj.lora_A.default.weight": "4e2bd1e641243647971719a3abfa2866694179aa8fc68e58f9680120bb96138b",
+      "base_model.model.model.layers.5.self_attn.q_proj.lora_B.default.weight": "8527fa389c8c87a9a81288ba028bd00eb474ca794c69526a70d23740e05412d9",
+      "base_model.model.model.layers.5.self_attn.k_proj.lora_A.default.weight": "5208d8a307029437419a4a279ce865e1dc385f6dc2ddf8761ead38f36549162d",
+      "base_model.model.model.layers.5.self_attn.k_proj.lora_B.default.weight": "b8a3e55303cc2ec32424481c738805b98349cfe50ad4d4787d2fcb33f6004103",
+      "base_model.model.model.layers.5.self_attn.v_proj.lora_A.default.weight": "30220c71b2bb6b837cb16a661332b52aa516b20ed1ae504ea5b3fc398fe68c2f",
+      "base_model.model.model.layers.5.self_attn.v_proj.lora_B.default.weight": "20a7bce74622048b20f59c9e97e5d11afccd359c9dcee37ebd9268ce992eb5c9",
+      "base_model.model.model.layers.5.self_attn.o_proj.lora_A.default.weight": "cdf43f255a4b040e55e572a4051a78cf67851f2e6bdf4a4419e22b77f72bef01",
+      "base_model.model.model.layers.5.self_attn.o_proj.lora_B.default.weight": "0b02f0f9590c4657655da88ac325fcb4e80b752fed85d1fde8051df088346868",
+      "base_model.model.model.layers.6.self_attn.q_proj.lora_A.default.weight": "6f51ce0f9dd65647ec42de0df87287a02370557aba08a7c1ba90b9b9a70e646d",
+      "base_model.model.model.layers.6.self_attn.q_proj.lora_B.default.weight": "498fdd33a390410a6e9cfca88c6860b13235dc84d70e9d470766bf3724d5136e",
+      "base_model.model.model.layers.6.self_attn.k_proj.lora_A.default.weight": "378b34e4985bb9cce583242c64741b0c01f94ab1efeee0ad96ef8cc3ff09ff18",
+      "base_model.model.model.layers.6.self_attn.k_proj.lora_B.default.weight": "daa13c272c0a2841552c0537123797755865a1d8e248a9284915fa509f32bb35",
+      "base_model.model.model.layers.6.self_attn.v_proj.lora_A.default.weight": "ec05b05f223d4db334e6e326c2acb402501d118ae902e8fc5a88f2c1528059b3",
+      "base_model.model.model.layers.6.self_attn.v_proj.lora_B.default.weight": "4a16e2d52aba1ea3da1f512109a2778a8e4df02ef4555bd2d37bf3ff7296fcda",
+      "base_model.model.model.layers.6.self_attn.o_proj.lora_A.default.weight": "ff79658d58bb7d93ab8232240d9ef9b6eedcf23e1cdd6cc917262a73ba1734be",
+      "base_model.model.model.layers.6.self_attn.o_proj.lora_B.default.weight": "17323864a1f5ecb92e9632c2d80aaa8c1b0da7ac0af53677bcab7c03ecdbafd9",
+      "base_model.model.model.layers.7.self_attn.q_proj.lora_A.default.weight": "85b1bebe360ed73debae814307b5a111370c0663f01be61941ed8af2d036a450",
+      "base_model.model.model.layers.7.self_attn.q_proj.lora_B.default.weight": "413509290945a3957bb43566ac7faf4420643370914cf894672f852b263dd8aa",
+      "base_model.model.model.layers.7.self_attn.k_proj.lora_A.default.weight": "c30ff1950b2db6efb86669d64ab2450dc85cfb2cefb252b6beed5978103feabf",
+      "base_model.model.model.layers.7.self_attn.k_proj.lora_B.default.weight": "11312a1e13b38fa2ee2d840cb3c81d17da9a7e5d76aef5c6816e809454a770ca",
+      "base_model.model.model.layers.7.self_attn.v_proj.lora_A.default.weight": "11f3491c75e06122ded0f1e96a57a7d627a146ad21829c7f8e8079136a4c9a21",
+      "base_model.model.model.layers.7.self_attn.v_proj.lora_B.default.weight": "82bb9cfa703975e35dd25779a8409bd50dac52961f0f7f8473a04e457cad2b99",
+      "base_model.model.model.layers.7.self_attn.o_proj.lora_A.default.weight": "57a39b780ff1c47a3edc1430430e62d7aec005fb07428a7bdd32af608e7f53f9",
+      "base_model.model.model.layers.7.self_attn.o_proj.lora_B.default.weight": "8742657fa985aed226deec2e4e01e9e39f45d48b3beaa9ca17b8d84fdd2acf0f",
+      "base_model.model.model.layers.8.self_attn.q_proj.lora_A.default.weight": "71b976edef3eb19d0e8b7b6280b478e633349469b11817a5fc8ac8fc8ff90526",
+      "base_model.model.model.layers.8.self_attn.q_proj.lora_B.default.weight": "6204f8c4f57834380af60df1db4b2d34c52d7398ef5810136cbee39aa8ebcc64",
+      "base_model.model.model.layers.8.self_attn.k_proj.lora_A.default.weight": "3f2ec17d1ed20e8e0b1413e5d1f0db35bd439fbf2dfe0c98e770fa1847644c6c",
+      "base_model.model.model.layers.8.self_attn.k_proj.lora_B.default.weight": "f862ec1cffa697a186c1c58365df2a22c50c066416f431683dd4e8fcc7d93f79",
+      "base_model.model.model.layers.8.self_attn.v_proj.lora_A.default.weight": "6f70a9de724c020bcb2b159be81ecc78178034424d10383e181bc6d496b57d0d",
+      "base_model.model.model.layers.8.self_attn.v_proj.lora_B.default.weight": "cad52f5d23262190ccf089b9d119ddee94111a79c9d052dfb1a07787cc0c2db8",
+      "base_model.model.model.layers.8.self_attn.o_proj.lora_A.default.weight": "26067816d2317f004e88c9923a72bf9f8cffcf64488168abc8b4fd23a012d8e5",
+      "base_model.model.model.layers.8.self_attn.o_proj.lora_B.default.weight": "73f1682f03a2253720f85d24de11307bbf63cede51a4813d525bae6da1856b79",
+      "base_model.model.model.layers.9.self_attn.q_proj.lora_A.default.weight": "2131c531d7c9d7f8b3dcc9fc79d573a678a3a070a8f63cb12faf33251c61590f",
+      "base_model.model.model.layers.9.self_attn.q_proj.lora_B.default.weight": "66b3ea4319543e7443f3d2730966b7b981af48583791a3e4a34ee71f0c0ff9ae",
+      "base_model.model.model.layers.9.self_attn.k_proj.lora_A.default.weight": "53ff92e66923a2cddc4152b396fc6a256c8a8ae8466563edd024ce01b7587c89",
+      "base_model.model.model.layers.9.self_attn.k_proj.lora_B.default.weight": "d4073d413ceeda3677028ff2846fec5bf0fa762395518c7c0ee5efc6a73177b7",
+      "base_model.model.model.layers.9.self_attn.v_proj.lora_A.default.weight": "c57516477a03d4da79763609a4b53a234b2a2c2647419e2fdc35dd93b87cd429",
+      "base_model.model.model.layers.9.self_attn.v_proj.lora_B.default.weight": "205f40066e82a6c5a45bac10f8cf90349470b9cd741b4454a0c0adca2e3ec878",
+      "base_model.model.model.layers.9.self_attn.o_proj.lora_A.default.weight": "9edcf405602a067d3e46816ca676391490e6e66c057a25f3fb72c4704a14a6cf",
+      "base_model.model.model.layers.9.self_attn.o_proj.lora_B.default.weight": "b156b4eb567cfdc92431c8ffff0e07b2c9807a9d06cfbd90d8ad35320cec83ec",
+      "base_model.model.model.layers.10.self_attn.q_proj.lora_A.default.weight": "5ea1677dd18cbec139706d677479dd081d95e913cdf8c54ed6e68233b70b9f78",
+      "base_model.model.model.layers.10.self_attn.q_proj.lora_B.default.weight": "1fadbc372751ae7e515339135b7a698f38fbb0a000240c2c3be98f97e9826323",
+      "base_model.model.model.layers.10.self_attn.k_proj.lora_A.default.weight": "cf25ec9b3763d3d2cd5e69f3237636d3b7b465706028a6aec9b80e3f5523fa6e",
+      "base_model.model.model.layers.10.self_attn.k_proj.lora_B.default.weight": "9308770182c40f7285d0ccbb531c3fffb47a810c31eb7d45facda8b4285e1c06",
+      "base_model.model.model.layers.10.self_attn.v_proj.lora_A.default.weight": "e5020387c7faf1a172bc407892c1d73c3eed01acf5d1832dc85920a15b1ce8cd",
+      "base_model.model.model.layers.10.self_attn.v_proj.lora_B.default.weight": "1ee21fe2ca0726a4812646ce48f91a7955b825b4ad020888323e3b58b8d9ecc6",
+      "base_model.model.model.layers.10.self_attn.o_proj.lora_A.default.weight": "fa218cda8de432f90787ff745e67abf10acf97a4b19b5fdb7540e8efe292366c",
+      "base_model.model.model.layers.10.self_attn.o_proj.lora_B.default.weight": "d7bd9269fbf6dfae1ffd5a198292b8a69f36f854fbc3feefc02a18079ed8b3ff",
+      "base_model.model.model.layers.11.self_attn.q_proj.lora_A.default.weight": "915ae9f33c035259cecc199747ceb4ea2e0b4d2acaff1f9f92e7a9355607b595",
+      "base_model.model.model.layers.11.self_attn.q_proj.lora_B.default.weight": "6ccd854652634b31bda38cc1437f6ab9eb23e552e1ba17c9c986b88ce4ef0949",
+      "base_model.model.model.layers.11.self_attn.k_proj.lora_A.default.weight": "7c757c9a74d61704db7b1fff7cb119a577a06e254c05741038978bf61e1cbfa2",
+      "base_model.model.model.layers.11.self_attn.k_proj.lora_B.default.weight": "6049418b2930085a0f54ddfcf103128968cfe33166347aa848b05b06ff2b39bd",
+      "base_model.model.model.layers.11.self_attn.v_proj.lora_A.default.weight": "66458fac3d2aabffeef2fcab4566883a3a51281e86d2a76cae29da4d0c56f876",
+      "base_model.model.model.layers.11.self_attn.v_proj.lora_B.default.weight": "4fb2c7dd65dfe3f7dfb3c349436169f6c9afacf06879dbb0de11496c85b3d5dd",
+      "base_model.model.model.layers.11.self_attn.o_proj.lora_A.default.weight": "609bf0bd24dbd6c25bcdaa3a00805a00c0ef457acbe04dbbe6e401333658677c",
+      "base_model.model.model.layers.11.self_attn.o_proj.lora_B.default.weight": "6d76071add87191ab2b6d7bebd2fdc89b1ce6af128cebe50f3a1398755143c47",
+      "base_model.model.model.layers.12.self_attn.q_proj.lora_A.default.weight": "6e31147beeb56af30216fd1978ce2c5164689474f286838fbde4c896547608ef",
+      "base_model.model.model.layers.12.self_attn.q_proj.lora_B.default.weight": "aa4c82dc9ec09afdc6fffb1f26bc73c36a7935e7f6dfc8cdd1c57468de5690b2",
+      "base_model.model.model.layers.12.self_attn.k_proj.lora_A.default.weight": "68d5a2cb670cef8257b55648cfc53f3a28ef1152007afe8142fe84aa6f0ca71b",
+      "base_model.model.model.layers.12.self_attn.k_proj.lora_B.default.weight": "3734196a3aaa5480467bcaab184a71851a8963cfe41d80a4f40b07990abcb5c6",
+      "base_model.model.model.layers.12.self_attn.v_proj.lora_A.default.weight": "bcf02aed21fc589e33ee7207a3bb9f0321d183c20062e9dc6705f7489a10f784",
+      "base_model.model.model.layers.12.self_attn.v_proj.lora_B.default.weight": "1cdc150723dc90ad00442e401c93ded698947c16eee7bd3fe6b2c7b674fa2ea1",
+      "base_model.model.model.layers.12.self_attn.o_proj.lora_A.default.weight": "91834ab8ee64daa40bf0b1216dc7bca9f1f2c7af214ebf3419ea0879e694cc44",
+      "base_model.model.model.layers.12.self_attn.o_proj.lora_B.default.weight": "34824556333413be019ce3f9682df55c71d4e6cc1bf0b6a3d314b2c0f1f9dc30",
+      "base_model.model.model.layers.13.self_attn.q_proj.lora_A.default.weight": "2abc899fca7ccb399d7cfcc8056f25c47d1782c8460b8f8285f34cc10394fd6d",
+      "base_model.model.model.layers.13.self_attn.q_proj.lora_B.default.weight": "3dc8b08dc96bd44f4a84a5d3605c47a4a1e9c80e10801e244466a517553a5a81",
+      "base_model.model.model.layers.13.self_attn.k_proj.lora_A.default.weight": "275f604f6de23d445a52940a06cf8dd531d8c8a182a7ba86d9f96b5dcdcef398",
+      "base_model.model.model.layers.13.self_attn.k_proj.lora_B.default.weight": "ae19a172e077c7f8b3c4d74b416e3221f1d93c7706732f46d3c57fa07463127b",
+      "base_model.model.model.layers.13.self_attn.v_proj.lora_A.default.weight": "26a515e410aba12a531eb66a9772072ae0784cc4a3fea4af7e61431fdd511259",
+      "base_model.model.model.layers.13.self_attn.v_proj.lora_B.default.weight": "6941af30bc57e12f4e8a1f3089b4af2454924b64830dd46ae3ffc711fd2fb724",
+      "base_model.model.model.layers.13.self_attn.o_proj.lora_A.default.weight": "81e77e4dcaa436720ae422657d0f5542adb078943d8f5d376c307d51935332df",
+      "base_model.model.model.layers.13.self_attn.o_proj.lora_B.default.weight": "c835f8b58183e464af4b9caf91557e87aed7e719fe313aeddb5eb0d9752f4a4f",
+      "base_model.model.model.layers.14.self_attn.q_proj.lora_A.default.weight": "74751322bffbd7a695e0ac6ceb91b60cfb2e5819f909440d715e41320b6b6aff",
+      "base_model.model.model.layers.14.self_attn.q_proj.lora_B.default.weight": "0f4db0cf97d16185a719deff37487b59013a04305a526d4e743e61adf5d8ca4d",
+      "base_model.model.model.layers.14.self_attn.k_proj.lora_A.default.weight": "9093df6fbd0a7341e9e28cd9b00663dfbfc26a21ec7120d06d7288941c902ab7",
+      "base_model.model.model.layers.14.self_attn.k_proj.lora_B.default.weight": "f8735f305eab9c8d2f690b57deaacc5ace1514007b230e09dd12db611f4063f2",
+      "base_model.model.model.layers.14.self_attn.v_proj.lora_A.default.weight": "f6bf820714511a705a107f6d34e9e05e217e24ef7df9d99bb9ee0509f4953d17",
+      "base_model.model.model.layers.14.self_attn.v_proj.lora_B.default.weight": "3d1309a992400c29bfe02df5ca2d2bac8192fa4edb295715e849ddfe9334cbed",
+      "base_model.model.model.layers.14.self_attn.o_proj.lora_A.default.weight": "53ee98427c530cd11ca6af4721800a753295e990ff39e05de6042687d763c746",
+      "base_model.model.model.layers.14.self_attn.o_proj.lora_B.default.weight": "da977111c90b9d230e2800a2fb4085a19d517a306b94c64ace7da4d8dbd11dd6",
+      "base_model.model.model.layers.15.self_attn.q_proj.lora_A.default.weight": "7a0f1622d224586dc88e00247d6046a61f103211fb920db8a82583fa63ffc158",
+      "base_model.model.model.layers.15.self_attn.q_proj.lora_B.default.weight": "1e7df01fc71738b1762acad7a85b7932a3a70d691fd9b0f4b3e66392d825fda8",
+      "base_model.model.model.layers.15.self_attn.k_proj.lora_A.default.weight": "b52089c916a848f889b306d26a9c149d9a580a358fc37cfaf0b4326afe82d302",
+      "base_model.model.model.layers.15.self_attn.k_proj.lora_B.default.weight": "a976bc6758792e10e78d6a46e38d66f92585f438ea79b0024e5a71414fcab72e",
+      "base_model.model.model.layers.15.self_attn.v_proj.lora_A.default.weight": "495aadb889c898a778e751e99163d7ee81ee9bf263f51c153786c6edf81241b5",
+      "base_model.model.model.layers.15.self_attn.v_proj.lora_B.default.weight": "3ae27e25cd54cd49da9751f92a0f77131775283312c646bdc52352c0c1617256",
+      "base_model.model.model.layers.15.self_attn.o_proj.lora_A.default.weight": "1db0c9839c46f658458ca190e396612da077926a84ffbd97a1504e04bc49d8c5",
+      "base_model.model.model.layers.15.self_attn.o_proj.lora_B.default.weight": "397e62545e707448d32763b1831aa82569d04af6f75dc845fbefff5af7157682",
+      "base_model.model.model.layers.16.self_attn.q_proj.lora_A.default.weight": "1e767ae8a6295e1c477c754800e0bef604c89cc814e4daa757f972388bbe6971",
+      "base_model.model.model.layers.16.self_attn.q_proj.lora_B.default.weight": "64c595ceca41a579a790f4b2a2c526f23e9504ebe235933dd86bdbe5d8d76b1f",
+      "base_model.model.model.layers.16.self_attn.k_proj.lora_A.default.weight": "1b2d3edc84e0e200a4bccda9fc7d853045394e9063db82ace9e49ed98fbfe1ec",
+      "base_model.model.model.layers.16.self_attn.k_proj.lora_B.default.weight": "15d2b20be64a5c1201b11dcb77d5fdf10c1b259d44dc34b0139483652384ccb8",
+      "base_model.model.model.layers.16.self_attn.v_proj.lora_A.default.weight": "703478cf6f6b1c2100dce8c0bea4c01dc91817baa7a4f0d893959eb6823ac8a0",
+      "base_model.model.model.layers.16.self_attn.v_proj.lora_B.default.weight": "a64479aa5845c9453743305bf812fd252fe20ee5f7b57614c31228e81f5ebb96",
+      "base_model.model.model.layers.16.self_attn.o_proj.lora_A.default.weight": "c49bc65f6d29c768a57aad9618d397723728852d25a49a8664b448e2e4253b76",
+      "base_model.model.model.layers.16.self_attn.o_proj.lora_B.default.weight": "64661d04fada7d5a9a83e315734625e13e7a96d170ac20e64d8e670f43894bf7",
+      "base_model.model.model.layers.17.self_attn.q_proj.lora_A.default.weight": "37c09da148450bd2ea00511a05f65bd90116eacc18951c7be742e3e2bb1d4b75",
+      "base_model.model.model.layers.17.self_attn.q_proj.lora_B.default.weight": "764a664271910c069b608c377315f812d3b8a0ce8f9d67213502a2b8600fb99c",
+      "base_model.model.model.layers.17.self_attn.k_proj.lora_A.default.weight": "594883e3e776f2dd655fae000df48f56a4e958d0d1764c1f05f88e1834afc7e5",
+      "base_model.model.model.layers.17.self_attn.k_proj.lora_B.default.weight": "bcfa8ed9ebfc56350cd4a6e4e49e32981861076f52ab2a8afa2e85bcdfe47432",
+      "base_model.model.model.layers.17.self_attn.v_proj.lora_A.default.weight": "98c18f9c42fb9c312aeebed0c428c0e4a67e3edd1ac4ee281510edbcd85e9c1a",
+      "base_model.model.model.layers.17.self_attn.v_proj.lora_B.default.weight": "81eba9b311c823ba66f7d93502023eb23caa31e2b8455eb7fe40a48a6edd0e32",
+      "base_model.model.model.layers.17.self_attn.o_proj.lora_A.default.weight": "137ae4a1ce6f13f382bfd05fbad9579d59ec883a4e40de7f331a75dd457fd367",
+      "base_model.model.model.layers.17.self_attn.o_proj.lora_B.default.weight": "aafcd9594589570f47cd6db0b7cde9fda4132f4bab5ad8b77bca40fd716b04ba",
+      "base_model.model.model.layers.18.self_attn.q_proj.lora_A.default.weight": "57438f11411c2e082d7d390c365545cbc25b33a80891e3618eabd7c0d194b4c4",
+      "base_model.model.model.layers.18.self_attn.q_proj.lora_B.default.weight": "5a1918dabab604c123cd2a54aba55369b4bf0c863629b9848f894d72874c8840",
+      "base_model.model.model.layers.18.self_attn.k_proj.lora_A.default.weight": "f4553c80013ccc221d2e344c5d1e0ceaf9398c84a4f05579d8db1e551b790b7c",
+      "base_model.model.model.layers.18.self_attn.k_proj.lora_B.default.weight": "3f765a0b651a2a76c09b370bd1662703054e002b2061a5656c5ca235f2e7d733",
+      "base_model.model.model.layers.18.self_attn.v_proj.lora_A.default.weight": "51c5d8069894124f622a8bc053590b9f24dc8256ea1645ebcba6e49909ea0d9a",
+      "base_model.model.model.layers.18.self_attn.v_proj.lora_B.default.weight": "f415de8c3d477a31050ea7213bdf74d9850badb30559eb0575127d33ee0fc92c",
+      "base_model.model.model.layers.18.self_attn.o_proj.lora_A.default.weight": "26405fce8defc0be59ca2d27352892d1d66ffacb2f2f1d6710ab5cf5ded59db0",
+      "base_model.model.model.layers.18.self_attn.o_proj.lora_B.default.weight": "101d2d9cdc5fa4fb1ae9502b41fef39f9ba548907cb42c34982dd2f8b3236e5a",
+      "base_model.model.model.layers.19.self_attn.q_proj.lora_A.default.weight": "ac47f812a4120d116a53fec1d110afc6d132a2c8aaea37da63dc71b29680e394",
+      "base_model.model.model.layers.19.self_attn.q_proj.lora_B.default.weight": "124f8e51a3eb4a6f4ed3a7e373d495308b8b1d0d9e0e24f4ae1e1a6f14a1ef10",
+      "base_model.model.model.layers.19.self_attn.k_proj.lora_A.default.weight": "e51214be69a29b1b6ae1f4712405cc3c373f76b987a2e90292b22469ef1066e8",
+      "base_model.model.model.layers.19.self_attn.k_proj.lora_B.default.weight": "f5563d3b63118b90f2f8049a7809c3390b8773a9b716084ab390371de8413ddc",
+      "base_model.model.model.layers.19.self_attn.v_proj.lora_A.default.weight": "d2dd0adfcf805b9d819ae91cbc99ea6d28785e33c0bf7b36330566fb44aa8be4",
+      "base_model.model.model.layers.19.self_attn.v_proj.lora_B.default.weight": "7c9cc788503878a68cbfeb5de603e3a431d74df437ad27bc966bc2fb382fc65a",
+      "base_model.model.model.layers.19.self_attn.o_proj.lora_A.default.weight": "6a926c9913041e7361409c43bf93b3c129ff55ab9b6d315b82b2f6d0d71c0925",
+      "base_model.model.model.layers.19.self_attn.o_proj.lora_B.default.weight": "17ca56533ce10e3ead4042cc56dddf6fa3b1a7f93a4e6d970b329dd545a5272a",
+      "base_model.model.model.layers.20.self_attn.q_proj.lora_A.default.weight": "6269d7ef521f6f098bcfa7c42cfd8d231fc367643bcd2802400478dbd062dda2",
+      "base_model.model.model.layers.20.self_attn.q_proj.lora_B.default.weight": "0f75e5c055f8ec16d1594cdc4f86072df9f5e359125a209375dea3958fa363a1",
+      "base_model.model.model.layers.20.self_attn.k_proj.lora_A.default.weight": "4a6f950d188dee52e8c21a03c2bd31f083c6163007290df7f4d50df051d9e8c7",
+      "base_model.model.model.layers.20.self_attn.k_proj.lora_B.default.weight": "ef8d7d49151df44738e921c62f76a4bd56b1c7684cc2e150a8aa480e9998900e",
+      "base_model.model.model.layers.20.self_attn.v_proj.lora_A.default.weight": "c32a777ab680bb54921b901624b1fa1e57daa10f95c31148822a865c7313e7a1",
+      "base_model.model.model.layers.20.self_attn.v_proj.lora_B.default.weight": "9e1b0e4dcb7b81b9f79d1373ec3c33a655e28fab11ae0e55c39388cae371a909",
+      "base_model.model.model.layers.20.self_attn.o_proj.lora_A.default.weight": "56c3b5456aee0e77d602b81c6dff0f2e56d8fcaf26a14e846cb1d5f6d420739a",
+      "base_model.model.model.layers.20.self_attn.o_proj.lora_B.default.weight": "4349006dea5060db8e8d6f9d950771aa3cc2fa07a1fe0ba79062f47ff8e62d93",
+      "base_model.model.model.layers.21.self_attn.q_proj.lora_A.default.weight": "a2ba07378b4b6f48faf5df7e043790b710478a5fc9b2a5f4b862bea202efad21",
+      "base_model.model.model.layers.21.self_attn.q_proj.lora_B.default.weight": "5c9d4b404d0a626d53de69ba9ab6ec82ba53f0c7ac9d0580cba7ebe5ae74b7c5",
+      "base_model.model.model.layers.21.self_attn.k_proj.lora_A.default.weight": "d801d9b335f92bd4ce7c4b8e84f6415f2d1794e8ba9f672e9214c6fc83ad6cc9",
+      "base_model.model.model.layers.21.self_attn.k_proj.lora_B.default.weight": "852e85b4a3778091ccad99e203aa4e47b0027bdbfd9b289745aee4a20e6b70be",
+      "base_model.model.model.layers.21.self_attn.v_proj.lora_A.default.weight": "6f09da37180268705a2e41c3a8877f7f70dc99f3eacf59d51a7919d755292750",
+      "base_model.model.model.layers.21.self_attn.v_proj.lora_B.default.weight": "cced4d5ef666dc41fe48dc41b527732e7ac2a670d68b56f568e1f0d4c2fd778e",
+      "base_model.model.model.layers.21.self_attn.o_proj.lora_A.default.weight": "a586721de620abd7d766b7146bdf869e36a18a6c305755ba8ed06bfa12258902",
+      "base_model.model.model.layers.21.self_attn.o_proj.lora_B.default.weight": "596c56e8806d7560379785b1ba1c804b52329dc320e1ae35daf62adfc9e34a7c",
+      "base_model.model.model.layers.22.self_attn.q_proj.lora_A.default.weight": "601f3fa527963b5ce6ed99eed086786fb76fc8f7c845caf7553cc2b65fffb99b",
+      "base_model.model.model.layers.22.self_attn.q_proj.lora_B.default.weight": "9aa783cbd7790d3fe407d40bfcb447e3a14969fdf70e6d7d4ea4a98731878b85",
+      "base_model.model.model.layers.22.self_attn.k_proj.lora_A.default.weight": "4438214322809704617497375bcb7097edad9d8fe987b34ccaf450ceb0226e95",
+      "base_model.model.model.layers.22.self_attn.k_proj.lora_B.default.weight": "fac587f07adc6b9a44de87a8d2e84bd867344b0c147c7fdc921f33b9d0722a3f",
+      "base_model.model.model.layers.22.self_attn.v_proj.lora_A.default.weight": "e1f207e5926e6988d0363ddd48d10e278598832e025ceef4d4089ed22152cf06",
+      "base_model.model.model.layers.22.self_attn.v_proj.lora_B.default.weight": "165a561769d21c9d6d5fb1ad3dc9894896b7bb547b8ddb13f14573fc635067ff",
+      "base_model.model.model.layers.22.self_attn.o_proj.lora_A.default.weight": "9ce0e0680743ecb4a2e9a16066c869d25e07a65e8a7b24b3afc71b33d60efed2",
+      "base_model.model.model.layers.22.self_attn.o_proj.lora_B.default.weight": "7e5ecae91b556dcfab891bf7423f7f9430ad4a63c1309d21c11f91c5a7bdcfbc",
+      "base_model.model.model.layers.23.self_attn.q_proj.lora_A.default.weight": "2b412d27649ca315e9f76d502e5957f4260fde30343971e3ee193ed082cd7f84",
+      "base_model.model.model.layers.23.self_attn.q_proj.lora_B.default.weight": "b249fbd3285d1b0825041623f5aa47ae2c5a7daf3dbd66d8030c9c1d2ff302a3",
+      "base_model.model.model.layers.23.self_attn.k_proj.lora_A.default.weight": "774c83dac2d09ef17345de1d84025376864250d3ff8db2bc7d839d3dbe993760",
+      "base_model.model.model.layers.23.self_attn.k_proj.lora_B.default.weight": "49bfc9a6f28612f0dadd972adb65c097ba7ee5a46624ca4cd80985801ff1d8c9",
+      "base_model.model.model.layers.23.self_attn.v_proj.lora_A.default.weight": "44a17b761d1bd07f5441452583a0c6aa0793a1a67292671147dff3302d1d2752",
+      "base_model.model.model.layers.23.self_attn.v_proj.lora_B.default.weight": "6577e825ad5cd9546ebc1228d424c910e61c2df752e4786910ed155ea29fc8bd",
+      "base_model.model.model.layers.23.self_attn.o_proj.lora_A.default.weight": "547550f4b65577810611a90f746044f92481fb030f2f78ab5c3f491fa03e1321",
+      "base_model.model.model.layers.23.self_attn.o_proj.lora_B.default.weight": "2696256b4e32bf6639b78a93a3d0916f8e1f11476389684f72babb8aac11f692",
+      "base_model.model.model.layers.24.self_attn.q_proj.lora_A.default.weight": "7c7d9e73e56fe91690b9375698d69a4ba8fb8663bd6499c64255bb252b1ece89",
+      "base_model.model.model.layers.24.self_attn.q_proj.lora_B.default.weight": "bbde488f0e6065877b28203a7f082951bf2e57c28361c897836896918b857682",
+      "base_model.model.model.layers.24.self_attn.k_proj.lora_A.default.weight": "edb9bbb94347ba3241f429d25e3d862845d2235f93d40d5cc1387c17be38ce69",
+      "base_model.model.model.layers.24.self_attn.k_proj.lora_B.default.weight": "54df7d31d31e5fd700251bdbd76d2e3120050741846a171b1bad2e1d6429b849",
+      "base_model.model.model.layers.24.self_attn.v_proj.lora_A.default.weight": "a81e2b430619069f0e09143db23e850868cbc2e1188f718d6888ca8dc05bbffe",
+      "base_model.model.model.layers.24.self_attn.v_proj.lora_B.default.weight": "25ff31f96681aababbacaf01559cd0d33777bae6e3608c382995fc3d52ff4fc3",
+      "base_model.model.model.layers.24.self_attn.o_proj.lora_A.default.weight": "aab23f1093835f97bd602f01f86d103a683baa9e2c27a7db860fd75540811deb",
+      "base_model.model.model.layers.24.self_attn.o_proj.lora_B.default.weight": "8ee4d17e87dec06300736e41b52d38df06151e3d33c33f52840ae8a4cc04bf69",
+      "base_model.model.model.layers.25.self_attn.q_proj.lora_A.default.weight": "b0706ad513f86deeba1bb6cabb3f8fa442a243cf712045f486b0ba240a5b121e",
+      "base_model.model.model.layers.25.self_attn.q_proj.lora_B.default.weight": "2e6c1bc04b072b811e1cf9dee19aeb7346453bd977cda9d7d86a87658dc7fcdc",
+      "base_model.model.model.layers.25.self_attn.k_proj.lora_A.default.weight": "2d0b76a136df2199da11ce1c8dcbbe96d4d57c8b17b92fdef174b052ef5ff43b",
+      "base_model.model.model.layers.25.self_attn.k_proj.lora_B.default.weight": "dd524663f341ac00c9e783e8b52fd19b7c7e91319ae2efbe3c43ba0285dc22d0",
+      "base_model.model.model.layers.25.self_attn.v_proj.lora_A.default.weight": "43b4ce2072bb86928b3a80cc50020c878be420c49c8d7404baa58510b8fa1f13",
+      "base_model.model.model.layers.25.self_attn.v_proj.lora_B.default.weight": "1c48b09c39a6e5229ea9353194908698a1825b910e50f46482b93bfc7c59cc13",
+      "base_model.model.model.layers.25.self_attn.o_proj.lora_A.default.weight": "0798ee38ee984b0476e5e67c062d4649077bdc13c7ccc714744dd2572190758a",
+      "base_model.model.model.layers.25.self_attn.o_proj.lora_B.default.weight": "9106e17add2b8fc92f06f5d32d8feb9888794ede7d225881ccb62dba4fdeb489",
+      "base_model.model.model.layers.26.self_attn.q_proj.lora_A.default.weight": "b8898b18d3b55d5702904d56e0fee7f59855689b6068db6b72b804c47c6b0610",
+      "base_model.model.model.layers.26.self_attn.q_proj.lora_B.default.weight": "d403c0035d0cd230e677ff2b1a0672e82827f6ab8119825810f2c423bbb817cc",
+      "base_model.model.model.layers.26.self_attn.k_proj.lora_A.default.weight": "f5d3fa80cd461775b50b88fc5af6b66b22279d639e91863b4ed53d9be9e1e8fd",
+      "base_model.model.model.layers.26.self_attn.k_proj.lora_B.default.weight": "91d2ffd8ae963905597515e51b77ad3e65f16ec056709fc2d3c2b4cee758cb9c",
+      "base_model.model.model.layers.26.self_attn.v_proj.lora_A.default.weight": "a5b11274650bdc968ffa1b94388403c74ede138771ab77c41e02d344d4a71421",
+      "base_model.model.model.layers.26.self_attn.v_proj.lora_B.default.weight": "e882da221fd3971a2d7455ae0e08c19c14e9eb586962ba8c0c964706c8c55d3a",
+      "base_model.model.model.layers.26.self_attn.o_proj.lora_A.default.weight": "8213b1ec5c9692fd261c071708effe0f778f7ef62872b11ff80ffbc858b2269e",
+      "base_model.model.model.layers.26.self_attn.o_proj.lora_B.default.weight": "653fd6f16e6c6f8ca74ea837fa4a53f85144d19255aeee3fc6ae0c65a50be5cc",
+      "base_model.model.model.layers.27.self_attn.q_proj.lora_A.default.weight": "b6507ed54d236d1f7b14abae288866047cf3c78ce690556389a31f8e643922e2",
+      "base_model.model.model.layers.27.self_attn.q_proj.lora_B.default.weight": "ea9a7676f9faaed516d915828c79a1a28709632c1214a4df4ad1836619858044",
+      "base_model.model.model.layers.27.self_attn.k_proj.lora_A.default.weight": "5084c12561d22a7259e1254b326451ecaa12e3adcf37491d4c0f8c3e384bf90f",
+      "base_model.model.model.layers.27.self_attn.k_proj.lora_B.default.weight": "56c0857efee72467167f121e04a5e415c5deb035c68d1ea0657390afde3e6207",
+      "base_model.model.model.layers.27.self_attn.v_proj.lora_A.default.weight": "46561cae521b80e64f8ee7c1990d07d7019e6b478508b54c6c8060a1a3a887c4",
+      "base_model.model.model.layers.27.self_attn.v_proj.lora_B.default.weight": "bc83d7b313fea9462e030359e6f924c1429707cdb6f670f2e0e2a3b3c0532729",
+      "base_model.model.model.layers.27.self_attn.o_proj.lora_A.default.weight": "1af78e5159404955d473fd8f39c1b84524134b3d815d51ac5f424a479fec19e3",
+      "base_model.model.model.layers.27.self_attn.o_proj.lora_B.default.weight": "9dc7b5ab4bc1639605538bc35df6b0abc760daf4750434b98b2e4de94cc4f71a"
+    },
+    "eval_skipped": true
+  },
+  "status": "OK",
+  "oom_stage": null,
+  "oom_step": null,
+  "allocated_at_failure_gb": null,
+  "error": null
+}
