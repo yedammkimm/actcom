@@ -12,7 +12,7 @@ The compiled paper is [docs/OAMP/OAMP_paper.pdf](docs/OAMP/OAMP_paper.pdf); the 
 Fine-tuning a 70B model on a single 128 GB device without recomputation requires compressing the activations stored for the backward pass. Prior work validates such a method by an in-distribution task-accuracy check. We show that this check does not see the failure four-bit compression actually produces:
 
 - Compressing every stored tensor to four bits, four of eight otherwise identical Llama-3.2-3B runs end with held-out perplexity 5 to 15% above the uncompressed baseline while the other four match it. The effect is in the dispersion, not the mean (variance ratio at exact permutation p = 0.03; difference in means at p = 0.10).
-- Which runs fail is a property of the run, not the seed: re-running a damaged configuration produced a safe model twice out of two.
+- Which runs fail is not predictable from the seed: re-running a damaged configuration produced a safe model twice out of two, and the divergence between two launches disappears under PyTorch's deterministic kernels.
 - Nine measurements fail to detect it, including task accuracy, training loss, in-distribution perplexity, gradient norms, four multiple-choice benchmarks over 21 adapters, and MMLU over the eight blockwise runs.
 - The damage follows gradient fidelity, not the bit budget. The sensitive tensors are the query and key head views only: gradient cosine falls to 0.36 there and stays above 0.99 everywhere else. A five-minute gradient probe identifies them before any training run.
 - Storing those two tensors in FP8 removes the failure in eight of eight runs at 0.60 bits per element at 3B (0.44 at 70B). Scaling them along the channel axis instead costs no extra bits but leaves one run of eight above the threshold.
@@ -61,6 +61,7 @@ python scripts/make_appendix_tables.py     # Table 23: every run behind the aggr
 python scripts/audit/mmlu_stats.py         # Table 25: every MMLU statistic
 python scripts/prereg_loo.py               # Table 24: leave-one-arm-out prediction
 python scripts/audit/_audit_numbers.py     # remaining statistics of Sections 5.3 and 5.4
+python scripts/audit/determinism_compare.py # Section 5.4 determinism probe: results/determinism/summary.md
 ```
 
 Arm membership is always resolved from (method, body encoding, rank-4 mode) jointly, and accuracy is always recomputed as `100 * n_correct / n`; Appendix F of the paper states the four rules the scripts follow.
