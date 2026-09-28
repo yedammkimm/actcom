@@ -775,8 +775,6 @@ Evaluated on the held-out GSM8K, the distribution the adapters were trained on, 
 Seed 123 of the blockwise arm shows this directly. It reaches WikiText-2 perplexity $18.43$, the highest of the eight and $2.65$ above the lowest. Yet it scores $55.0\%$ on GSM8K, above the uncompressed baseline's $52.8\%$ rather than below it. Its in-distribution perplexity, $2.5637$, ranks fourth of the eight and sits $0.0007$ below the arm mean. No non-finite gradient occurred.
 
 
-The paired and unpaired $t$ agree (\S\ref{sec:lottery}). 
-
 As a consequence, in the blockwise arm, half of the runs land at or below the base model before fine-tuning (16.19) on out-of-distribution perplexity and half exceed it by $4.6$ to $13.8\%$. None of the nine measurements we took during or after training, except evaluating on a distribution the model was not trained on, distinguishes the two. In practice, a damaged run ends worse on general text than the model it was fine-tuned from ($16.19$). Every safe run, every FP8 run, and both uncompressed baselines end at or below it. No prior activation-compression method reports run-to-run variation in held-out perplexity in a fine-tuning setting (\S\ref{sec:related_measure}).
 
 
