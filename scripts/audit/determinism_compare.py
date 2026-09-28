@@ -296,7 +296,7 @@ def build_summary(runs, out_dir):
                     row.append('raised'); raised.append((m, n, o['error']))
                 else:
                     row.append(f"{o['mismatching_repeats']}/{rep[m]}" +
-                               (f" (max |diff| {o['max_abs_diff']:.2e})" if o['mismatching_repeats'] else ''))
+                               (f" (max abs diff {o['max_abs_diff']:.2e})" if o['mismatching_repeats'] else ''))
             P(f'| {n} | ' + ' | '.join(row) + ' |')
         P('')
         if raised:
@@ -314,8 +314,28 @@ def build_summary(runs, out_dir):
         L.extend(open(nd).read().rstrip('\n').split('\n'))
         P('```')
         P('')
-    # 8. outcome
-    P('## 8. Outcome against the pre-registered reading rules')
+    # 8. provenance: git_dirty across the repository
+    P('## 8. env.git_dirty across every run record in the repository')
+    P('')
+    tot = dirty = 0
+    probe_n = probe_dirty = 0
+    for f in glob.glob(os.path.join(ROOT, 'results', '**', '*.json'), recursive=True):
+        try:
+            d = json.load(open(f))
+        except Exception:                      # noqa: BLE001
+            continue
+        e = d.get('env') if isinstance(d, dict) else None
+        if not isinstance(e, dict) or 'git_dirty' not in e:
+            continue
+        if os.path.relpath(f, ROOT).startswith('results/determinism/'):
+            probe_n += 1; probe_dirty += bool(e['git_dirty'])
+        else:
+            tot += 1; dirty += bool(e['git_dirty'])
+    P(f'- records outside `results/determinism/` that carry `env.git_dirty`: {tot}, of which true: {dirty}')
+    P(f'- records of this probe: {probe_n}, of which true: {probe_dirty}')
+    P('')
+    # 9. outcome
+    P('## 9. Outcome against the pre-registered reading rules')
     P('')
     det_pairs = [(k, c) for k, cs in pair_results.items() for c in cs if k[3] == 'deterministic']
     def_pairs = [(k, c) for k, cs in pair_results.items() for c in cs if k[3] == 'default']
@@ -347,6 +367,35 @@ def build_summary(runs, out_dir):
     return '\n'.join(L) + '\n'
 
 
+ARM_NAMES = {'A': 'blockwise four-bit (A)', 'B': 'FP8 head views (B)', 'C': 'uncompressed (C)'}
+
+
+def latex_rows(runs):
+    """Rows of the paper's determinism table: one line per (arm, seed, steps, mode).
+
+    Columns: configuration, kernels, first differing optimizer step in the gradient
+    hash, the parameter hash and the loss ('none' = agreement through the last step
+    both runs completed), and the mean step time over steps 2..N in seconds.
+    """
+    groups = {}
+    for r in runs:
+        if r['status'] == 'OK':
+            groups.setdefault((r['arm'], r['seed'], r['steps'], r['mode']), []).append(r)
+    lines = []
+    last_cfg = None
+    for key in sorted(groups):
+        rs = sorted(groups[key], key=lambda r: r['name'])
+        if len(rs) < 2:
+            continue
+        c = compare_pair(rs[0], rs[1])
+        mst = statistics.mean(mean_step_time(r) for r in rs)
+        cfg = f"{ARM_NAMES.get(key[0], key[0])}, seed {key[1]}" + (f", {key[2]} steps" if key[2] != 20 else '')
+        first = cfg if cfg != last_cfg else ''
+        last_cfg = cfg
+        lines.append(f"{first} & {key[3]} & {fmt(c['grad'])} & {fmt(c['param'])} & {fmt(c['loss'])} & {mst:.2f} \\\\")
+    return lines
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('paths', nargs='*')
@@ -354,6 +403,7 @@ def main():
     ap.add_argument('--write', default=None, help='write the markdown summary here')
     ap.add_argument('--gate', action='store_true',
                     help='exactly two records: print one line with the first differing point of each ladder')
+    ap.add_argument('--latex', action='store_true', help='print the rows of the paper\'s determinism table')
     a = ap.parse_args()
     if a.gate:
         if len(a.paths) != 2:
@@ -373,6 +423,9 @@ def main():
         except Exception as e:                  # noqa: BLE001
             print(f'skipping {p}: {type(e).__name__}: {e}', file=sys.stderr)
     out_dir = a.dir if not a.paths else os.path.dirname(os.path.abspath(a.paths[0]))
+    if a.latex:
+        print('\n'.join(latex_rows(runs)))
+        return
     text = build_summary(runs, out_dir)
     if a.write:
         with open(a.write, 'w') as f:
