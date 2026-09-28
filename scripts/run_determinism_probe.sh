@@ -152,13 +152,7 @@ commit_record() {
     local name="$1" what="$2"
     git -C ${ROOT_HOST} add -- "${OUT}/${name}.json" 2>/dev/null
     [[ -f "${OUT_HOST}/${name}.checkpoints.jsonl" ]] && git -C ${ROOT_HOST} add -- "${OUT}/${name}.checkpoints.jsonl"
-    if git -C ${ROOT_HOST} commit -q -m "determinism probe: ${name} (as run)
-
-${what} written by scripts/run_determinism_probe.sh at commit ${HEAD:0:12}.
-Committed by the chain before the next cell starts, so every launch sees a
-clean tree and env.git_dirty stays false.
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"; then
+    if git -C ${ROOT_HOST} commit -q -m "determinism probe: ${name} (as run)"; then
         log "  committed ${name}"
     else
         log "  COMMIT FAILED for ${name}; the next cell will record git_dirty=true"
