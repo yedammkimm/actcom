@@ -107,7 +107,7 @@ GROUPS = [
      ['scripts/run_determinism_probe.sh (chain, prediction in the header)', 'scripts/audit/determinism_compare.py',
       'scripts/audit/determinism_ops_probe.py'],
      ['results/determinism/*.json', 'results/determinism/*.checkpoints.jsonl', 'results/determinism/summary.md',
-      'results/determinism/nondeterministic_ops.txt']),
+      'results/determinism/nondeterministic_ops.txt', 'results/determinism/commit_map.txt']),
 ]
 
 
