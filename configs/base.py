@@ -48,6 +48,7 @@ _WEIGHT_QUANTS = ('bf16', 'nf4')
 _TASKS = ('gsm8k',)   # extend when task backends are added to oamp.data
 _OPTIMIZERS = ('adamw', 'paged_adamw8bit')
 _SCHEDULERS = ('cosine', 'linear', 'constant', 'none')
+_SDPA_BACKENDS = ('default', 'flash', 'math')
 
 
 def routing_for(method: str) -> str:
@@ -169,6 +170,18 @@ class ExperimentConfig:
     output_dir: str = 'results'
     output_path: Optional[str] = None    # explicit JSON path; None => auto-naming
 
+    # -------- determinism probe (2026-09-28) --------
+    # Every default below leaves earlier runs unchanged: no early stop, the
+    # evaluation runs, PyTorch's default kernels, the default SDPA dispatch,
+    # and no extra recording.
+    max_opt_steps: int = 0               # >0: stop training after this many optimizer steps
+    skip_eval: bool = False              # skip the GSM8K evaluation; the adapter is still saved
+    deterministic: bool = False          # torch.use_deterministic_algorithms(True) + fixed cuBLAS workspace
+    deterministic_warn_only: bool = False
+    sdpa_backend: str = 'default'        # 'default' | 'flash' | 'math' for the training forward/backward
+    param_hash_every: int = 0            # >0: sha256 of the LoRA gradients and parameters every k optimizer steps
+    record_micro_losses: bool = False    # store every micro-step loss as repr(float)
+
     # -------- validation --------
 
     def __post_init__(self) -> None:
@@ -253,6 +266,15 @@ class ExperimentConfig:
             raise ValueError("max_seq_len must be positive.")
         if not (0.0 <= self.warmup_ratio <= 1.0):
             raise ValueError("warmup_ratio must be in [0, 1].")
+
+        # Determinism-probe fields.
+        if self.max_opt_steps < 0:
+            raise ValueError(f"max_opt_steps must be >= 0 (0 = no limit), got {self.max_opt_steps}.")
+        if self.param_hash_every < 0:
+            raise ValueError(f"param_hash_every must be >= 0 (0 = off), got {self.param_hash_every}.")
+        if self.sdpa_backend not in _SDPA_BACKENDS:
+            raise ValueError(
+                f"sdpa_backend must be one of {_SDPA_BACKENDS}, got {self.sdpa_backend!r}.")
 
     # -------- convenience --------
 
@@ -378,6 +400,28 @@ def _add_config_args(p: argparse.ArgumentParser) -> None:
     p.add_argument('--legacy_repro', action='store_true', default=False,
                    help='Match test_dtype_policy_3way (Arm 4) training conditions verbatim.')
 
+    # Determinism probe (2026-09-28). Defaults reproduce the earlier behaviour exactly.
+    p.add_argument('--max_opt_steps', type=int, default=0,
+                   help='Stop training after this many optimizer steps and save the '
+                        'adapter (0 = train to the end). The scheduler horizon stays '
+                        'the full run, so the learning rate of each step is unchanged.')
+    p.add_argument('--skip_eval', action='store_true', default=False,
+                   help='Skip the GSM8K evaluation after training.')
+    p.add_argument('--deterministic', action='store_true', default=False,
+                   help='torch.use_deterministic_algorithms(True), cudnn.deterministic, '
+                        'and CUBLAS_WORKSPACE_CONFIG=:4096:8 unless already set.')
+    p.add_argument('--deterministic_warn_only', action='store_true', default=False,
+                   help='With --deterministic: warn instead of raising on an op that '
+                        'has no deterministic implementation.')
+    p.add_argument('--sdpa_backend', choices=list(_SDPA_BACKENDS), default='default',
+                   help="Restrict scaled_dot_product_attention in the training loop to "
+                        "one backend. 'default' leaves PyTorch's dispatch alone.")
+    p.add_argument('--param_hash_every', type=int, default=0,
+                   help='Record a sha256 of all LoRA gradients (before clipping) and of '
+                        'all LoRA parameters (after the update) every k optimizer steps.')
+    p.add_argument('--record_micro_losses', action='store_true', default=False,
+                   help='Store each micro-step loss as repr(float) in results.micro_losses.')
+
 
 def build_from_cli(argv: Optional[List[str]] = None) -> ExperimentConfig:
     """Parse the command line and build an ExperimentConfig.
@@ -463,4 +507,11 @@ def build_from_cli(argv: Optional[List[str]] = None) -> ExperimentConfig:
         checkpoint_every=args.checkpoint_every,
         output_dir=args.output_dir,
         output_path=args.output_path,
+        max_opt_steps=args.max_opt_steps,
+        skip_eval=args.skip_eval,
+        deterministic=args.deterministic,
+        deterministic_warn_only=args.deterministic_warn_only,
+        sdpa_backend=args.sdpa_backend,
+        param_hash_every=args.param_hash_every,
+        record_micro_losses=args.record_micro_losses,
     )

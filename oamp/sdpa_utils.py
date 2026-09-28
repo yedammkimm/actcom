@@ -38,25 +38,82 @@ def probe_backend_availability(seq_len: int = 64, dtype=torch.bfloat16):
     that, force flash with flash_sdp_context(force=True) and let the call fail
     if the model's real inputs make flash ineligible.
     """
-    if sdpa_kernel is None:
+    if sdpa_kernel is None or not torch.cuda.is_available():
         return 'UNKNOWN'
     import torch.nn.functional as F
-    q = torch.randn(1, 8, seq_len, 64, device='cuda', dtype=dtype)
-    k = torch.randn_like(q)
-    v = torch.randn_like(q)
-    for name, backend in [
-        ('FLASH', SDPBackend.FLASH_ATTENTION),
-        ('EFFICIENT', SDPBackend.EFFICIENT_ATTENTION),
-        ('CUDNN', SDPBackend.CUDNN_ATTENTION),
-    ]:
-        try:
-            with sdpa_kernel([backend]):
-                F.scaled_dot_product_attention(q, k, v, is_causal=True)
-            torch.cuda.synchronize()
-            return name
-        except Exception:
-            continue
+    # fork_rng: the synthetic tensors must not advance the run's RNG streams.
+    with torch.random.fork_rng(devices=[torch.cuda.current_device()]):
+        q = torch.randn(1, 8, seq_len, 64, device='cuda', dtype=dtype)
+        k = torch.randn_like(q)
+        v = torch.randn_like(q)
+        for name, backend in [
+            ('FLASH', SDPBackend.FLASH_ATTENTION),
+            ('EFFICIENT', SDPBackend.EFFICIENT_ATTENTION),
+            ('CUDNN', SDPBackend.CUDNN_ATTENTION),
+        ]:
+            try:
+                with sdpa_kernel([backend]):
+                    F.scaled_dot_product_attention(q, k, v, is_causal=True)
+                torch.cuda.synchronize()
+                return name
+            except Exception:
+                continue
     return 'MATH'
+
+
+def probe_default_dispatch(seq_len: int = 512, n_heads: int = 24, n_kv_heads: int = 8,
+                           head_dim: int = 128, dtype=torch.bfloat16):
+    """Return which backend PyTorch's default dispatch runs for a causal call
+    without a mask at the given shapes (Llama-3.2-3B by default): 'FLASH',
+    'CUDNN', 'EFFICIENT', 'MATH' or 'UNKNOWN'.
+
+    The default call is compared bitwise with each backend forced in turn; the
+    backends round differently, so the one that matches is the one that ran.
+    Runs under fork_rng so the run's RNG streams are untouched.
+    """
+    if sdpa_kernel is None or not torch.cuda.is_available():
+        return 'UNKNOWN'
+    import torch.nn.functional as F
+    with torch.random.fork_rng(devices=[torch.cuda.current_device()]):
+        torch.manual_seed(0)
+        q = torch.randn(1, n_heads, seq_len, head_dim, device='cuda', dtype=dtype)
+        k = torch.randn(1, n_kv_heads, seq_len, head_dim, device='cuda', dtype=dtype)
+        v = torch.randn_like(k)
+        kw = dict(is_causal=True)
+        if n_kv_heads != n_heads:
+            kw['enable_gqa'] = True
+        ref = F.scaled_dot_product_attention(q, k, v, **kw)
+        for name, backend in [
+            ('FLASH', SDPBackend.FLASH_ATTENTION),
+            ('CUDNN', SDPBackend.CUDNN_ATTENTION),
+            ('EFFICIENT', SDPBackend.EFFICIENT_ATTENTION),
+            ('MATH', SDPBackend.MATH),
+        ]:
+            try:
+                with sdpa_kernel([backend]):
+                    out = F.scaled_dot_product_attention(q, k, v, **kw)
+                torch.cuda.synchronize()
+            except Exception:
+                continue
+            if torch.equal(out, ref):
+                return name
+    return 'UNKNOWN'
+
+
+def sdpa_backend_context(name: str):
+    """Context manager for the training loop's forward and backward.
+
+    'default' returns a nullcontext, so PyTorch's dispatch is untouched;
+    'flash' restricts SDPA to the flash backend and 'math' to the MATH
+    backend. sdpa_kernel is a generator-based context manager, so a new one
+    is built on every call.
+    """
+    if name == 'default' or sdpa_kernel is None:
+        return contextlib.nullcontext()
+    table = {'flash': SDPBackend.FLASH_ATTENTION, 'math': SDPBackend.MATH}
+    if name not in table:
+        raise ValueError(f"sdpa_backend must be 'default', 'flash' or 'math', got {name!r}")
+    return sdpa_kernel([table[name]])
 
 
 def normalize_attention_mask(attention_mask):

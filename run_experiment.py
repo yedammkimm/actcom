@@ -15,6 +15,7 @@ result the paper cites, so it has to be written like any other.
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import os
 import sys
 import time
@@ -57,7 +58,10 @@ from oamp.schema import (
     make_result_skeleton, mark_nan, mark_ok, mark_oom,
     validate_schema, write_result,
 )
-from oamp.sdpa_utils import normalize_attention_mask
+from oamp.sdpa_utils import (
+    normalize_attention_mask, probe_backend_availability, probe_default_dispatch,
+    sdpa_backend_context,
+)
 
 
 CACHE_DIR = os.environ.get("HF_HOME", "/app/hf_cache")
@@ -80,6 +84,59 @@ class MemoryBudgetError(RuntimeError):
     Raised by _measure_one so the process exits with an OOM record instead of
     being killed by the docker cgroup (2026-08-18).
     """
+
+
+# Determinism (2026-09-28 probe)
+
+def _apply_determinism(cfg: ExperimentConfig) -> dict:
+    """Apply cfg.deterministic before any CUDA work and return the env fields
+    that describe the kernel condition of this process.
+
+    CUBLAS_WORKSPACE_CONFIG has to be in the environment before the cuBLAS
+    handle is created, which is why this runs before collect_env and before
+    the model is loaded; the chain script also exports it, so setdefault does
+    not override an explicit value. The SDPA probes run on synthetic tensors
+    under fork_rng and leave the run's RNG streams untouched.
+    """
+    if cfg.deterministic:
+        os.environ.setdefault('CUBLAS_WORKSPACE_CONFIG', ':4096:8')
+        torch.use_deterministic_algorithms(True, warn_only=cfg.deterministic_warn_only)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+    info = {
+        'deterministic_algorithms': bool(torch.are_deterministic_algorithms_enabled()),
+        'deterministic_warn_only': bool(torch.is_deterministic_algorithms_warn_only_enabled()),
+        'cublas_workspace_config': os.environ.get('CUBLAS_WORKSPACE_CONFIG'),
+        'cudnn_deterministic': bool(torch.backends.cudnn.deterministic),
+        'sdpa_backend_requested': cfg.sdpa_backend,
+        'sdpa_backend_probe': 'UNKNOWN',
+        'sdpa_default_dispatch': 'UNKNOWN',
+    }
+    if torch.cuda.is_available():
+        try:
+            info['sdpa_backend_probe'] = probe_backend_availability()
+            info['sdpa_default_dispatch'] = probe_default_dispatch()
+        except Exception as e:                       # noqa: BLE001
+            info['sdpa_backend_probe'] = f'probe failed: {type(e).__name__}: {e}'[:200]
+    return info
+
+
+def _hash_tensors(tensors) -> str:
+    """sha256 over the raw bytes of the tensors, in the order given.
+
+    bf16 and fp16 are viewed as int16, fp32 as int32, so the bytes are the
+    stored bits and no conversion touches them. Two runs whose LoRA
+    parameters hash equal are bit-for-bit identical, which is a stronger
+    statement than equal losses."""
+    h = hashlib.sha256()
+    for t in tensors:
+        t = t.detach().contiguous()
+        if t.dtype in (torch.bfloat16, torch.float16):
+            t = t.view(torch.int16)
+        elif t.dtype == torch.float32:
+            t = t.view(torch.int32)
+        h.update(t.cpu().numpy().tobytes())
+    return h.hexdigest()
 
 
 # Model loading
@@ -205,11 +262,11 @@ def _parity_check(model, pack_ctx, tokenizer, cfg: ExperimentConfig,
     torch.manual_seed(cfg.seed)
     ids = torch.randint(0, vocab_size, (2, cfg.max_seq_len), device=DEVICE)
 
-    with torch.enable_grad():
+    with torch.enable_grad(), sdpa_backend_context(cfg.sdpa_backend):
         loss_off_val = float(model(input_ids=ids, labels=ids).loss.item())
     torch.cuda.empty_cache()
 
-    with torch.enable_grad(), pack_ctx:
+    with torch.enable_grad(), sdpa_backend_context(cfg.sdpa_backend), pack_ctx:
         loss_on_val = float(model(input_ids=ids, labels=ids).loss.item())
     torch.cuda.empty_cache()
 
@@ -347,7 +404,20 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
     n_nonfinite_grad_steps = 0  # opt-step attempts where raw grad had inf/nan (skipped)
     grad_norm_trace = []        # (opt_step, pre_clip_norm) sampled every checkpoint_every
     skipped_step_indices = []   # opt_step values at each skip (first 100 only)
+    # Determinism probe (2026-09-28). All of it is off unless the flags are set,
+    # so a default run records exactly what it recorded before.
+    probe = cfg.param_hash_every > 0
+    micro_losses = [] if cfg.record_micro_losses else None   # repr(float) per micro-step
+    grad_hash_trace = []        # (opt_step, sha256 of every LoRA grad before clipping)
+    param_hash_trace = []       # (opt_step, sha256 of every LoRA parameter after the update)
+    step_wall_s = []            # per optimizer step, synchronised, hashing excluded
+    stopped_at_opt_step = None
+    stop_training = False
+    if probe:
+        lora_named = [(n, p) for n, p in model.named_parameters() if p.requires_grad]
+        assert [id(p) for _, p in lora_named] == [id(p) for p in lora_params]
     t_train0 = time.time()
+    t_step0 = time.perf_counter()
 
     # As in the earlier build_data_order: one np.random.RandomState(seed) reused across epochs.
     # Pre-materializing avoids interference with the global RNG stream used by
@@ -377,22 +447,27 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
 
             seen_lens.append(int(input_ids.shape[1]))
 
-            with pack_ctx:
-                if attn is None:
-                    out = model(input_ids=input_ids, labels=labels)
-                else:
-                    out = model(input_ids=input_ids, attention_mask=attn, labels=labels)
-                loss = out.loss / cfg.grad_accum_steps
+            sdpa_ctx = sdpa_backend_context(cfg.sdpa_backend)   # nullcontext by default
+            with sdpa_ctx:
+                with pack_ctx:
+                    if attn is None:
+                        out = model(input_ids=input_ids, labels=labels)
+                    else:
+                        out = model(input_ids=input_ids, attention_mask=attn, labels=labels)
+                    loss = out.loss / cfg.grad_accum_steps
 
-            if not torch.isfinite(loss):
-                _save_partial_adapter(
-                    f"nan_loss at epoch={epoch} idx={idx} micro_step={micro_step}")
-                raise NaNError(
-                    f"loss became {loss.item()} at epoch {epoch}, sample idx={idx}, "
-                    f"micro_step={micro_step}, opt_step={opt_step}")
+                if not torch.isfinite(loss):
+                    _save_partial_adapter(
+                        f"nan_loss at epoch={epoch} idx={idx} micro_step={micro_step}")
+                    raise NaNError(
+                        f"loss became {loss.item()} at epoch {epoch}, sample idx={idx}, "
+                        f"micro_step={micro_step}, opt_step={opt_step}")
 
-            loss.backward()
-            running_loss += loss.item()
+                loss.backward()
+            loss_val = loss.item()
+            running_loss += loss_val
+            if micro_losses is not None:
+                micro_losses.append(repr(float(loss_val)))
             micro_step += 1
 
             if micro_step % cfg.grad_accum_steps == 0:
@@ -427,6 +502,10 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
                             f"steps (>30%): quantization not viable for this model")
                     continue
 
+                if probe and (opt_step + 1) % cfg.param_hash_every == 0:
+                    grad_hash_trace.append(
+                        (opt_step + 1, _hash_tensors([p.grad for p in lora_params if p.grad is not None])))
+
                 if cfg.grad_clip > 0:
                     pre_clip_norm = torch.nn.utils.clip_grad_norm_(lora_params, cfg.grad_clip)
                 else:
@@ -445,6 +524,13 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
                 step_losses.append(float(step_loss))
                 running_loss = 0.0
                 result['throughput']['steps_completed'] = opt_step
+
+                if probe:
+                    torch.cuda.synchronize(DEVICE)
+                    step_wall_s.append(time.perf_counter() - t_step0)
+                    if opt_step % cfg.param_hash_every == 0:
+                        param_hash_trace.append((opt_step, _hash_tensors(lora_params)))
+                    t_step0 = time.perf_counter()
 
                 if opt_step == 1:
                     result['memory']['mem_after_first_step_gb'] = (
@@ -492,6 +578,14 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
                               f"exiting immediately.", flush=True)
                         sys.exit(1)
 
+                if cfg.max_opt_steps > 0 and opt_step >= cfg.max_opt_steps:
+                    stopped_at_opt_step = opt_step
+                    stop_training = True
+                    print(f"[train] stopping at opt_step={opt_step} (max_opt_steps)", flush=True)
+                    break
+        if stop_training:
+            break
+
     train_wall = time.time() - t_train0
 
     # Sequence stats
@@ -514,6 +608,17 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
     result['results']['n_nonfinite_grad_steps'] = n_nonfinite_grad_steps
     result['results']['grad_norm_trace'] = grad_norm_trace
     result['results']['skipped_step_indices'] = skipped_step_indices
+    # Determinism-probe records; the keys exist only when the flags were set.
+    if cfg.max_opt_steps > 0:
+        result['results']['stopped_at_opt_step'] = stopped_at_opt_step
+    if micro_losses is not None:
+        result['results']['micro_losses'] = micro_losses
+    if probe:
+        result['results']['grad_hash_trace'] = grad_hash_trace
+        result['results']['param_hash_trace'] = param_hash_trace
+        result['results']['step_wall_s'] = step_wall_s
+        result['results']['param_hash_by_name'] = {
+            n: _hash_tensors([p]) for n, p in lora_named}
 
     # Save the LoRA adapter before eval
     # Eval on 70B risks KV-cache OOM; if that happens post-eval save would lose
@@ -529,6 +634,11 @@ def _run_accuracy(model, tokenizer, cfg: ExperimentConfig,
     except Exception as e:                       # noqa: BLE001
         result['results']['adapter_path'] = None
         print(f"[adapter] WARNING: save failed: {type(e).__name__}: {e}", flush=True)
+
+    if cfg.skip_eval:
+        result['results']['eval_skipped'] = True
+        print("[eval] skipped (skip_eval)", flush=True)
+        return
 
     # Eval
     # on_abort: persist a partial JSON with the abort diagnostics before
@@ -714,7 +824,9 @@ def _default_output_path(cfg: ExperimentConfig) -> str:
 
 def main(argv=None) -> int:
     cfg = build_from_cli(argv)
+    det_info = _apply_determinism(cfg)     # before any CUDA work
     env = collect_env()
+    env.update(det_info)
     env['timestamp_start'] = datetime.now().isoformat()
 
     # (3) validation before any GPU work
@@ -733,6 +845,8 @@ def main(argv=None) -> int:
     try:
         # (4)+(5): load model, apply the dtype policy
         set_seed(cfg.seed)
+        # set_seed fixes the cudnn flags for every run; record what the training saw.
+        env['cudnn_deterministic'] = bool(torch.backends.cudnn.deterministic)
         model, tokenizer = _load_model(cfg)
         model, param_ptrs, dtype_report = apply_dtype_policy(
             model, weight_quant=cfg.weight_quant, bf16_rmsnorm=cfg.bf16_rmsnorm,
